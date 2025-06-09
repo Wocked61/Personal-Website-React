@@ -3,8 +3,14 @@ import './Header.css'
 function Header() {
   return (
     <header className="App-header">
-      <h1>Welcome to My Portfolio</h1>
-      <p>This is a simple React application.</p>
+      <h1>Dylan Phan's Portfolio</h1>
+      <ul>
+        <li>Home</li>
+        <li>About Me</li>
+        <li>Projects</li>
+        <li>Resume</li>        
+        <li>Contact</li>
+      </ul>
     </header>
   )
 }

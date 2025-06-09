@@ -1,0 +1,20 @@
+.App-header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+}
+
+.App-header h1 {
+  font-size: 2.5em;
+  margin: 0;
+}
+
+.App-header ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.App-header li {
+  display: inline;
+  margin: 0 15px;
+}
