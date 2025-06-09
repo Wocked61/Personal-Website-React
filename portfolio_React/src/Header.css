@@ -2,6 +2,9 @@
   background-color: #282c34;
   padding: 20px;
   color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .App-header h1 {
@@ -12,9 +15,15 @@
 .App-header ul {
   list-style-type: none;
   padding: 0;
+  margin: 0;
+  display: flex;
 }
 
 .App-header li {
-  display: inline;
   margin: 0 15px;
+  cursor: pointer;
+}
+
+.App-header li:hover {
+  text-decoration: underline;
 }
