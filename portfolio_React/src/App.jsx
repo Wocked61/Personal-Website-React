@@ -11,11 +11,11 @@ function App() {
       <main>
         <section>
           <h2>About Me</h2>
-          <p></p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Non distinctio ratione nisi beatae, atque optio magnam excepturi. Omnis enim, soluta dicta rem aperiam ducimus odio quasi aut, expedita quae perferendis!</p>
         </section>
         <section>
           <h2>Projects</h2>
-          <p>List your projects here.</p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Non distinctio ratione nisi beatae, atque optio magnam excepturi. Omnis enim, soluta dicta rem aperiam ducimus odio quasi aut, expedita quae perferendis!</p>
         </section>
       </main>
       <Footer />

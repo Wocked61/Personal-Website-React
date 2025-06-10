@@ -8,16 +8,26 @@
   --violet-accent: #8E6BFF;
   --light-gray: #D2D2D5;
   --text-color: #252525;
+  --pixel-font: 'Press Start 2P', cursive;
 }
 
 body {
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--pixel-font);
   background: linear-gradient(135deg, var(--bg-color) 0%, var(--panel-color) 100%);
   color: var(--text-color);
   min-height: 100vh;
+  font-size: 12px; /* Base size for pixel font readability */
+  line-height: 1.5;
 }
 
 * {
   box-sizing: border-box;
+}
+
+/* Smooth text rendering for pixel fonts */
+* {
+  -webkit-font-smoothing: pixelated;
+  -moz-osx-font-smoothing: auto;
+  image-rendering: pixelated;
 }

@@ -7,16 +7,17 @@
   align-items: center;
   box-shadow: 0 4px 20px rgba(254, 137, 217, 0.3);
   border-bottom: 3px solid var(--accent-color);
+  font-family: var(--pixel-font);
 }
 
 .App-header h1 {
-  font-size: 2.5em;
+  font-size: 2em; /* Adjusted for pixel font */
   margin: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(45deg, #ffffff, var(--panel-color));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  letter-spacing: 2px;
+  text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5);
+  color: white;
+  text-transform: uppercase;
+  /* Removed gradient text for better pixel font display */
 }
 
 .App-header ul {
@@ -24,23 +25,30 @@
   padding: 0;
   margin: 0;
   display: flex;
-  gap: 20px;
+  gap: 15px;
 }
 
 .App-header li {
-  padding: 10px 20px;
+  padding: 10px 15px;
   cursor: pointer;
-  border-radius: 25px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
-  font-weight: 500;
+  border-radius: 0; /* Sharp corners for pixel aesthetic */
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--accent-color);
+  transition: all 0.2s ease;
+  font-weight: normal;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .App-header li:hover {
   background: var(--accent-color);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(254, 137, 217, 0.4);
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
   color: white;
+}
+
+.App-header li:active {
+  transform: translateY(0px);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
 }

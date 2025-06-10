@@ -1,60 +1,82 @@
 .App-footer {
+  position: relative;
   background: linear-gradient(135deg, var(--accent3-color) 0%, var(--blue-accent) 100%);
-  padding: 40px;
+  padding: 30px;
   color: white;
   text-align: left;
   border-top: 3px solid var(--accent-color);
   box-shadow: 0 -4px 20px rgba(254, 137, 217, 0.3);
+  font-family: var(--pixel-font);
 }
 
 .App-footer p {
-  margin: 12px 0;
-  font-size: 1.1em;
+  margin: 15px 0;
+  font-size: 10px;
   display: flex;
   align-items: center;
   gap: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .App-footer a {
   color: var(--panel-color);
   text-decoration: none;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  border-bottom: 1px solid transparent;
+  font-weight: normal;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+  padding: 2px 4px;
 }
 
 .App-footer a:hover {
   color: var(--accent-color);
   border-bottom-color: var(--accent-color);
-  text-shadow: 0 0 8px rgba(254, 137, 217, 0.5);
+  background: rgba(254, 137, 217, 0.2);
 }
 
 .social-icon {
   cursor: pointer;
   margin-right: 8px;
-  font-size: 1.4em;
+  font-size: 12px;
   vertical-align: middle;
-  transition: all 0.3s ease;
-  padding: 8px;
-  border-radius: 50%;
+  transition: all 0.2s ease;
+  padding: 6px;
+  border: 2px solid transparent;
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
 }
 
 .social-icon:hover {
   color: var(--accent-color);
   background: rgba(254, 137, 217, 0.2);
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 4px 15px rgba(254, 137, 217, 0.4);
+  border-color: var(--accent-color);
+  transform: scale(1.1);
 }
 
-/* Add a subtle animation to the footer */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-3px); }
-}
-
+/* Remove the floating animation for more stable pixel aesthetic */
 .App-footer {
-  animation: float 6s ease-in-out infinite;
+  animation: none;
+}
+
+/* Add a subtle pixel-style glow effect */
+.App-footer::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--accent-color) 0px,
+    var(--accent-color) 4px,
+    var(--accent2-color) 4px,
+    var(--accent2-color) 8px
+  );
+  animation: pixelScroll 2s linear infinite;
+}
+
+@keyframes pixelScroll {
+  0% { transform: translateX(0px); }
+  100% { transform: translateX(8px); }
 }
 
