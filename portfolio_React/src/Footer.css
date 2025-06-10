@@ -8,7 +8,25 @@
 .App-footer p {
   margin: 5px 0;
 }
+
 .App-footer a {
-  color: #61dafb;
-  text-decoration: none;
+  color: inherit;
+  text-decoration: underline;
 }
+
+.App-footer a:hover {
+  opacity: 0.8;
+}
+
+.social-icon {
+  cursor: pointer;
+  margin-right: 8px;
+  font-size: 1.2em;
+  vertical-align: middle;
+}
+
+.social-icon :hover {
+  color: #61dafb;
+  cursor: pointer;
+}
+
