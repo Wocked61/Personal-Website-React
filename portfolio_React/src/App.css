@@ -287,3 +287,26 @@ body {
     padding: 20px;
   }
 }
+
+.status-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* This will push the logo to the right */
+  gap: 8px;
+}
+
+.csuf-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+
+  filter: none;
+}

@@ -2,6 +2,7 @@ import React from 'react'
 import Header from './Header.jsx'
 import Footer from './Footer.jsx'
 import './App.css'
+import csufLogo from './assets/csuf-logo.png'
 
 function App() {
   const getCurrentTime = () => {
@@ -49,7 +50,10 @@ function App() {
             <h2>User Profile</h2>
             <p>INITIALIZING USER DATA...</p>
             <p>Loading profile: Dylan Phan</p>
-            <p>Status: Computer Science Student @ CSUF</p>
+            <p className="status-line">
+              Status: Computer Science Student @ CSUF 
+              <img src={csufLogo} alt="CSUF Logo" className="csuf-logo" />
+            </p>
             <p>Interests: Web Development, Gaming, Technology</p>
             <p>Current Project: React Portfolio with NSO Aesthetic</p>
             <div className="chat-message">
