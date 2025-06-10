@@ -1,8 +1,13 @@
 .App-footer {
   margin: 0;
+  padding: 30px 0 0 0; /* Full viewport width positioning from App.css */
+  width: 100vw;
   position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
   background: linear-gradient(135deg, var(--accent3-color) 0%, var(--blue-accent) 100%);
-  padding: 30px;
   color: white;
   text-align: left;
   border-top: 3px solid var(--accent-color);
@@ -10,8 +15,14 @@
   font-family: var(--pixel-font);
 }
 
+/* Add a container inside the footer for proper content positioning */
+.App-footer > * {
+  margin-left: 40px; /* Add left margin to all direct children */
+  margin-right: 40px; /* Add right margin for balance */
+}
+
 .App-footer p {
-  margin: 15px 0;
+  margin: 15px 40px; /* Override the margin to include left/right spacing */
   font-size: 10px;
   display: flex;
   align-items: center;
@@ -79,5 +90,12 @@
 @keyframes pixelScroll {
   0% { transform: translateX(0px); }
   100% { transform: translateX(8px); }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .App-footer p {
+    margin: 15px 20px; /* Less margin on mobile */
+  }
 }
 
