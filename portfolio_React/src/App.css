@@ -1,78 +1,244 @@
-.App {
-  text-align: center;
+/* First, make sure to reset all default margins and padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--pixel-font);
+  background: linear-gradient(135deg, var(--bg-color) 0%, var(--panel-color) 100%);
+  color: var(--text-color);
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: var(--bg-color);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Make sure your App container doesn't add margins */
+.App {
+  margin: 0;
+  padding: 20px 20px 0 20px; /* Remove bottom padding */
+  min-height: 100vh;
+  background: linear-gradient(45deg, #D2D2D5 0%, #FCFEFF 50%, #FEECFA 100%);
+  background-attachment: fixed;
+  font-family: var(--pixel-font);
+  color: var(--text-color);
+  position: relative;
+}
+
+/* Footer with no margins/padding on sides and bottom */
+.App-footer {
+  margin: 0; /* This should work now */
+  padding: 30px 0 0 0; /* Only top padding, no sides or bottom */
+  width: 100vw; /* Full viewport width */
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  background: linear-gradient(135deg, var(--accent3-color) 0%, var(--blue-accent) 100%);
+  color: white;
+  text-align: left;
+  border-top: 3px solid var(--accent-color);
+  box-shadow: 0 -4px 20px rgba(254, 137, 217, 0.3);
   font-family: var(--pixel-font);
 }
 
-main {
-  flex: 1;
-  padding: 40px 20px;
-  max-width: 1200px;
+/* Alternative approach - if the above doesn't work */
+.App-footer-alt {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 30px 20px 0 20px;
+  background: linear-gradient(135deg, var(--accent3-color) 0%, var(--blue-accent) 100%);
+  color: white;
+  text-align: left;
+  border-top: 3px solid var(--accent-color);
+  box-shadow: 0 -4px 20px rgba(254, 137, 217, 0.3);
+  font-family: var(--pixel-font);
+}
+
+/* Desktop-style window containers - Changed to single column layout */
+.window-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 900px; /* Made wider since it's single column */
   margin: 0 auto;
-  width: 100%;
+  padding: 20px 0;
 }
 
-section {
-  margin: 30px 0;
-  padding: 30px;
-  background: linear-gradient(135deg, rgba(254, 236, 250, 0.8) 0%, rgba(212, 212, 213, 0.3) 100%);
-  border-radius: 0; /* Sharp corners for pixel aesthetic */
-  border: 3px solid var(--accent-color);
-  box-shadow: 8px 8px 0px rgba(148, 106, 163, 0.3);
-  transition: all 0.2s ease;
-}
-
-section:hover {
-  transform: translateX(-2px) translateY(-2px);
-  box-shadow: 10px 10px 0px rgba(148, 106, 163, 0.4);
-}
-
-section h2 {
-  color: var(--accent3-color);
-  font-size: 1.5em; /* Adjusted for pixel font */
+.window {
+  background-color: #FCFEFF;
+  border: 3px solid #946AA3;
+  box-shadow: 4px 4px 0 #8E6BFF, 8px 8px 0 rgba(148, 106, 163, 0.3);
+  font-family: var(--pixel-font);
   margin-bottom: 20px;
-  text-shadow: 3px 3px 0px rgba(148, 106, 163, 0.3);
+  min-height: 500px; /* Made much taller */
+  width: 100%;
   position: relative;
+}
+
+.window-header {
+  background: linear-gradient(90deg, #14C8F9 0%, #946AA3 100%);
+  color: white;
+  padding: 12px 16px; /* Slightly bigger padding */
+  font-size: 12px; /* Slightly bigger font */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #8E6BFF;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.window-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.window-button {
+  width: 18px; /* Made slightly bigger */
+  height: 18px;
+  background: #FEECFA;
+  border: 1px solid #946AA3;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: #252525;
+}
+
+.window-button:hover {
+  background: #FE89D9;
+  color: white;
+}
+
+.window-content {
+  padding: 25px; /* More padding for bigger look */
+  min-height: 400px; /* Taller content area */
+}
+
+.window-content h2 {
+  color: #946AA3;
+  font-size: 18px; /* Bigger heading */
+  margin: 0 0 20px 0;
   text-transform: uppercase;
   letter-spacing: 2px;
 }
 
-section h2::after {
-  content: '';
-  position: absolute;
-  bottom: -15px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 4px;
-  background: var(--accent-color);
-  border-radius: 0;
+.window-content p {
+  font-size: 12px; /* Bigger text */
+  line-height: 1.8; /* More spacing */
+  margin: 15px 0; /* More margin */
+  letter-spacing: 0.5px;
 }
 
-section p {
-  color: var(--text-color);
-  font-size: 11px; /* Smaller for pixel font readability */
-  line-height: 1.8;
-  max-width: 800px;
-  margin: 0 auto;
+.chat-message {
+  background: rgba(254, 137, 217, 0.2);
+  padding: 12px; /* More padding */
+  margin: 15px 0; /* More margin */
+  border-left: 4px solid #FE89D9; /* Thicker border */
+  font-size: 11px; /* Bigger text */
+  line-height: 1.6;
+}
+
+/* HUD Panel for header */
+.hud-panel {
+  background-color: #FCFEFF;
+  border: 3px solid #14C8F9;
+  box-shadow: 4px 4px 0 #946AA3;
+  padding: 20px 25px; /* More padding */
+  font-family: var(--pixel-font);
+  color: #252525;
+  margin-bottom: 30px; /* More spacing */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Task bar at bottom */
+.task-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #D2D2D5;
+  height: 40px;
+  border-top: 2px solid #8E6BFF;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  font-family: var(--pixel-font);
+  font-size: 10px;
+  z-index: 1000;
+}
+
+.start-button {
+  background: linear-gradient(135deg, #FE89D9, #14C8F9);
+  border: 2px solid #946AA3;
+  color: white;
+  padding: 6px 12px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 9px;
   letter-spacing: 1px;
 }
 
-/* Add some nice styling for empty content */
-section p:empty::before {
-  content: "LOADING...";
-  color: var(--accent2-color);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  animation: blink 1s infinite;
+.start-button:hover {
+  background: linear-gradient(135deg, #14C8F9, #FE89D9);
 }
 
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+.task-items {
+  margin-left: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.task-item {
+  background: rgba(254, 236, 250, 0.8);
+  border: 1px solid #946AA3;
+  padding: 4px 8px;
+  font-size: 9px;
+  cursor: pointer;
+}
+
+.system-tray {
+  margin-left: auto;
+  font-size: 9px;
+  color: #252525;
+}
+
+/* Add some desktop icons */
+.desktop-icon {
+  position: absolute;
+  width: 60px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 8px;
+  color: #252525;
+}
+
+.desktop-icon:nth-child(1) { top: 60px; left: 30px; }
+.desktop-icon:nth-child(2) { top: 140px; left: 30px; }
+.desktop-icon:nth-child(3) { top: 220px; left: 30px; }
+
+.icon-image {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(45deg, #FE89D9, #14C8F9);
+  border: 1px solid #946AA3;
+  margin: 0 auto 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
 }
 
 /* Add pixel-perfect scrollbar */
@@ -92,4 +258,32 @@ section p:empty::before {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent2-color);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .window-container {
+    padding: 10px;
+  }
+  
+  .App {
+    padding: 10px;
+    padding-bottom: 60px;
+  }
+  
+  .task-bar {
+    padding: 0 10px;
+  }
+  
+  .desktop-icon {
+    display: none;
+  }
+  
+  .window {
+    min-height: 400px;
+  }
+  
+  .window-content {
+    padding: 20px;
+  }
 }

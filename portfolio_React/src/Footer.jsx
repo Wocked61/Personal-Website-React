@@ -18,7 +18,9 @@ function Footer() {
         Connect with me on <a href="https://www.linkedin.com/in/dylan-phan88">LinkedIn</a>
       </p>
       <p>Last updated: June 2025</p>
-      <p>&copy; 2025 Dylan Phan | Computer Science Student @ CSUF </p>            
+      <p>&copy; 2025 Dylan Phan | Computer Science Student @ CSUF </p>
+      <p></p>
+      <p></p> 
     </footer>
   )
 }
