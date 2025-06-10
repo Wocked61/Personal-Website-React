@@ -11,7 +11,7 @@ function App() {
       <main>
         <section>
           <h2>About Me</h2>
-          <p>Here you can add information about yourself.</p>
+          <p></p>
         </section>
         <section>
           <h2>Projects</h2>

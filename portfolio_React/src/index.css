@@ -1,4 +1,23 @@
+:root {
+  --bg-color: #FCFEFF;
+  --panel-color: #FEECFA;
+  --accent-color: #FE89D9;
+  --accent2-color: #14C8F9;
+  --accent3-color: #946AA3;
+  --blue-accent: #589ADF;
+  --violet-accent: #8E6BFF;
+  --light-gray: #D2D2D5;
+  --text-color: #252525;
+}
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, var(--bg-color) 0%, var(--panel-color) 100%);
+  color: var(--text-color);
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
 }

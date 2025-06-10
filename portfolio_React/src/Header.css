@@ -1,15 +1,22 @@
 .App-header {
-  background-color: #282c34;
-  padding: 20px;
+  background: linear-gradient(90deg, var(--accent3-color) 0%, var(--accent2-color) 100%);
+  padding: 20px 40px;
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 4px 20px rgba(254, 137, 217, 0.3);
+  border-bottom: 3px solid var(--accent-color);
 }
 
 .App-header h1 {
   font-size: 2.5em;
   margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(45deg, #ffffff, var(--panel-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .App-header ul {
@@ -17,13 +24,23 @@
   padding: 0;
   margin: 0;
   display: flex;
+  gap: 20px;
 }
 
 .App-header li {
-  margin: 0 15px;
+  padding: 10px 20px;
   cursor: pointer;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .App-header li:hover {
-  text-decoration: underline;
+  background: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(254, 137, 217, 0.4);
+  color: white;
 }

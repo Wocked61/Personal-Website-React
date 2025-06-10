@@ -1,32 +1,60 @@
 .App-footer {
-  background-color: #282c34;
-  padding: 20px;
+  background: linear-gradient(135deg, var(--accent3-color) 0%, var(--blue-accent) 100%);
+  padding: 40px;
   color: white;
   text-align: left;
+  border-top: 3px solid var(--accent-color);
+  box-shadow: 0 -4px 20px rgba(254, 137, 217, 0.3);
 }
 
 .App-footer p {
-  margin: 5px 0;
+  margin: 12px 0;
+  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .App-footer a {
-  color: inherit;
-  text-decoration: underline;
+  color: var(--panel-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid transparent;
 }
 
 .App-footer a:hover {
-  opacity: 0.8;
+  color: var(--accent-color);
+  border-bottom-color: var(--accent-color);
+  text-shadow: 0 0 8px rgba(254, 137, 217, 0.5);
 }
 
 .social-icon {
   cursor: pointer;
   margin-right: 8px;
-  font-size: 1.2em;
+  font-size: 1.4em;
   vertical-align: middle;
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
-.social-icon :hover {
-  color: #61dafb;
-  cursor: pointer;
+.social-icon:hover {
+  color: var(--accent-color);
+  background: rgba(254, 137, 217, 0.2);
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 4px 15px rgba(254, 137, 217, 0.4);
+}
+
+/* Add a subtle animation to the footer */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+}
+
+.App-footer {
+  animation: float 6s ease-in-out infinite;
 }
 
