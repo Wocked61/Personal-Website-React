@@ -22,9 +22,13 @@ function App() {
         }}
         minWidth={200}
         minHeight={150}
-        bounds="window"
+        bounds="parent"
         dragHandleClassName="window-header"
         className="desktop-icons-rnd"
+        style={{
+          position: 'fixed',
+          zIndex: 100
+        }}
       >
         <div className="desktop-icons-window">
           <div className="window-header">

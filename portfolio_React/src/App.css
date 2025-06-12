@@ -260,6 +260,7 @@ body {
   font-family: var(--pixel-font);
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .desktop-icons-content {
