@@ -1,6 +1,5 @@
 import React from 'react'
 import { Rnd } from 'react-rnd'
-import Header from './Header.jsx'
 import Footer from './Footer.jsx'
 import './App.css'
 import '@hackernoon/pixel-icon-library/fonts/iconfont.css'
