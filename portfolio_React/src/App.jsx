@@ -2,6 +2,7 @@ import React from 'react'
 import Header from './Header.jsx'
 import Footer from './Footer.jsx'
 import './App.css'
+import '@hackernoon/pixel-icon-library/fonts/iconfont.css'
 import csufLogo from './assets/csuf-logo.png'
 
 function App() {

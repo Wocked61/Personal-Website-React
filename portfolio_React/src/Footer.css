@@ -49,12 +49,16 @@
 .social-icon {
   cursor: pointer;
   margin-right: 8px;
-  font-size: 12px;
+  font-size: 16px; /* Slightly larger for pixel icons */
   vertical-align: middle;
   transition: all 0.2s ease;
   padding: 6px;
   border: 2px solid transparent;
   background: rgba(255, 255, 255, 0.1);
+  /* Ensure pixel-perfect rendering */
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 .social-icon:hover {
