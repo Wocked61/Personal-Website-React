@@ -11,18 +11,30 @@ function App() {
 
   return (
     <div className="App">
-      {/* Desktop Icons */}
-      <div className="desktop-icon">
-        <div className="icon-image">📁</div>
-        <div>Projects</div>
-      </div>
-      <div className="desktop-icon">
-        <div className="icon-image">👤</div>
-        <div>About Me</div>
-      </div>
-      <div className="desktop-icon">
-        <div className="icon-image">📧</div>
-        <div>Contact</div>
+      {/* Desktop Icons Container with Window Border */}
+      <div className="desktop-icons-window">
+        <div className="window-header">
+          <span>Desktop_Icons.exe</span>
+          <div className="window-controls">
+            <div className="window-button">−</div>
+            <div className="window-button">□</div>
+            <div className="window-button">×</div>
+          </div>
+        </div>
+        <div className="desktop-icons-content">
+          <div className="desktop-icon">
+            <div className="icon-image">📁</div>
+            <div>Projects</div>
+          </div>
+          <div className="desktop-icon">
+            <div className="icon-image">👤</div>
+            <div>About Me</div>
+          </div>
+          <div className="desktop-icon">
+            <div className="icon-image">📧</div>
+            <div>Contact</div>
+          </div>
+        </div>
       </div>
 
       {/* HUD Panel Header */}

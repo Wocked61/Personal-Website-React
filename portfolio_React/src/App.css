@@ -216,29 +216,59 @@ body {
 
 /* Add some desktop icons */
 .desktop-icon {
-  position: absolute;
+  position: relative; /* Changed from absolute */
   width: 60px;
   text-align: center;
   cursor: pointer;
   font-size: 8px;
   color: #252525;
+  margin: 0 auto; /* Center the icons */
 }
 
-.desktop-icon:nth-child(1) { top: 60px; left: 30px; }
-.desktop-icon:nth-child(2) { top: 140px; left: 30px; }
-.desktop-icon:nth-child(3) { top: 220px; left: 30px; }
+/* Remove the individual positioning since they're now in a container */
+.desktop-icon:nth-child(1),
+.desktop-icon:nth-child(2), 
+.desktop-icon:nth-child(3) {
+  top: auto;
+  left: auto;
+}
 
-.icon-image {
-  width: 32px;
-  height: 32px;
-  background: linear-gradient(45deg, #FE89D9, #14C8F9);
-  border: 1px solid #946AA3;
-  margin: 0 auto 4px;
+.desktop-icons-window {
+  position: fixed;
+  top: 120px;
+  left: 20px;
+  width: 320px;
+  background-color: #FCFEFF;
+  border: 3px solid #946AA3;
+  box-shadow: 4px 4px 0 #8E6BFF, 8px 8px 0 rgba(148, 106, 163, 0.3);
+  font-family: var(--pixel-font);
+  z-index: 100;
+}
+
+.desktop-icons-content {
+  padding: 15px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 14px;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Update the existing desktop-icon styles */
+.desktop-icon {
+  position: relative; /* Changed from absolute */
+  width: 60px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 8px;
+  color: #252525;
+  margin: 0 auto; /* Center the icons */
+}
+
+/* Remove the individual positioning since they're now in a container */
+.desktop-icon:nth-child(1),
+.desktop-icon:nth-child(2), 
+.desktop-icon:nth-child(3) {
+  top: auto;
+  left: auto;
 }
 
 /* Add pixel-perfect scrollbar */
