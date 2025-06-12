@@ -1,4 +1,5 @@
 import React from 'react'
+import { Rnd } from 'react-rnd'
 import Header from './Header.jsx'
 import Footer from './Footer.jsx'
 import './App.css'
@@ -12,31 +13,45 @@ function App() {
 
   return (
     <div className="App">
-      {/* Desktop Icons Container with Window Border */}
-      <div className="desktop-icons-window">
-        <div className="window-header">
-          <span>Desktop_Icons.exe</span>
-          <div className="window-controls">
-            <div className="window-button">−</div>
-            <div className="window-button">□</div>
-            <div className="window-button">×</div>
+      {/* Desktop Icons Container with Window Border - Now Draggable/Resizable */}
+      <Rnd
+        default={{
+          x: 20,
+          y: 120,
+          width: 320,
+          height: 250,
+        }}
+        minWidth={200}
+        minHeight={150}
+        bounds="window"
+        dragHandleClassName="window-header"
+        className="desktop-icons-rnd"
+      >
+        <div className="desktop-icons-window">
+          <div className="window-header">
+            <span>Navigator.exe</span>
+            <div className="window-controls">
+              <div className="window-button">−</div>
+              <div className="window-button">□</div>
+              <div className="window-button">×</div>
+            </div>
+          </div>
+          <div className="desktop-icons-content">
+            <div className="desktop-icon">
+              <div className="icon-image">📁</div>
+              <div>Projects</div>
+            </div>
+            <div className="desktop-icon">
+              <div className="icon-image">👤</div>
+              <div>About Me</div>
+            </div>
+            <div className="desktop-icon">
+              <div className="icon-image">📧</div>
+              <div>Contact</div>
+            </div>
           </div>
         </div>
-        <div className="desktop-icons-content">
-          <div className="desktop-icon">
-            <div className="icon-image">📁</div>
-            <div>Projects</div>
-          </div>
-          <div className="desktop-icon">
-            <div className="icon-image">👤</div>
-            <div>About Me</div>
-          </div>
-          <div className="desktop-icon">
-            <div className="icon-image">📧</div>
-            <div>Contact</div>
-          </div>
-        </div>
-      </div>
+      </Rnd>
 
       {/* HUD Panel Header */}
       <div className="hud-panel">
@@ -64,7 +79,7 @@ function App() {
             <p>INITIALIZING USER DATA...</p>
             <p>Loading profile: Dylan Phan</p>
             <p className="status-line">
-              Status: Computer Science Student @ CSUF 
+              <span>Status: Computer Science Student @ CSUF</span>
               <img src={csufLogo} alt="CSUF Logo" className="csuf-logo" />
             </p>
             <p>Interests: Web Development, Gaming, Technology</p>
