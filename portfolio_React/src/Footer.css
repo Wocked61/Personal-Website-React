@@ -1,6 +1,6 @@
 .App-footer {
   margin: 0;
-  padding: 30px 0 0 0; /* Full viewport width positioning from App.css */
+  padding: 30px 0 0 0;
   width: 100vw;
   position: relative;
   left: 50%;
@@ -15,14 +15,13 @@
   font-family: var(--pixel-font);
 }
 
-/* Add a container inside the footer for proper content positioning */
 .App-footer > * {
-  margin-left: 40px; /* Add left margin to all direct children */
-  margin-right: 40px; /* Add right margin for balance */
+  margin-left: 40px;
+  margin-right: 40px;
 }
 
 .App-footer p {
-  margin: 15px 40px; /* Override the margin to include left/right spacing */
+  margin: 15px 40px;
   font-size: 10px;
   display: flex;
   align-items: center;
@@ -49,13 +48,12 @@
 .social-icon {
   cursor: pointer;
   margin-right: 8px;
-  font-size: 16px; /* Slightly larger for pixel icons */
+  font-size: 16px;
   vertical-align: middle;
   transition: all 0.2s ease;
   padding: 6px;
   border: 2px solid transparent;
   background: rgba(255, 255, 255, 0.1);
-  /* Ensure pixel-perfect rendering */
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
@@ -68,12 +66,10 @@
   transform: scale(1.1);
 }
 
-/* Remove the floating animation for more stable pixel aesthetic */
 .App-footer {
   animation: none;
 }
 
-/* Add a subtle pixel-style glow effect */
 .App-footer::before {
   content: '';
   position: absolute;
@@ -96,10 +92,8 @@
   100% { transform: translateX(8px); }
 }
 
-/* Mobile responsiveness */
 @media (max-width: 768px) {
   .App-footer p {
-    margin: 15px 20px; /* Less margin on mobile */
+    margin: 15px 20px;
   }
 }
-

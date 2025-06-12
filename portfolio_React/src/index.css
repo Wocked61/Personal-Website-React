@@ -17,7 +17,7 @@ body {
   background: linear-gradient(135deg, var(--bg-color) 0%, var(--panel-color) 100%);
   color: var(--text-color);
   min-height: 100vh;
-  font-size: 12px; /* Base size for pixel font readability */
+  font-size: 12px;
   line-height: 1.5;
 }
 
@@ -25,7 +25,6 @@ body {
   box-sizing: border-box;
 }
 
-/* Smooth text rendering for pixel fonts */
 * {
   -webkit-font-smoothing: pixelated;
   -moz-osx-font-smoothing: auto;

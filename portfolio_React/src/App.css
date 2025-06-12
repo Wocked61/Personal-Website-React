@@ -1,4 +1,3 @@
-/* First, make sure to reset all default margins and padding */
 * {
   margin: 0;
   padding: 0;
@@ -16,10 +15,9 @@ body {
   line-height: 1.5;
 }
 
-/* Make sure your App container doesn't add margins */
 .App {
   margin: 0;
-  padding: 20px 20px 0 20px; /* Remove bottom padding */
+  padding: 20px 20px 0 20px;
   min-height: 100vh;
   background: linear-gradient(45deg, #D2D2D5 0%, #FCFEFF 50%, #FEECFA 100%);
   background-attachment: fixed;
@@ -28,11 +26,10 @@ body {
   position: relative;
 }
 
-/* Footer with no margins/padding on sides and bottom */
 .App-footer {
-  margin: 0; /* This should work now */
-  padding: 30px 0 0 0; /* Only top padding, no sides or bottom */
-  width: 100vw; /* Full viewport width */
+  margin: 0;
+  padding: 30px 0 0 0;
+  width: 100vw;
   position: relative;
   left: 50%;
   right: 50%;
@@ -46,7 +43,6 @@ body {
   font-family: var(--pixel-font);
 }
 
-/* Alternative approach - if the above doesn't work */
 .App-footer-alt {
   position: absolute;
   bottom: 0;
@@ -62,12 +58,11 @@ body {
   font-family: var(--pixel-font);
 }
 
-/* Desktop-style window containers - Changed to single column layout */
 .window-container {
   display: flex;
   flex-direction: column;
   gap: 30px;
-  max-width: 900px; /* Made wider since it's single column */
+  max-width: 900px;
   margin: 0 auto;
   padding: 20px 0;
 }
@@ -78,7 +73,7 @@ body {
   box-shadow: 4px 4px 0 #8E6BFF, 8px 8px 0 rgba(148, 106, 163, 0.3);
   font-family: var(--pixel-font);
   margin-bottom: 20px;
-  min-height: 500px; /* Made much taller */
+  min-height: 500px;
   width: 100%;
   position: relative;
 }
@@ -89,11 +84,11 @@ body {
   align-items: center;
   cursor: move;
   user-select: none;
-  min-width: 0; /* Allow text to shrink */
+  min-width: 0;
   background: linear-gradient(90deg, #14C8F9 0%, #946AA3 100%);
   color: white;
-  padding: 12px 16px; /* Slightly bigger padding */
-  font-size: 12px; /* Slightly bigger font */
+  padding: 12px 16px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 1px;
   border-bottom: 2px solid #8E6BFF;
@@ -110,13 +105,13 @@ body {
 .window-controls {
   display: flex;
   gap: 4px;
-  flex-shrink: 0; /* Prevent controls from shrinking */
+  flex-shrink: 0;
   margin-left: 8px;
 }
 
 .window-button {
-  flex-shrink: 0; /* Prevent buttons from shrinking */
-  width: 18px; /* Made slightly bigger */
+  flex-shrink: 0;
+  width: 18px;
   height: 18px;
   background: #FEECFA;
   border: 1px solid #946AA3;
@@ -134,49 +129,47 @@ body {
 }
 
 .window-content {
-  padding: 25px; /* More padding for bigger look */
-  min-height: 400px; /* Taller content area */
+  padding: 25px;
+  min-height: 400px;
 }
 
 .window-content h2 {
   color: #946AA3;
-  font-size: 18px; /* Bigger heading */
+  font-size: 18px;
   margin: 0 0 20px 0;
   text-transform: uppercase;
   letter-spacing: 2px;
 }
 
 .window-content p {
-  font-size: 12px; /* Bigger text */
-  line-height: 1.8; /* More spacing */
-  margin: 15px 0; /* More margin */
+  font-size: 12px;
+  line-height: 1.8;
+  margin: 15px 0;
   letter-spacing: 0.5px;
 }
 
 .chat-message {
   background: rgba(254, 137, 217, 0.2);
-  padding: 12px; /* More padding */
-  margin: 15px 0; /* More margin */
-  border-left: 4px solid #FE89D9; /* Thicker border */
-  font-size: 11px; /* Bigger text */
+  padding: 12px;
+  margin: 15px 0;
+  border-left: 4px solid #FE89D9;
+  font-size: 11px;
   line-height: 1.6;
 }
 
-/* HUD Panel for header */
 .hud-panel {
   background-color: #FCFEFF;
   border: 3px solid #14C8F9;
   box-shadow: 4px 4px 0 #946AA3;
-  padding: 20px 25px; /* More padding */
+  padding: 20px 25px;
   font-family: var(--pixel-font);
   color: #252525;
-  margin-bottom: 30px; /* More spacing */
+  margin-bottom: 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* Task bar at bottom */
 .task-bar {
   position: fixed;
   bottom: 0;
@@ -228,18 +221,16 @@ body {
   color: #252525;
 }
 
-/* Add some desktop icons */
 .desktop-icon {
-  position: relative; /* Changed from absolute */
+  position: relative;
   width: 60px;
   text-align: center;
   cursor: pointer;
   font-size: 8px;
   color: #252525;
-  margin: 0 auto; /* Center the icons */
+  margin: 0 auto;
 }
 
-/* Remove the individual positioning since they're now in a container */
 .desktop-icon:nth-child(1),
 .desktop-icon:nth-child(2), 
 .desktop-icon:nth-child(3) {
@@ -272,7 +263,6 @@ body {
   overflow-y: auto;
 }
 
-/* Update the existing desktop-icon styles */
 .desktop-icon {
   position: relative;
   width: 60px;
@@ -283,7 +273,6 @@ body {
   margin: 0 auto;
 }
 
-/* Remove the old positioning styles since they're now in Rnd */
 .desktop-icon:nth-child(1),
 .desktop-icon:nth-child(2), 
 .desktop-icon:nth-child(3) {
@@ -291,7 +280,6 @@ body {
   left: auto;
 }
 
-/* Add pixel-perfect scrollbar */
 ::-webkit-scrollbar {
   width: 16px;
 }
@@ -310,7 +298,6 @@ body {
   background: #FF10F0;
 }
 
-/* Mobile responsiveness */
 @media (max-width: 768px) {
   .window-container {
     padding: 10px;
@@ -341,7 +328,7 @@ body {
 .status-line {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* This will push the logo to the right */
+  justify-content: space-between;
   gap: 8px;
 }
 
@@ -357,7 +344,6 @@ body {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   transform: translateZ(0);
-
   filter: none;
 }
 
