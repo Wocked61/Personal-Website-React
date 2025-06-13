@@ -81,10 +81,13 @@ function App() {
             <h2>User Profile</h2>
             <p>INITIALIZING USER DATA...</p>
             <p>Loading profile: Dylan Phan</p>
-            <p className="status-line">
-              <span>Status: Computer Science Student @ CSUF</span>
+            <p>Hello! I'm Dylan — a curious and driven CS student who builds interactive, stylish websites with a creative twist. Whether it’s a checkers app or a Pokémon collector, I aim to merge code with personality.</p>
+            <div className="status-line">
+              <div className="status-text">
+                <span>Status: Senior Computer Science Student @ CSUF</span>
+              </div>
               <img src={csufLogo} alt="CSUF Logo" className="csuf-logo" />
-            </p>
+            </div>
             <p>Interests: Web Development, Gaming, Technology</p>
             <p>Current Project: React Portfolio with NSO Aesthetic</p>
             <div className="chat-message">

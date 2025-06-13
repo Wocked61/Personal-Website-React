@@ -328,8 +328,16 @@ body {
 .status-line {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 8px;
+  margin: 15px 0;
+  position: relative;
+  padding-right: 90px;
+}
+
+.status-text {
+  flex: 1;
+  min-width: 0;
 }
 
 .csuf-logo {
@@ -337,13 +345,13 @@ body {
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  image-rendering: pixelated;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
   image-rendering: auto;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  transform: translateZ(0);
   filter: none;
 }
 
