@@ -10,13 +10,32 @@ function App() {
     return new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
   }
 
+  const handlePokePullClick = () => {
+    window.open('https://wocked61.github.io/PokePull/', '_blank');
+  }
+
+  const SkillBar = ({ skill, level, maxBars = 10 }) => {
+    const filledBars = Math.round((level / 100) * maxBars);
+    const emptyBars = maxBars - filledBars;
+    
+    return (
+      <div className="skill-item">
+        <div className="skill-name">{skill}</div>
+        <div className="skill-bar">
+          <span className="skill-filled">{'█'.repeat(filledBars)}</span>
+          <span className="skill-empty">{'░'.repeat(emptyBars)}</span>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="App">
       {/* Desktop Icons Container with Window Border - Now Draggable/Resizable */}
       <Rnd
         default={{
-          x: 120,
-          y: 150,
+          x: 20,
+          y: 120,
           width: 320,
           height: 250,
         }}
@@ -81,7 +100,7 @@ function App() {
             <h2>User Profile</h2>
             <p>INITIALIZING USER DATA...</p>
             <p>Loading profile: Dylan Phan</p>
-            <p>Hello! I'm Dylan — a curious and driven CS student who builds interactive, stylish websites with a creative twist. Whether it’s a checkers app or a Pokémon collector, I aim to merge code with personality.</p>
+            <p>Hello! I'm Dylan — a curious and driven CS student who builds interactive, stylish websites with a creative twist. Whether it's a checkers app or a Pokémon collector, I aim to merge code with personality.</p>
             <div className="status-line">
               <div className="status-text">
                 <span>Status: Senior Computer Science Student @ CSUF</span>
@@ -92,6 +111,44 @@ function App() {
             <p>Current Project: React Portfolio with NSO Aesthetic</p>
             <div className="chat-message">
               System: Welcome to my digital space! I'm passionate about creating innovative web experiences and bringing creative visions to life through code.
+            </div>
+          </div>
+        </div>
+
+        <div className="window">
+          <div className="window-header">
+            <span>Skills_Manager.exe</span>
+            <div className="window-controls">
+              <div className="window-button">−</div>
+              <div className="window-button">□</div>
+              <div className="window-button">×</div>
+            </div>
+          </div>
+          <div className="window-content">
+            <h2>Technical Skills Database</h2>
+            <p>SCANNING SKILL REPOSITORY...</p>
+            <p>Found 10 programming languages and technologies</p>
+            
+            <div className="skills-container">
+              <h3>Web Technologies</h3>
+              <SkillBar skill="HTML" level={85} />
+              <SkillBar skill="CSS" level={80} />
+              <SkillBar skill="JavaScript" level={75} />
+              <SkillBar skill="React" level={70} />
+              <SkillBar skill="Node.js" level={50} />
+              
+              <h3>Programming Languages</h3>
+              <SkillBar skill="Python" level={50} />
+              <SkillBar skill="Java" level={50} />
+              <SkillBar skill="C++" level={50} />
+              <SkillBar skill="C#" level={20} />
+              
+              <h3>Tools & Platforms</h3>
+              <SkillBar skill="Git / GitHub" level={75} />
+            </div>
+
+            <div className="chat-message">
+              System: Skills assessment complete. Proficiency levels based on project experience and academic coursework. Continuous learning in progress...
             </div>
           </div>
         </div>
@@ -120,7 +177,7 @@ function App() {
                 </div>
               </div>
 
-              <div className="project-item">
+              <div className="project-item clickable" onClick={handlePokePullClick}>
                 <div className="project-icon">⚡</div>
                 <div className="project-details">
                   <h3>PokéPull – Pokémon Collection App</h3>
@@ -161,6 +218,7 @@ function App() {
         <div className="task-items">
           <div className="task-item">Portfolio.exe</div>
           <div className="task-item">About_Me.exe</div>
+          <div className="task-item">Skills.exe</div>
           <div className="task-item">Projects</div>
         </div>
         <div className="system-tray">
