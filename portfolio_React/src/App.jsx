@@ -14,6 +14,14 @@ function App() {
     window.open('https://wocked61.github.io/PokePull/', '_blank');
   }
 
+  const handleRegionalCloudClick = () => {
+    window.open('https://wocked61.github.io/cpsc-349-project/', '_blank');
+  }
+
+  const handleHurdleWordleClick = () => {
+    window.open('https://amajc.github.io/hurdle-frontend/', '_blank');
+  }
+
   const SkillBar = ({ skill, level, maxBars = 10 }) => {
     const filledBars = Math.round((level / 100) * maxBars);
     const emptyBars = maxBars - filledBars;
@@ -186,7 +194,7 @@ function App() {
                 </div>
               </div>
 
-              <div className="project-item">
+              <div className="project-item clickable" onClick={handleRegionalCloudClick}>
                 <div className="project-icon">🌤️</div>
                 <div className="project-details">
                   <h3>Regional Cloud Weather Fullstack Website</h3>
@@ -195,7 +203,7 @@ function App() {
                 </div>
               </div>
 
-              <div className="project-item">
+              <div className="project-item clickable" onClick={handleHurdleWordleClick}>
                 <div className="project-icon">🎯</div>
                 <div className="project-details">
                   <h3>Hurdle Wordle Clone</h3>
