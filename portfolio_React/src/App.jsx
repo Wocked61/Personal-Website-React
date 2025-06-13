@@ -95,7 +95,7 @@ function App() {
 
         <div className="window">
           <div className="window-header">
-            <span>Projects_Folder</span>
+            <span>Projects_Directory.exe</span>
             <div className="window-controls">
               <div className="window-button">−</div>
               <div className="window-button">□</div>
@@ -103,13 +103,50 @@ function App() {
             </div>
           </div>
           <div className="window-content">
-            <h2>Project Files</h2>
-            <p>📁 React_Portfolio.zip</p>
-            <p>📁 Web_Development_Tools.rar</p>
-            <p>📁 Gaming_Projects.7z</p>
-            <p>📁 AI_Experiments.tar</p>
+            <h2>Project Archive</h2>
+            <p>LOADING PROJECT DATABASE...</p>
+            <p>Found 4 project files in directory</p>
+            
+            <div className="project-list">
+              <div className="project-item">
+                <div className="project-icon">🏁</div>
+                <div className="project-details">
+                  <h3>Checkers/Chess Fullstack Website</h3>
+                  <p>Technologies: HTML, CSS, Javascript</p>
+                  <p>Status: Completed</p>
+                </div>
+              </div>
+
+              <div className="project-item">
+                <div className="project-icon">⚡</div>
+                <div className="project-details">
+                  <h3>PokéPull – Pokémon Collection App</h3>
+                  <p>Technologies: React, PokéAPI</p>
+                  <p>Status: Active Development</p>
+                </div>
+              </div>
+
+              <div className="project-item">
+                <div className="project-icon">🌤️</div>
+                <div className="project-details">
+                  <h3>Regional Cloud Weather Fullstack Website</h3>
+                  <p>Technologies: Full Stack Development</p>
+                  <p>Status: Completed</p>
+                </div>
+              </div>
+
+              <div className="project-item">
+                <div className="project-icon">🎯</div>
+                <div className="project-details">
+                  <h3>Hurdle Wordle Clone</h3>
+                  <p>Technologies: Javascript, Game Logic</p>
+                  <p>Status: Completed</p>
+                </div>
+              </div>
+            </div>
+
             <div className="chat-message">
-              Loading project descriptions... Each folder contains innovative solutions and creative implementations of modern web technologies.
+              System: Projects showcase full-stack development skills and creative problem-solving. Each project demonstrates proficiency in modern web technologies and user experience design.
             </div>
           </div>
         </div>
