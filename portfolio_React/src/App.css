@@ -19,7 +19,10 @@ body {
   margin: 0;
   padding: 20px 20px 0 20px;
   min-height: 100vh;
-  background: linear-gradient(45deg, #D2D2D5 0%, #FCFEFF 50%, #FEECFA 100%);
+  background-image: url('./assets/port_Back.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   background-attachment: fixed;
   font-family: var(--pixel-font);
   color: var(--text-color);
