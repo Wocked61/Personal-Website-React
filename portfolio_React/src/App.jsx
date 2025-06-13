@@ -42,8 +42,8 @@ function App() {
       {/* Desktop Icons Container with Window Border - Now Draggable/Resizable */}
       <Rnd
         default={{
-          x: 20,
-          y: 120,
+          x: 120,
+          y: 140,
           width: 320,
           height: 250,
         }}
