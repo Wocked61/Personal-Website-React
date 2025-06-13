@@ -15,10 +15,10 @@ function App() {
       {/* Desktop Icons Container with Window Border - Now Draggable/Resizable */}
       <Rnd
         default={{
-          x: 20,
-          y: 120,
+          x: 80,
+          y: 150,
           width: 320,
-          height: 250,
+          height: 260,
         }}
         minWidth={200}
         minHeight={150}
@@ -51,6 +51,61 @@ function App() {
             <div className="desktop-icon">
               <div className="icon-image">📧</div>
               <div>Contact</div>
+            </div>
+          </div>
+        </div>
+      </Rnd>
+
+      {/* Mood Panel - Draggable Window */}
+      <Rnd
+        default={{
+          x: window.innerWidth - 450, 
+          y: 150,
+          width: 390,
+          height: 250,
+        }}
+        minWidth={250}
+        minHeight={150}
+        bounds="parent"
+        dragHandleClassName="window-header"
+        className="mood-panel-rnd"
+        style={{
+          zIndex: 99
+        }}
+      >
+        <div className="mood-panel-window">
+          <div className="window-header">
+            <span>Mood_Monitor.exe</span>
+            <div className="window-controls">
+              <div className="window-button">−</div>
+              <div className="window-button">□</div>
+              <div className="window-button">×</div>
+            </div>
+          </div>
+          <div className="mood-panel-content">
+            <div className="mood-item">
+              <span className="mood-icon">🧠</span>
+              <span className="mood-label">Mood</span>
+              <div className="mood-progress">
+                <div className="mood-progress-bar" style={{width: '85%'}}></div>
+              </div>
+              <span className="mood-value">85/100</span>
+            </div>
+            <div className="mood-item">
+              <span className="mood-icon">🔋</span>
+              <span className="mood-label">Energy</span>
+              <div className="mood-progress">
+                <div className="mood-progress-bar" style={{width: '60%'}}></div>
+              </div>
+              <span className="mood-value">60/100</span>
+            </div>
+            <div className="mood-item">
+              <span className="mood-icon">🎨</span>
+              <span className="mood-label">Creativity</span>
+              <div className="mood-progress">
+                <div className="mood-progress-bar" style={{width: '95%'}}></div>
+              </div>
+              <span className="mood-value">95/100</span>
             </div>
           </div>
         </div>
