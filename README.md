@@ -4,6 +4,16 @@ This repository will be about my Personal Website as a Computer Science Student 
 # Wishlist
 I would like to add a 3d model to the website for the user to interact with and try to push myself to see what I can achieve
 
-# preview
+# Preview
 ![image](https://github.com/user-attachments/assets/13ce1c1b-cb73-43f3-8257-f54d16ccab0d)
 ![image](https://github.com/user-attachments/assets/e343fe37-068a-45d2-861c-06a08a50af1b)
+
+# Footer Icons
+License (CC BY 4.0 International)
+The icons (.svg/.png) files are free to download and are licensed under CC 4.0
+By downloading, it is assumed that you agree with the terms mentioned in CC 4.0.
+You must give appropriate credit, provide a link to the license, and indicate if changes were made.
+Other files in the repository which are not icons, are licensed under the MIT License.
+
+link to their repository
+https://github.com/hackernoon/pixel-icon-library?tab=readme-ov-file#license-cc-by-40-international
