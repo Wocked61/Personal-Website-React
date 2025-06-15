@@ -2,4 +2,8 @@
 This repository will be about my Personal Website as a Computer Science Student at CSUF where I try with React and its libraries instead of raw HTML compared to my previous repository with the same function and see what I can do
 
 # Wishlist
-I would like to add a 3d model to the website for the user to interact with and try to push myself to see what I can acheive
+I would like to add a 3d model to the website for the user to interact with and try to push myself to see what I can achieve
+
+# preview
+![image](https://github.com/user-attachments/assets/13ce1c1b-cb73-43f3-8257-f54d16ccab0d)
+![image](https://github.com/user-attachments/assets/e343fe37-068a-45d2-861c-06a08a50af1b)
