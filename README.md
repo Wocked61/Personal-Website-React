@@ -17,3 +17,6 @@ Other files in the repository which are not icons, are licensed under the MIT Li
 
 link to their repository
 https://github.com/hackernoon/pixel-icon-library?tab=readme-ov-file#license-cc-by-40-international
+
+link to their website to preview Icons
+https://pixeliconlibrary.com/
