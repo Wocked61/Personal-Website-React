@@ -20,3 +20,6 @@ https://github.com/hackernoon/pixel-icon-library?tab=readme-ov-file#license-cc-b
 
 link to their website to preview Icons
 https://pixeliconlibrary.com/
+
+# Other Libraries
+react-rnd – a popular React component for resizable & draggable containers.
