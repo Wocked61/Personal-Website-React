@@ -23,3 +23,7 @@ https://pixeliconlibrary.com/
 
 # Other Libraries
 react-rnd – a popular React component for resizable & draggable containers.
+
+# Theme of design
+I used the inspiration of Needy Streamer Overload because I love its theme and design as I listen to their music, which is made by Aiobahn, and their notable songs Internet Overdose and Internet Yamero
+![image](https://github.com/user-attachments/assets/754a51eb-41d5-4780-9eef-3db8fcdae010)
