@@ -13,17 +13,18 @@ License (CC BY 4.0 International)
 The icons (.svg/.png) files are free to download and are licensed under CC 4.0
 By downloading, it is assumed that you agree with the terms mentioned in CC 4.0.
 You must give appropriate credit, provide a link to the license, and indicate if changes were made.
-Other files in the repository which are not icons, are licensed under the MIT License.
+Other files in the repository that are not icons are licensed under the MIT License.
 
 link to their repository
 https://github.com/hackernoon/pixel-icon-library?tab=readme-ov-file#license-cc-by-40-international
 
-link to their website to preview Icons
+link to their website to preview the Icons
 https://pixeliconlibrary.com/
 
 # Other Libraries
 react-rnd – a popular React component for resizable & draggable containers.
 
 # Theme of design
-I used the inspiration of Needy Streamer Overload because I love its theme and design as I listen to their music, which is made by Aiobahn, and their notable songs Internet Overdose and Internet Yamero
+I used the inspiration of Needy Streamer Overload because I love its theme and design as I listen to their music, which is made by Aiobahn, and their notable songs [Internet Overdose](https://youtu.be/BnkhBwzBqlQ?si=SyRhR1s1OefVCcP0) and [Internet Yamero](https://youtu.be/51GIxXFKbzk?si=E6QtOmIHrvcN8hMK)
+Note: I never played the game but I love the music since I listen to the artist
 ![image](https://github.com/user-attachments/assets/754a51eb-41d5-4780-9eef-3db8fcdae010)
