@@ -10,6 +10,10 @@ function App() {
     return new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
   }
 
+  const handleCheckersChessClick = () => {
+    window.open('https://wocked61.github.io/cpsc_362_sp2025_group2/', '_blank');
+  }
+
   const handlePokePullClick = () => {
     window.open('https://wocked61.github.io/PokePull/', '_blank');
   }
@@ -176,7 +180,7 @@ function App() {
             <p>Found 4 project files in directory</p>
             
             <div className="project-list">
-              <div className="project-item">
+              <div className="project-item clickable" onClick={handleCheckersChessClick}>
                 <div className="project-icon">🏁</div>
                 <div className="project-details">
                   <h3>Checkers/Chess Fullstack Website</h3>
