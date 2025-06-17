@@ -378,10 +378,10 @@ function App() {
       <div className="task-bar">
         <div className="start-button">Start</div>
         <div className="task-items">
-          <div className="task-item">Portfolio.exe</div>
-          <div className="task-item">About_Me.exe</div>
-          <div className="task-item">Skills.exe</div>
-          <div className="task-item">Projects</div>
+          <div className="task-item" onClick={scrollToAboutMe}>About_Me.exe</div>  
+          <div className="task-item" onClick={scrollToSkills}>Skills.exe</div>                  
+          <div className="task-item" onClick={scrollToProjects}>Projects.exe</div>
+          <div className="task-item" onClick={scrollToContact}>Contact.exe</div>
           <div 
             className={`task-item ${(!navigatorState.isVisible || navigatorState.isMinimized) ? 'minimized' : 'active'}`}
             onClick={handleTaskBarNavigatorClick}
