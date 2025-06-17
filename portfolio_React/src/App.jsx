@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Rnd } from 'react-rnd'
 import Footer from './Footer.jsx'
 import './App.css'
@@ -6,9 +6,15 @@ import '@hackernoon/pixel-icon-library/fonts/iconfont.css'
 import csufLogo from './assets/csuf-logo.png'
 
 function App() {
-  const getCurrentTime = () => {
-    return new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-  }
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const handleCheckersChessClick = () => {
     window.open('https://wocked61.github.io/cpsc_362_sp2025_group2/', '_blank');
@@ -234,7 +240,7 @@ function App() {
           <div className="task-item">Projects</div>
         </div>
         <div className="system-tray">
-          {getCurrentTime()} | 🔊 ⚡ 📶
+          {currentTime} | 🔊 ⚡ 📶
         </div>
       </div>
 
