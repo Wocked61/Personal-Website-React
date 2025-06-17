@@ -7,6 +7,13 @@ import csufLogo from './assets/csuf-logo.png'
 
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+  const [navigatorState, setNavigatorState] = useState({
+    isVisible: true,
+    isMinimized: false,
+    isMaximized: false,
+    position: { x: 120, y: 140 },
+    size: { width: 320, height: 250 }
+  });
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -15,6 +22,49 @@ function App() {
 
     return () => clearInterval(timer);
   }, []);
+
+  const handleMinimize = () => {
+    setNavigatorState(prev => ({
+      ...prev,
+      isMinimized: true
+    }));
+  };
+
+  const handleMaximize = () => {
+    setNavigatorState(prev => ({
+      ...prev,
+      isMaximized: !prev.isMaximized,
+      isMinimized: false
+    }));
+  };
+
+  const handleClose = () => {
+    setNavigatorState(prev => ({
+      ...prev,
+      isVisible: false,
+      isMinimized: false
+    }));
+  };
+
+  const handleTaskBarNavigatorClick = () => {
+    if (!navigatorState.isVisible) {
+      setNavigatorState(prev => ({
+        ...prev,
+        isVisible: true,
+        isMinimized: false
+      }));
+    } else if (navigatorState.isMinimized) {
+      setNavigatorState(prev => ({
+        ...prev,
+        isMinimized: false
+      }));
+    } else {
+      setNavigatorState(prev => ({
+        ...prev,
+        isMinimized: true
+      }));
+    }
+  };
 
   const handleCheckersChessClick = () => {
     window.open('https://wocked61.github.io/cpsc_362_sp2025_group2/', '_blank');
@@ -50,48 +100,65 @@ function App() {
   return (
     <div className="App">
       {/* Desktop Icons Container with Window Border - Now Draggable/Resizable */}
-      <Rnd
-        default={{
-          x: 120,
-          y: 140,
-          width: 320,
-          height: 250,
-        }}
-        minWidth={200}
-        minHeight={150}
-        bounds="parent"
-        dragHandleClassName="window-header"
-        className="desktop-icons-rnd"
-        style={{
-          position: 'fixed',
-          zIndex: 100
-        }}
-      >
-        <div className="desktop-icons-window">
-          <div className="window-header">
-            <span>Navigator.exe</span>
-            <div className="window-controls">
-              <div className="window-button">−</div>
-              <div className="window-button">□</div>
-              <div className="window-button">×</div>
+      {navigatorState.isVisible && !navigatorState.isMinimized && (
+        <Rnd
+          position={navigatorState.isMaximized ? { x: 0, y: 0 } : navigatorState.position}
+          size={navigatorState.isMaximized ? { width: window.innerWidth, height: window.innerHeight - 40 } : navigatorState.size}
+          onDragStop={(e, d) => {
+            if (!navigatorState.isMaximized) {
+              setNavigatorState(prev => ({
+                ...prev,
+                position: { x: d.x, y: d.y }
+              }));
+            }
+          }}
+          onResizeStop={(e, direction, ref, delta, position) => {
+            if (!navigatorState.isMaximized) {
+              setNavigatorState(prev => ({
+                ...prev,
+                size: { width: ref.style.width, height: ref.style.height },
+                position
+              }));
+            }
+          }}
+          minWidth={200}
+          minHeight={150}
+          bounds="parent"
+          dragHandleClassName="window-header"
+          className="desktop-icons-rnd"
+          style={{
+            position: 'fixed',
+            zIndex: 100
+          }}
+          disableDragging={navigatorState.isMaximized}
+          enableResizing={!navigatorState.isMaximized}
+        >
+          <div className="desktop-icons-window">
+            <div className="window-header">
+              <span>Navigator.exe</span>
+              <div className="window-controls">
+                <div className="window-button" onClick={handleMinimize}>−</div>
+                <div className="window-button" onClick={handleMaximize}>□</div>
+                <div className="window-button" onClick={handleClose}>×</div>
+              </div>
+            </div>
+            <div className="desktop-icons-content">
+              <div className="desktop-icon">
+                <div className="icon-image">📁</div>
+                <div>Projects</div>
+              </div>
+              <div className="desktop-icon">
+                <div className="icon-image">👤</div>
+                <div>About Me</div>
+              </div>
+              <div className="desktop-icon">
+                <div className="icon-image">📧</div>
+                <div>Contact</div>
+              </div>
             </div>
           </div>
-          <div className="desktop-icons-content">
-            <div className="desktop-icon">
-              <div className="icon-image">📁</div>
-              <div>Projects</div>
-            </div>
-            <div className="desktop-icon">
-              <div className="icon-image">👤</div>
-              <div>About Me</div>
-            </div>
-            <div className="desktop-icon">
-              <div className="icon-image">📧</div>
-              <div>Contact</div>
-            </div>
-          </div>
-        </div>
-      </Rnd>
+        </Rnd>
+      )}
 
       {/* HUD Panel Header */}
       <div className="hud-panel">
@@ -238,6 +305,12 @@ function App() {
           <div className="task-item">About_Me.exe</div>
           <div className="task-item">Skills.exe</div>
           <div className="task-item">Projects</div>
+          <div 
+            className={`task-item ${(!navigatorState.isVisible || navigatorState.isMinimized) ? 'minimized' : 'active'}`}
+            onClick={handleTaskBarNavigatorClick}
+          >
+            Navigator.exe
+          </div>
         </div>
         <div className="system-tray">
           {currentTime} | 🔊 ⚡ 📶

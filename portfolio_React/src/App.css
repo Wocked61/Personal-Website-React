@@ -218,6 +218,17 @@ body {
   cursor: pointer;
 }
 
+.task-item.minimized {
+  background: rgba(254, 137, 217, 0.5);
+  border: 1px solid #FE89D9;
+  font-style: italic;
+}
+
+.task-item.active {
+  background: rgba(122, 121, 121, 0.8);
+  color: white;
+}
+
 .system-tray {
   margin-left: auto;
   font-size: 9px;
