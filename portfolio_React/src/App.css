@@ -265,13 +265,16 @@ body {
   font-size: 8px;
   color: #252525;
   margin: 0 auto;
+  transition: all 0.2s ease;
 }
 
-.desktop-icon:nth-child(1),
-.desktop-icon:nth-child(2), 
-.desktop-icon:nth-child(3) {
-  top: auto;
-  left: auto;
+.desktop-icon:hover {
+  transform: scale(1.05);
+}
+
+.desktop-icon:hover .icon-image {
+  background-color: rgba(254, 137, 217, 0.3);
+  border-color: #FE89D9;
 }
 
 .desktop-icons-rnd {
@@ -297,23 +300,6 @@ body {
   flex-direction: column;
   gap: 15px;
   overflow-y: auto;
-}
-
-.desktop-icon {
-  position: relative;
-  width: 60px;
-  text-align: center;
-  cursor: pointer;
-  font-size: 8px;
-  color: #252525;
-  margin: 0 auto;
-}
-
-.desktop-icon:nth-child(1),
-.desktop-icon:nth-child(2), 
-.desktop-icon:nth-child(3) {
-  top: auto;
-  left: auto;
 }
 
 ::-webkit-scrollbar {
@@ -578,7 +564,36 @@ body {
   transition: all 0.3s ease;
 }
 
-/* Window minimize animation */
+html {
+  scroll-behavior: smooth;
+}
+
+
+.desktop-icon {
+  position: relative;
+  width: 60px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 8px;
+  color: #252525;
+  margin: 0 auto;
+  transition: all 0.2s ease;
+}
+
+.desktop-icon:hover {
+  transform: scale(1.05);
+}
+
+.desktop-icon:hover .icon-image {
+  background-color: rgba(254, 137, 217, 0.3);
+  border-color: #FE89D9;
+}
+
+.desktop-icon:active {
+  transform: scale(0.95);
+}
+
+
 .desktop-icons-rnd.minimizing {
   animation: minimizeToTaskbar 0.3s ease-in-out forwards;
   pointer-events: none;

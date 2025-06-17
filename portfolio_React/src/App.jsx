@@ -13,9 +13,9 @@ function App() {
     isMaximized: false,
     isAnimating: false,
     position: { x: 120, y: 140 },
-    size: { width: 320, height: 250 },
-    savedPosition: { x: 120, y: 140 }, // Store the position before minimize/maximize
-    savedSize: { width: 320, height: 250 }
+    size: { width: 320, height: 320 },
+    savedPosition: { x: 120, y: 140 },
+    savedSize: { width: 320, height: 320 }
   });
 
   useEffect(() => {
@@ -27,7 +27,6 @@ function App() {
   }, []);
 
   const handleMinimize = () => {
-    // Save current position before minimizing
     setNavigatorState(prev => ({
       ...prev,
       savedPosition: prev.isMaximized ? prev.savedPosition : prev.position,
@@ -35,7 +34,6 @@ function App() {
       isAnimating: true
     }));
 
-    // After animation completes, set as minimized
     setTimeout(() => {
       setNavigatorState(prev => ({
         ...prev,
@@ -57,7 +55,6 @@ function App() {
   };
 
   const handleClose = () => {
-    // Save current position before closing
     setNavigatorState(prev => ({
       ...prev,
       savedPosition: prev.isMaximized ? prev.savedPosition : prev.position,
@@ -65,7 +62,6 @@ function App() {
       isAnimating: true
     }));
 
-    // After animation completes, close window
     setTimeout(() => {
       setNavigatorState(prev => ({
         ...prev,
@@ -95,6 +91,51 @@ function App() {
       }));
     } else {
       handleMinimize();
+    }
+  };
+
+  // Navigation functions for Navigator icons
+  const scrollToAboutMe = () => {
+    const aboutMeWindow = document.querySelector('.window:nth-child(1)');
+    if (aboutMeWindow) {
+      aboutMeWindow.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
+  };
+
+  const scrollToProjects = () => {
+    const projectsWindow = document.querySelector('.window:nth-child(3)');
+    if (projectsWindow) {
+      projectsWindow.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
+  };
+
+  const scrollToSkills = () => {
+    const skillsWindow = document.querySelector('.window:nth-child(2)');
+    if (skillsWindow) {
+      skillsWindow.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
+  };
+
+  const scrollToContact = () => {
+    const footer = document.querySelector('.App-footer');
+    if (footer) {
+      footer.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start',
+        inline: 'nearest'
+      });
     }
   };
 
@@ -175,15 +216,19 @@ function App() {
               </div>
             </div>
             <div className="desktop-icons-content">
-              <div className="desktop-icon">
-                <div className="icon-image">📁</div>
-                <div>Projects</div>
-              </div>
-              <div className="desktop-icon">
+              <div className="desktop-icon" onClick={scrollToAboutMe}>
                 <div className="icon-image">👤</div>
                 <div>About Me</div>
               </div>
-              <div className="desktop-icon">
+              <div className="desktop-icon" onClick={scrollToSkills}>
+                <div className="icon-image">⚙️</div>
+                <div>Skills</div>
+              </div>              
+              <div className="desktop-icon" onClick={scrollToProjects}>
+                <div className="icon-image">📁</div>
+                <div>Projects</div>                
+              </div>
+              <div className="desktop-icon" onClick={scrollToContact}>
                 <div className="icon-image">📧</div>
                 <div>Contact</div>
               </div>
@@ -204,7 +249,7 @@ function App() {
 
       {/* Window Container */}
       <div className="window-container">
-        <div className="window">
+        <div className="window" id="about-me-section">
           <div className="window-header">
             <span>About_Me.exe</span>
             <div className="window-controls">
@@ -232,7 +277,7 @@ function App() {
           </div>
         </div>
 
-        <div className="window">
+        <div className="window" id="skills-section">
           <div className="window-header">
             <span>Skills_Manager.exe</span>
             <div className="window-controls">
@@ -270,7 +315,7 @@ function App() {
           </div>
         </div>
 
-        <div className="window">
+        <div className="window" id="projects-section">
           <div className="window-header">
             <span>Projects_Directory.exe</span>
             <div className="window-controls">
