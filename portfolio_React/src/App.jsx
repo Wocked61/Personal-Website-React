@@ -11,8 +11,11 @@ function App() {
     isVisible: true,
     isMinimized: false,
     isMaximized: false,
+    isAnimating: false,
     position: { x: 120, y: 140 },
-    size: { width: 320, height: 250 }
+    size: { width: 320, height: 250 },
+    savedPosition: { x: 120, y: 140 }, // Store the position before minimize/maximize
+    savedSize: { width: 320, height: 250 }
   });
 
   useEffect(() => {
@@ -24,26 +27,54 @@ function App() {
   }, []);
 
   const handleMinimize = () => {
+    // Save current position before minimizing
     setNavigatorState(prev => ({
       ...prev,
-      isMinimized: true
+      savedPosition: prev.isMaximized ? prev.savedPosition : prev.position,
+      savedSize: prev.isMaximized ? prev.savedSize : prev.size,
+      isAnimating: true
     }));
+
+    // After animation completes, set as minimized
+    setTimeout(() => {
+      setNavigatorState(prev => ({
+        ...prev,
+        isMinimized: true,
+        isAnimating: false,
+        isMaximized: false
+      }));
+    }, 300);
   };
 
   const handleMaximize = () => {
     setNavigatorState(prev => ({
       ...prev,
       isMaximized: !prev.isMaximized,
-      isMinimized: false
+      isMinimized: false,
+      savedPosition: prev.isMaximized ? prev.savedPosition : prev.position,
+      savedSize: prev.isMaximized ? prev.savedSize : prev.size
     }));
   };
 
   const handleClose = () => {
+    // Save current position before closing
     setNavigatorState(prev => ({
       ...prev,
-      isVisible: false,
-      isMinimized: false
+      savedPosition: prev.isMaximized ? prev.savedPosition : prev.position,
+      savedSize: prev.isMaximized ? prev.savedSize : prev.size,
+      isAnimating: true
     }));
+
+    // After animation completes, close window
+    setTimeout(() => {
+      setNavigatorState(prev => ({
+        ...prev,
+        isVisible: false,
+        isMinimized: false,
+        isAnimating: false,
+        isMaximized: false
+      }));
+    }, 300);
   };
 
   const handleTaskBarNavigatorClick = () => {
@@ -51,18 +82,19 @@ function App() {
       setNavigatorState(prev => ({
         ...prev,
         isVisible: true,
-        isMinimized: false
+        isMinimized: false,
+        position: prev.savedPosition,
+        size: prev.savedSize
       }));
     } else if (navigatorState.isMinimized) {
       setNavigatorState(prev => ({
         ...prev,
-        isMinimized: false
+        isMinimized: false,
+        position: prev.savedPosition,
+        size: prev.savedSize
       }));
     } else {
-      setNavigatorState(prev => ({
-        ...prev,
-        isMinimized: true
-      }));
+      handleMinimize();
     }
   };
 
@@ -124,18 +156,18 @@ function App() {
           minWidth={200}
           minHeight={150}
           bounds="parent"
-          dragHandleClassName="window-header"
-          className="desktop-icons-rnd"
+          dragHandleClassName="window-title-area"
+          className={`desktop-icons-rnd ${navigatorState.isAnimating ? 'minimizing' : ''}`}
           style={{
             position: 'fixed',
             zIndex: 100
           }}
-          disableDragging={navigatorState.isMaximized}
-          enableResizing={!navigatorState.isMaximized}
+          disableDragging={navigatorState.isMaximized || navigatorState.isAnimating}
+          enableResizing={!navigatorState.isMaximized && !navigatorState.isAnimating}
         >
           <div className="desktop-icons-window">
             <div className="window-header">
-              <span>Navigator.exe</span>
+              <span className="window-title-area">Navigator.exe</span>
               <div className="window-controls">
                 <div className="window-button" onClick={handleMinimize}>−</div>
                 <div className="window-button" onClick={handleMaximize}>□</div>

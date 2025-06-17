@@ -85,7 +85,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  cursor: move;
   user-select: none;
   min-width: 0;
   background: linear-gradient(90deg, #14C8F9 0%, #946AA3 100%);
@@ -97,7 +96,17 @@ body {
   border-bottom: 2px solid #8E6BFF;
 }
 
-.window-header span {
+.window-title-area {
+  cursor: move;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+  padding-right: 10px;
+}
+
+.window-header span:not(.window-title-area) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -124,6 +133,8 @@ body {
   justify-content: center;
   font-size: 9px;
   color: #252525;
+  position: relative;
+  z-index: 10;
 }
 
 .window-button:hover {
@@ -222,10 +233,21 @@ body {
   background: rgba(254, 137, 217, 0.5);
   border: 1px solid #FE89D9;
   font-style: italic;
+  animation: taskbarBlink 0.5s ease-in-out;
+}
+
+@keyframes taskbarBlink {
+  0%, 100% {
+    background: rgba(254, 137, 217, 0.5);
+  }
+  50% {
+    background: rgba(254, 137, 217, 0.8);
+  }
 }
 
 .task-item.active {
-  background: rgba(122, 121, 121, 0.8);
+  background: rgba(20, 200, 249, 0.8);
+  border: 1px solid #14C8F9;
   color: white;
 }
 
@@ -554,4 +576,41 @@ body {
   color: #666;
   opacity: 0.8;
   transition: all 0.3s ease;
+}
+
+/* Window minimize animation */
+.desktop-icons-rnd.minimizing {
+  animation: minimizeToTaskbar 0.3s ease-in-out forwards;
+  pointer-events: none;
+}
+
+@keyframes minimizeToTaskbar {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.8) translateY(20vh);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0.1) translateY(calc(100vh - 80px)) translateX(50vw);
+    opacity: 0;
+  }
+}
+
+
+@keyframes restoreFromTaskbar {
+  0% {
+    transform: scale(0.1) translateY(calc(100vh - 80px)) translateX(50vw);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(0.8) translateY(20vh);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
 }
