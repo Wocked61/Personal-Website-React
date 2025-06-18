@@ -146,6 +146,7 @@ function App() {
         size: prev.savedSize
       }));
     } else {
+      playCloseWindowSound();
       handleMinimize();
     }
   };
