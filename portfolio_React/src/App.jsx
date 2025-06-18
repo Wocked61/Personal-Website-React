@@ -9,6 +9,7 @@ import closeWindowSound from './assets/close_Window.mp3'
 import openWindowSound from './assets/open_Window.mp3'
 import enlargeWindowSound from './assets/enlarge_Window.mp3'
 import minimizeWindowSound from './assets/minimize_Window.mp3'
+import errorSound from './assets/Error.wav'
 
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
@@ -83,6 +84,18 @@ function App() {
     try {
       const audio = new Audio(minimizeWindowSound);
       audio.volume = 0.7;
+      audio.play().catch(error => {
+        console.log('Audio play failed:', error);
+      });
+    } catch (error) {
+      console.log('Audio creation failed:', error);
+    }
+  };
+
+  const playErrorSound = () => {
+    try {
+      const audio = new Audio(errorSound);
+      audio.volume = 0.6;
       audio.play().catch(error => {
         console.log('Audio play failed:', error);
       });
@@ -350,9 +363,9 @@ function App() {
           <div className="window-header">
             <span>About_Me.exe</span>
             <div className="window-controls">
-              <div className="window-button">−</div>
-              <div className="window-button">□</div>
-              <div className="window-button">×</div>
+              <div className="window-button" onClick={playErrorSound}>−</div>
+              <div className="window-button" onClick={playErrorSound}>□</div>
+              <div className="window-button" onClick={playErrorSound}>×</div>
             </div>
           </div>
           <div className="window-content">
@@ -378,9 +391,9 @@ function App() {
           <div className="window-header">
             <span>Skills_Manager.exe</span>
             <div className="window-controls">
-              <div className="window-button">−</div>
-              <div className="window-button">□</div>
-              <div className="window-button">×</div>
+              <div className="window-button" onClick={playErrorSound}>−</div>
+              <div className="window-button" onClick={playErrorSound}>□</div>
+              <div className="window-button" onClick={playErrorSound}>×</div>
             </div>
           </div>
           <div className="window-content">
@@ -416,9 +429,9 @@ function App() {
           <div className="window-header">
             <span>Projects_Directory.exe</span>
             <div className="window-controls">
-              <div className="window-button">−</div>
-              <div className="window-button">□</div>
-              <div className="window-button">×</div>
+              <div className="window-button" onClick={playErrorSound}>−</div>
+              <div className="window-button" onClick={playErrorSound}>□</div>
+              <div className="window-button" onClick={playErrorSound}>×</div>
             </div>
           </div>
           <div className="window-content">
