@@ -6,6 +6,7 @@ import '@hackernoon/pixel-icon-library/fonts/iconfont.css'
 import csufLogo from './assets/csuf-logo.png'
 import moveScrollSound from './assets/move_scroll.mp3'
 import closeWindowSound from './assets/close_Window.mp3'
+import openWindowSound from './assets/open_Window.mp3'
 
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
@@ -44,6 +45,18 @@ function App() {
     try {
       const audio = new Audio(closeWindowSound);
       audio.volume = 0.7;
+      audio.play().catch(error => {
+        console.log('Audio play failed:', error);
+      });
+    } catch (error) {
+      console.log('Audio creation failed:', error);
+    }
+  };
+
+  const playOpenWindowSound = () => {
+    try {
+      const audio = new Audio(openWindowSound);
+      audio.volume = 1;
       audio.play().catch(error => {
         console.log('Audio play failed:', error);
       });
@@ -102,6 +115,7 @@ function App() {
 
   const handleTaskBarNavigatorClick = () => {
     if (!navigatorState.isVisible) {
+      playOpenWindowSound();
       setNavigatorState(prev => ({
         ...prev,
         isVisible: true,
@@ -110,6 +124,7 @@ function App() {
         size: prev.savedSize
       }));
     } else if (navigatorState.isMinimized) {
+      playOpenWindowSound();
       setNavigatorState(prev => ({
         ...prev,
         isMinimized: false,
