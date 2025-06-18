@@ -32,7 +32,7 @@ function App() {
   const playMoveScrollSound = () => {
     try {
       const audio = new Audio(moveScrollSound);
-      audio.volume = 0.9;
+      audio.volume = 0.8;
       audio.play().catch(error => {
         console.log('Audio play failed:', error);
       });
@@ -185,22 +185,18 @@ function App() {
   };
 
   const handleTaskbarAboutMe = () => {
-    playMoveScrollSound();
     scrollToAboutMe();
   };
 
   const handleTaskbarSkills = () => {
-    playMoveScrollSound();
     scrollToSkills();
   };
 
   const handleTaskbarProjects = () => {
-    playMoveScrollSound();
     scrollToProjects();
   };
 
   const handleTaskbarContact = () => {
-    playMoveScrollSound();
     scrollToContact();
   };
 
