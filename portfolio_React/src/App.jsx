@@ -231,6 +231,14 @@ function App() {
     );
   };
 
+  const handleStartButtonClick = () => {
+    playMoveScrollSound();
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
   return (
     <div className="App">
       {/* Desktop Icons Container with Window Border - Now Draggable/Resizable */}
@@ -437,7 +445,7 @@ function App() {
 
       {/* Task Bar */}
       <div className="task-bar">
-        <div className="start-button">Start</div>
+        <div className="start-button" onClick={handleStartButtonClick}>Start</div>
         <div className="task-items">
           <div className="task-item" onClick={handleTaskbarAboutMe}>About_Me.exe</div>  
           <div className="task-item" onClick={handleTaskbarSkills}>Skills.exe</div>                  

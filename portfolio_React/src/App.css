@@ -215,6 +215,10 @@ body {
   background: linear-gradient(135deg, #14C8F9, #FE89D9);
 }
 
+.start-button:active {
+  transform: scale(0.95);
+}
+
 .task-items {
   margin-left: 20px;
   display: flex;
@@ -227,6 +231,18 @@ body {
   padding: 4px 8px;
   font-size: 9px;
   cursor: pointer;
+}
+
+.task-item:hover {
+  background: rgba(254, 137, 217, 0.5);
+  border-color: #FE89D9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(148, 106, 163, 0.3);
+}
+
+.task-item:active {
+  transform: scale(0.95);
+  background: rgba(254, 137, 217, 0.7);
 }
 
 .task-item.minimized {
