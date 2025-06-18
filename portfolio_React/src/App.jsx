@@ -4,7 +4,7 @@ import Footer from './Footer.jsx'
 import './App.css'
 import '@hackernoon/pixel-icon-library/fonts/iconfont.css'
 import csufLogo from './assets/csuf-logo.png'
-import moveScrollSound from './assets/move_scroll.wav'
+import moveScrollSound from './assets/move_scroll.mp3'
 
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
@@ -14,9 +14,9 @@ function App() {
     isMaximized: false,
     isAnimating: false,
     position: { x: 120, y: 140 },
-    size: { width: 350, height: 280 },
+    size: { width: 320, height: 320 },
     savedPosition: { x: 120, y: 140 },
-    savedSize: { width: 350, height: 280 }
+    savedSize: { width: 320, height: 320 }
   });
 
   useEffect(() => {
@@ -27,11 +27,11 @@ function App() {
     return () => clearInterval(timer);
   }, []);
 
-  // Function to play sound
+
   const playMoveScrollSound = () => {
     try {
       const audio = new Audio(moveScrollSound);
-      audio.volume = 0.6; // Set volume to 30%
+      audio.volume = 0.9;
       audio.play().catch(error => {
         console.log('Audio play failed:', error);
       });
