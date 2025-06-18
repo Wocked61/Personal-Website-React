@@ -8,6 +8,7 @@ import moveScrollSound from './assets/move_scroll.mp3'
 import closeWindowSound from './assets/close_Window.mp3'
 import openWindowSound from './assets/open_Window.mp3'
 import enlargeWindowSound from './assets/enlarge_Window.mp3'
+import minimizeWindowSound from './assets/minimize_Window.mp3'
 
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
@@ -78,7 +79,20 @@ function App() {
     }
   };
 
+  const playMinimizeWindowSound = () => {
+    try {
+      const audio = new Audio(minimizeWindowSound);
+      audio.volume = 0.7;
+      audio.play().catch(error => {
+        console.log('Audio play failed:', error);
+      });
+    } catch (error) {
+      console.log('Audio creation failed:', error);
+    }
+  };
+
   const handleMinimize = () => {
+    playMinimizeWindowSound();
     setNavigatorState(prev => ({
       ...prev,
       savedPosition: prev.isMaximized ? prev.savedPosition : prev.position,
@@ -146,7 +160,6 @@ function App() {
         size: prev.savedSize
       }));
     } else {
-      playCloseWindowSound();
       handleMinimize();
     }
   };
