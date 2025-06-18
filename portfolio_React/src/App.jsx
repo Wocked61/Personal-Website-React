@@ -4,6 +4,7 @@ import Footer from './Footer.jsx'
 import './App.css'
 import '@hackernoon/pixel-icon-library/fonts/iconfont.css'
 import csufLogo from './assets/csuf-logo.png'
+import moveScrollSound from './assets/move_scroll.wav'
 
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
@@ -13,9 +14,9 @@ function App() {
     isMaximized: false,
     isAnimating: false,
     position: { x: 120, y: 140 },
-    size: { width: 320, height: 320 },
+    size: { width: 350, height: 280 },
     savedPosition: { x: 120, y: 140 },
-    savedSize: { width: 320, height: 320 }
+    savedSize: { width: 350, height: 280 }
   });
 
   useEffect(() => {
@@ -25,6 +26,19 @@ function App() {
 
     return () => clearInterval(timer);
   }, []);
+
+  // Function to play sound
+  const playMoveScrollSound = () => {
+    try {
+      const audio = new Audio(moveScrollSound);
+      audio.volume = 0.6; // Set volume to 30%
+      audio.play().catch(error => {
+        console.log('Audio play failed:', error);
+      });
+    } catch (error) {
+      console.log('Audio creation failed:', error);
+    }
+  };
 
   const handleMinimize = () => {
     setNavigatorState(prev => ({
@@ -94,8 +108,8 @@ function App() {
     }
   };
 
-  // Navigation functions for Navigator icons
   const scrollToAboutMe = () => {
+    playMoveScrollSound();
     const aboutMeWindow = document.querySelector('.window:nth-child(1)');
     if (aboutMeWindow) {
       aboutMeWindow.scrollIntoView({ 
@@ -107,6 +121,7 @@ function App() {
   };
 
   const scrollToProjects = () => {
+    playMoveScrollSound();
     const projectsWindow = document.querySelector('.window:nth-child(3)');
     if (projectsWindow) {
       projectsWindow.scrollIntoView({ 
@@ -118,6 +133,7 @@ function App() {
   };
 
   const scrollToSkills = () => {
+    playMoveScrollSound();
     const skillsWindow = document.querySelector('.window:nth-child(2)');
     if (skillsWindow) {
       skillsWindow.scrollIntoView({ 
@@ -129,6 +145,7 @@ function App() {
   };
 
   const scrollToContact = () => {
+    playMoveScrollSound();
     const footer = document.querySelector('.App-footer');
     if (footer) {
       footer.scrollIntoView({ 
@@ -137,6 +154,26 @@ function App() {
         inline: 'nearest'
       });
     }
+  };
+
+  const handleTaskbarAboutMe = () => {
+    playMoveScrollSound();
+    scrollToAboutMe();
+  };
+
+  const handleTaskbarSkills = () => {
+    playMoveScrollSound();
+    scrollToSkills();
+  };
+
+  const handleTaskbarProjects = () => {
+    playMoveScrollSound();
+    scrollToProjects();
+  };
+
+  const handleTaskbarContact = () => {
+    playMoveScrollSound();
+    scrollToContact();
   };
 
   const handleCheckersChessClick = () => {
@@ -378,10 +415,10 @@ function App() {
       <div className="task-bar">
         <div className="start-button">Start</div>
         <div className="task-items">
-          <div className="task-item" onClick={scrollToAboutMe}>About_Me.exe</div>  
-          <div className="task-item" onClick={scrollToSkills}>Skills.exe</div>                  
-          <div className="task-item" onClick={scrollToProjects}>Projects.exe</div>
-          <div className="task-item" onClick={scrollToContact}>Contact.exe</div>
+          <div className="task-item" onClick={handleTaskbarAboutMe}>About_Me.exe</div>  
+          <div className="task-item" onClick={handleTaskbarSkills}>Skills.exe</div>                  
+          <div className="task-item" onClick={handleTaskbarProjects}>Projects.exe</div>
+          <div className="task-item" onClick={handleTaskbarContact}>Contact.exe</div>
           <div 
             className={`task-item ${(!navigatorState.isVisible || navigatorState.isMinimized) ? 'minimized' : 'active'}`}
             onClick={handleTaskBarNavigatorClick}
