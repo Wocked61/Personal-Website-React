@@ -10,9 +10,16 @@ import openWindowSound from './assets/open_Window.mp3'
 import enlargeWindowSound from './assets/enlarge_Window.mp3'
 import minimizeWindowSound from './assets/minimize_Window.mp3'
 import errorSound from './assets/Error.wav'
+import loadingSound from './assets/loading.mp3'
+import bgmSound from './assets/bgm.mp3'
 
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [loadingText, setLoadingText] = useState('INITIALIZING SYSTEM...');
+  const [loadingAudio, setLoadingAudio] = useState(null);
+  const [bgmAudio, setBgmAudio] = useState(null);
   const [navigatorState, setNavigatorState] = useState({
     isVisible: true,
     isMinimized: false,
@@ -31,6 +38,81 @@ function App() {
 
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    const loadingAudioInstance = new Audio(loadingSound);
+    loadingAudioInstance.volume = 0.5;
+    setLoadingAudio(loadingAudioInstance);
+    
+    loadingAudioInstance.play().catch(error => {
+      console.log('Loading audio play failed:', error);
+    });
+
+    const bgmAudioInstance = new Audio(bgmSound);
+    bgmAudioInstance.volume = 0.3;
+    bgmAudioInstance.loop = true;
+    setBgmAudio(bgmAudioInstance);
+
+    const loadingSteps = [
+      { progress: 20, text: 'LOADING USER DATA...' },
+      { progress: 40, text: 'SCANNING SKILL REPOSITORY...' },
+      { progress: 60, text: 'INITIALIZING PROJECTS...' },
+      { progress: 80, text: 'CONNECTING TO PORTFOLIO SYSTEM...' },
+      { progress: 100, text: 'SYSTEM READY!' }
+    ];
+
+    let currentStep = 0;
+    const loadingInterval = setInterval(() => {
+      if (currentStep < loadingSteps.length) {
+        setLoadingProgress(loadingSteps[currentStep].progress);
+        setLoadingText(loadingSteps[currentStep].text);
+        currentStep++;
+      } else {
+        clearInterval(loadingInterval);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 800);
+      }
+    }, 600);
+
+
+    return () => {
+      clearInterval(loadingInterval);
+    };
+  }, []);
+
+
+  useEffect(() => {
+    if (loadingAudio && bgmAudio && !isLoading) {
+
+      const checkLoadingSoundEnd = () => {
+        if (loadingAudio.ended || loadingAudio.currentTime >= loadingAudio.duration) {
+          bgmAudio.play().catch(error => {
+            console.log('BGM play failed:', error);
+          });
+        } else {
+
+          setTimeout(checkLoadingSoundEnd, 100);
+        }
+      };
+      
+
+      checkLoadingSoundEnd();
+    }
+  }, [loadingAudio, bgmAudio, isLoading]);
+
+  useEffect(() => {
+    return () => {
+      if (loadingAudio) {
+        loadingAudio.pause();
+        loadingAudio.currentTime = 0;
+      }
+      if (bgmAudio) {
+        bgmAudio.pause();
+        bgmAudio.currentTime = 0;
+      }
+    };
+  }, [loadingAudio, bgmAudio]);
 
   const playMoveScrollSound = () => {
     try {
@@ -280,6 +362,33 @@ function App() {
     });
   };
 
+  if (isLoading) {
+    return (
+      <div className="loading-screen">
+        <div className="loading-container">
+          <h1 className="loading-title">DYLAN'S PORTFOLIO SYSTEM</h1>
+          <div className="loading-version">v1.0</div>
+          
+          <div className="loading-progress-container">
+            <div className="loading-text">{loadingText}</div>
+            <div className="loading-bar">
+              <div 
+                className="loading-fill" 
+                style={{ width: `${loadingProgress}%` }}
+              ></div>
+            </div>
+            <div className="loading-percentage">{loadingProgress}%</div>
+          </div>
+          
+          <div className="loading-footer">
+            <div>INITIALIZING USER: DYLAN_PHAN</div>
+            <div>STATUS: LOADING...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="App">
       {/* Desktop Icons Container with Window Border - Now Draggable/Resizable */}
@@ -370,8 +479,8 @@ function App() {
           </div>
           <div className="window-content">
             <h2>User Profile</h2>
-            <p>INITIALIZING USER DATA...</p>
-            <p>Loading profile: Dylan Phan</p>
+            <p>USER DATA LOADED SUCCESSFULLY ✓</p>
+            <p>Profile: Dylan Phan</p>
             <p>Hello! I'm Dylan — a curious and driven CS student who builds interactive, stylish websites with a creative twist. Whether it's a checkers app or a Pokémon collector, I aim to merge code with personality.</p>
             <div className="status-line">
               <div className="status-text">
@@ -398,7 +507,7 @@ function App() {
           </div>
           <div className="window-content">
             <h2>Technical Skills Database</h2>
-            <p>SCANNING SKILL REPOSITORY...</p>
+            <p>SKILL REPOSITORY SCAN COMPLETE ✓</p>
             <p>Found 10 programming languages and technologies</p>
             
             <div className="skills-container">
@@ -436,7 +545,7 @@ function App() {
           </div>
           <div className="window-content">
             <h2>Project Archive</h2>
-            <p>LOADING PROJECT DATABASE...</p>
+            <p>PROJECT INITIALIZATION COMPLETE ✓</p>
             <p>Found 4 project files in directory</p>
             
             <div className="project-list">
