@@ -71,12 +71,11 @@ body {
 }
 
 .window {
-  background-color: #FCFEFF;
-  border: 3px solid #946AA3;
+  background-color: #FCFEFF;  border: 3px solid #946AA3;
   box-shadow: 4px 4px 0 #8E6BFF, 8px 8px 0 rgba(148, 106, 163, 0.3);
   font-family: var(--pixel-font);
   margin-bottom: 20px;
-  min-height: 500px;
+  min-height: 520px;
   width: 100%;
   position: relative;
 }
@@ -964,4 +963,55 @@ html {
 
 .system-tray {
   position: relative;
+}
+
+/* About Me Loading and Typing Effects */
+.profile-loading {
+  min-height: 200px;
+}
+
+.loading-text {
+  color: #946AA3;
+  font-style: italic;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.profile-content {
+  min-height: 200px;
+}
+
+.typed-content {
+  position: relative;
+}
+
+.typing-cursor {
+  color: #FE89D9;
+  font-weight: bold;
+  animation: blink 1s infinite;
+  font-size: 14px;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.typed-content p {
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+.typed-content p:empty {
+  margin: 8px 0;
+  height: 8px;
+}
+
+/* Ensure status line spacing matches other content */
+.typed-content .status-line {
+  margin: 4px 0;
 }

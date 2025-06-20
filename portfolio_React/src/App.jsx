@@ -26,6 +26,9 @@ function App() {
   const [showVolumeSettings, setShowVolumeSettings] = useState(false);
   const [bgmVolume, setBgmVolume] = useState(0.1);
   const [isMuted, setIsMuted] = useState(false);
+  const [aboutMeLoading, setAboutMeLoading] = useState(true);
+  const [typedText, setTypedText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
   const [navigatorState, setNavigatorState] = useState({
     isVisible: true,
     isMinimized: false,
@@ -158,6 +161,58 @@ function App() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [showVolumeSettings]);
+
+  // About Me loading and typing effect
+  useEffect(() => {
+    if (!isLoading) {
+      //About Me loading sequence after main loading is complete
+      const aboutMeTimer = setTimeout(() => {
+        setAboutMeLoading(false);
+        setIsTyping(true);
+        
+        // The text content to type out - each element represents a paragraph
+        const textLines = [
+          "Profile: Dylan Phan",
+          "",
+          "Hello! I'm Dylan — a curious and driven CS student who builds interactive, stylish websites with a creative twist. Whether it's a checkers app or a Pokémon collector, I aim to merge code with personality.",
+          "",
+          "Status: Senior Computer Science Student @ CSUF",
+          "",
+          "Interests: Web Development, Gaming, Technology",
+          "",
+          "Current Project: React Portfolio with NSO Aesthetic"
+        ];
+
+        let currentLineIndex = 0;
+        let currentCharIndex = 0;
+        let displayLines = [];
+        
+        const typeText = () => {
+          if (currentLineIndex < textLines.length) {
+            const currentLine = textLines[currentLineIndex];
+            
+            if (currentCharIndex < currentLine.length) {
+              displayLines[currentLineIndex] = currentLine.slice(0, currentCharIndex + 1);
+              setTypedText(displayLines.join('\n'));
+              currentCharIndex++;
+              setTimeout(typeText, 15); // Typing speed: 15ms per character
+            } else {
+              displayLines[currentLineIndex] = currentLine;
+              currentLineIndex++;
+              currentCharIndex = 0;
+              setTimeout(typeText, 100); // Brief pause
+            }
+          } else {
+            setIsTyping(false);
+          }
+        };
+        
+        typeText();
+      }, 2000); 
+      
+      return () => clearTimeout(aboutMeTimer);
+    }
+  }, [isLoading]);
 
   const playMoveScrollSound = () => {
     try {
@@ -574,20 +629,37 @@ function App() {
           </div>
           <div className="window-content">
             <h2>User Profile</h2>
-            <p>USER DATA LOADED SUCCESSFULLY ✓</p>
-            <p>Profile: Dylan Phan</p>
-            <p>Hello! I'm Dylan — a curious and driven CS student who builds interactive, stylish websites with a creative twist. Whether it's a checkers app or a Pokémon collector, I aim to merge code with personality.</p>
-            <div className="status-line">
-              <div className="status-text">
-                <span>Status: Senior Computer Science Student @ CSUF</span>
+            {aboutMeLoading ? (
+              <div className="profile-loading">
+                <p>INITIALIZING USER DATA...</p>
+                <p className="loading-text">Loading profile: Dylan Phan</p>
               </div>
-              <img src={csufLogo} alt="CSUF Logo" className="csuf-logo" />
-            </div>
-            <p>Interests: Web Development, Gaming, Technology</p>
-            <p>Current Project: React Portfolio with NSO Aesthetic</p>
-            <div className="chat-message">
-              System: Welcome to my digital space! I'm passionate about creating innovative web experiences and bringing creative visions to life through code.
-            </div>
+            ) : (
+              <div className="profile-content">
+                <p>USER DATA LOADED SUCCESSFULLY ✓</p>
+                <div className="typed-content">
+                  {typedText.split('\n').map((line, index) => {
+                    if (line.startsWith('Status: Senior Computer Science Student @ CSUF')) {
+                      return (
+                        <div key={index} className="status-line">
+                          <div className="status-text">
+                            <span>{line}</span>
+                          </div>
+                          <img src={csufLogo} alt="CSUF Logo" className="csuf-logo" />
+                        </div>
+                      );
+                    }
+                    return <p key={index}>{line}</p>;
+                  })}
+                  {isTyping && <span className="typing-cursor">|</span>}
+                </div>
+                {!isTyping && (
+                  <div className="chat-message">
+                    System: Welcome to my website! I'm passionate about creating innovative web experiences and bringing creative visions to life through code.
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
