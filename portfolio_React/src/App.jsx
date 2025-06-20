@@ -36,7 +36,7 @@ function App() {
     isAnimating: false,
     position: { x: 120, y: 140 },
     size: { width: 320, height: 320 },
-    savedPosition: { x: 120, y: 140 },
+    savedPosition: { x: 120, y: 140 }, 
     savedSize: { width: 320, height: 320 }
   });
 
@@ -46,6 +46,17 @@ function App() {
     }, 1000);
 
     return () => clearInterval(timer);
+  }, []);
+
+
+  useEffect(() => {
+    setNavigatorState(prev => ({
+      ...prev,
+      savedPosition: {
+        x: prev.position.x,
+        y: prev.position.y - window.scrollY
+      }
+    }));
   }, []);
 
 
@@ -170,7 +181,7 @@ function App() {
         setAboutMeLoading(false);
         setIsTyping(true);
         
-        // The text content to type out - each element represents a paragraph
+        // The text content to type out
         const textLines = [
           "Profile: Dylan Phan",
           "",
@@ -325,9 +336,16 @@ function App() {
 
   const handleMinimize = () => {
     playMinimizeWindowSound();
+    
+    const currentPosition = navigatorState.isMaximized ? navigatorState.savedPosition : navigatorState.position;
+    const viewportRelativePosition = {
+      x: currentPosition.x,
+      y: currentPosition.y - window.scrollY 
+    };
+    
     setNavigatorState(prev => ({
       ...prev,
-      savedPosition: prev.isMaximized ? prev.savedPosition : prev.position,
+      savedPosition: viewportRelativePosition,
       savedSize: prev.isMaximized ? prev.savedSize : prev.size,
       isAnimating: true
     }));
@@ -344,20 +362,59 @@ function App() {
 
   const handleMaximize = () => {
     playEnlargeWindowSound();
-    setNavigatorState(prev => ({
-      ...prev,
-      isMaximized: !prev.isMaximized,
-      isMinimized: false,
-      savedPosition: prev.isMaximized ? prev.savedPosition : prev.position,
-      savedSize: prev.isMaximized ? prev.savedSize : prev.size
-    }));
+    
+    if (!navigatorState.isMaximized) {
+      const viewportRelativePosition = {
+        x: navigatorState.position.x,
+        y: navigatorState.position.y - window.scrollY
+      };
+      
+      setNavigatorState(prev => ({
+        ...prev,
+        isMaximized: true,
+        isMinimized: false,
+        savedPosition: viewportRelativePosition,
+        savedSize: prev.size
+      }));
+    } else {
+      const viewportPosition = {
+        x: navigatorState.savedPosition.x,
+        y: navigatorState.savedPosition.y + window.scrollY
+      };
+      
+      setNavigatorState(prev => ({
+        ...prev,
+        isMaximized: false,
+        isMinimized: false,
+        position: viewportPosition,
+        size: prev.savedSize
+      }));
+    }
   };
 
   const handleClose = () => {
     playCloseWindowSound();
+    
+    const navigatorElement = document.querySelector('.navigator-window');
+    let viewportRelativePosition;
+    
+    if (navigatorElement) {
+      const rect = navigatorElement.getBoundingClientRect();
+      viewportRelativePosition = {
+        x: rect.left,
+        y: rect.top
+      };
+    } else {
+      const currentPosition = navigatorState.isMaximized ? navigatorState.savedPosition : navigatorState.position;
+      viewportRelativePosition = {
+        x: currentPosition.x,
+        y: currentPosition.y - window.scrollY
+      };
+    }
+    
     setNavigatorState(prev => ({
       ...prev,
-      savedPosition: prev.isMaximized ? prev.savedPosition : prev.position,
+      savedPosition: viewportRelativePosition,
       savedSize: prev.isMaximized ? prev.savedSize : prev.size,
       isAnimating: true
     }));
@@ -376,23 +433,72 @@ function App() {
   const handleTaskBarNavigatorClick = () => {
     if (!navigatorState.isVisible) {
       playOpenWindowSound();
+      
+      const viewportPosition = {
+        x: navigatorState.savedPosition.x,
+        y: navigatorState.savedPosition.y + window.scrollY
+      };
+      
       setNavigatorState(prev => ({
         ...prev,
         isVisible: true,
         isMinimized: false,
-        position: prev.savedPosition,
+        position: viewportPosition,
         size: prev.savedSize
       }));
     } else if (navigatorState.isMinimized) {
       playOpenWindowSound();
+      
+      const viewportPosition = {
+        x: navigatorState.savedPosition.x,
+        y: navigatorState.savedPosition.y + window.scrollY
+      };
+      
       setNavigatorState(prev => ({
         ...prev,
         isMinimized: false,
-        position: prev.savedPosition,
+        position: viewportPosition,
         size: prev.savedSize
       }));
     } else {
-      handleMinimize();
+
+      playCloseWindowSound();
+      
+
+      const navigatorElement = document.querySelector('.navigator-window');
+      let viewportRelativePosition;
+      
+      if (navigatorElement) {
+        const rect = navigatorElement.getBoundingClientRect();
+        viewportRelativePosition = {
+          x: rect.left,
+          y: rect.top
+        };
+      } else {
+
+        const currentPosition = navigatorState.isMaximized ? navigatorState.savedPosition : navigatorState.position;
+        viewportRelativePosition = {
+          x: currentPosition.x,
+          y: currentPosition.y - window.scrollY
+        };
+      }
+      
+      setNavigatorState(prev => ({
+        ...prev,
+        savedPosition: viewportRelativePosition,
+        savedSize: prev.isMaximized ? prev.savedSize : prev.size,
+        isAnimating: true
+      }));
+
+      setTimeout(() => {
+        setNavigatorState(prev => ({
+          ...prev,
+          isVisible: false,
+          isMinimized: false,
+          isAnimating: false,
+          isMaximized: false
+        }));
+      }, 300);
     }
   };
 
@@ -548,18 +654,30 @@ function App() {
           size={navigatorState.isMaximized ? { width: window.innerWidth, height: window.innerHeight - 40 } : navigatorState.size}
           onDragStop={(e, d) => {
             if (!navigatorState.isMaximized) {
+              const viewportRelativePosition = {
+                x: d.x,
+                y: d.y - window.scrollY
+              };
+              
               setNavigatorState(prev => ({
                 ...prev,
-                position: { x: d.x, y: d.y }
+                position: { x: d.x, y: d.y },
+                savedPosition: viewportRelativePosition
               }));
             }
           }}
           onResizeStop={(e, direction, ref, delta, position) => {
             if (!navigatorState.isMaximized) {
+              const viewportRelativePosition = {
+                x: position.x,
+                y: position.y - window.scrollY
+              };
+              
               setNavigatorState(prev => ({
                 ...prev,
                 size: { width: ref.style.width, height: ref.style.height },
-                position
+                position,
+                savedPosition: viewportRelativePosition
               }));
             }
           }}
@@ -575,7 +693,7 @@ function App() {
           disableDragging={navigatorState.isMaximized || navigatorState.isAnimating}
           enableResizing={!navigatorState.isMaximized && !navigatorState.isAnimating}
         >
-          <div className="desktop-icons-window">
+          <div className="desktop-icons-window navigator-window">
             <div className="window-header">
               <span className="window-title-area">Navigator.exe</span>
               <div className="window-controls">
