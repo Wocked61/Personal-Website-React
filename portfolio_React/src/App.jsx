@@ -23,6 +23,9 @@ function App() {
   const [bgmAudio, setBgmAudio] = useState(null);
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [showAudioPrompt, setShowAudioPrompt] = useState(false);
+  const [showVolumeSettings, setShowVolumeSettings] = useState(false);
+  const [bgmVolume, setBgmVolume] = useState(0.1);
+  const [isMuted, setIsMuted] = useState(false);
   const [navigatorState, setNavigatorState] = useState({
     isVisible: true,
     isMinimized: false,
@@ -137,6 +140,25 @@ function App() {
     };
   }, [loadingAudio, bgmAudio]);
 
+  useEffect(() => {
+    if (bgmAudio) {
+      bgmAudio.volume = isMuted ? 0 : bgmVolume;
+    }
+  }, [bgmAudio, bgmVolume, isMuted]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showVolumeSettings && !event.target.closest('.volume-settings-popup') && !event.target.closest('.volume-controls-area')) {
+        setShowVolumeSettings(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showVolumeSettings]);
+
   const playMoveScrollSound = () => {
     try {
       const audio = new Audio(moveScrollSound);
@@ -219,6 +241,31 @@ function App() {
     } catch (error) {
       console.log('Audio creation failed:', error);
     }
+  };
+
+  const handleVolumeChange = (newVolume) => {
+    setBgmVolume(newVolume);
+    if (bgmAudio) {
+      bgmAudio.volume = isMuted ? 0 : newVolume;
+    }
+  };
+
+  const handleMuteToggle = () => {
+    playProjectClickSound();
+    const newMutedState = !isMuted;
+    setIsMuted(newMutedState);
+    if (bgmAudio) {
+      bgmAudio.volume = newMutedState ? 0 : bgmVolume;
+    }
+  };
+
+  const handleVolumeIconClick = () => {
+    if (showVolumeSettings) {
+      playCloseWindowSound();
+    } else {
+      playOpenWindowSound();
+    }
+    setShowVolumeSettings(!showVolumeSettings);
   };
 
   const handleMinimize = () => {
@@ -657,7 +704,55 @@ function App() {
           </div>
         </div>
         <div className="system-tray">
-          {currentTime} | 🔊 ⚡ 📶
+          {currentTime} | 
+          <span 
+            className="volume-controls-area clickable" 
+            onClick={handleVolumeIconClick}
+            title="Volume Settings"
+          >
+            🔊 ⚡ 📶
+          </span>
+          
+          {/* Volume Settings Popup */}
+          {showVolumeSettings && (
+            <div className="volume-settings-popup">
+              <div className="volume-popup-header">
+                <span>Volume Settings</span>
+                <button 
+                  className="close-popup-btn"
+                  onClick={() => {
+                    playCloseWindowSound();
+                    setShowVolumeSettings(false);
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+              <div className="volume-controls">
+                <div className="volume-control-row">
+                  <span className="volume-label">BGM Volume:</span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value={bgmVolume}
+                    onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+                    className="volume-slider"
+                  />
+                  <span className="volume-value">{Math.round(bgmVolume * 100)}%</span>
+                </div>
+                <div className="mute-control-row">
+                  <button 
+                    className={`mute-btn ${isMuted ? 'muted' : ''}`}
+                    onClick={handleMuteToggle}
+                  >
+                    {isMuted ? '🔇' : '🔊'} {isMuted ? 'Unmute' : 'Mute'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
