@@ -6,12 +6,13 @@ import '@hackernoon/pixel-icon-library/fonts/iconfont.css'
 import csufLogo from './assets/csuf-logo.png'
 import moveScrollSound from './assets/move_scroll.mp3'
 import closeWindowSound from './assets/close_Window.mp3'
-import openWindowSound from './assets/open_Window.mp3'
+import openWindowSound from './assets/Open_Window.mp3'
 import enlargeWindowSound from './assets/enlarge_Window.mp3'
 import minimizeWindowSound from './assets/minimize_Window.mp3'
 import errorSound from './assets/Error.wav'
 import loadingSound from './assets/loading.mp3'
 import bgmSound from './assets/bgm.mp3'
+import projectClickSound from './assets/Project_Click.wav'
 
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
@@ -50,7 +51,7 @@ function App() {
       setLoadingAudio(loadingAudioInstance);
       
       const bgmAudioInstance = new Audio(bgmSound);
-      bgmAudioInstance.volume = 0.15;
+      bgmAudioInstance.volume = 0.1;
       bgmAudioInstance.loop = true;
       setBgmAudio(bgmAudioInstance);
 
@@ -86,7 +87,7 @@ function App() {
         clearInterval(loadingInterval);
         setTimeout(() => {
           setIsLoading(false);
-        }, 1000); // Extended final delay
+        }, 1000);
       }
     }, 1000); // 7 steps × 1000ms + 1000ms = 8 seconds total
 
@@ -200,6 +201,18 @@ function App() {
     try {
       const audio = new Audio(errorSound);
       audio.volume = 0.6;
+      audio.play().catch(error => {
+        console.log('Audio play failed:', error);
+      });
+    } catch (error) {
+      console.log('Audio creation failed:', error);
+    }
+  };
+
+  const playProjectClickSound = () => {
+    try {
+      const audio = new Audio(projectClickSound);
+      audio.volume = 0.7;
       audio.play().catch(error => {
         console.log('Audio play failed:', error);
       });
@@ -346,18 +359,22 @@ function App() {
   };
 
   const handleCheckersChessClick = () => {
+    playProjectClickSound();
     window.open('https://wocked61.github.io/cpsc_362_sp2025_group2/', '_blank');
   }
 
   const handlePokePullClick = () => {
+    playProjectClickSound();
     window.open('https://wocked61.github.io/PokePull/', '_blank');
   }
 
   const handleRegionalCloudClick = () => {
+    playProjectClickSound();
     window.open('https://wocked61.github.io/cpsc-349-project/', '_blank');
   }
 
   const handleHurdleWordleClick = () => {
+    playProjectClickSound();
     window.open('https://amajc.github.io/hurdle-frontend/', '_blank');
   }
 
