@@ -1,3 +1,12 @@
+// to do
+// add a text bubble and have the pink cat to show the user the volume settings
+// add more to loading screen???
+// tie online status to my discord status
+// add acheivements???
+// add users visited count
+// fix the background not fiiting if dragged to the right
+// add from claifornia in the about me section
+
 import React, { useState, useEffect } from 'react'
 import { Rnd } from 'react-rnd'
 import Footer from './Footer.jsx'
