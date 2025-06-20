@@ -6,6 +6,7 @@
 // add users visited count
 // fix the background not fiiting if dragged to the right
 // add from claifornia in the about me section
+// add text sound for typing effect
 
 import React, { useState, useEffect } from 'react'
 import { Rnd } from 'react-rnd'
