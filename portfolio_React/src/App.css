@@ -755,3 +755,39 @@ html {
   line-height: 1.8;
   letter-spacing: 1px;
 }
+
+.audio-prompt {
+  margin: 30px 0;
+  text-align: center;
+}
+
+.audio-enable-button {
+  background: linear-gradient(135deg, #FE89D9 0%, #14C8F9 100%);
+  border: 2px solid #FE89D9;
+  color: white;
+  font-family: var(--pixel-font);
+  font-size: 14px;
+  padding: 12px 24px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.audio-enable-button:hover {
+  background: linear-gradient(135deg, #14C8F9 0%, #FE89D9 100%);
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(254, 137, 217, 0.6);
+}
+
+.audio-enable-button:active {
+  transform: scale(0.95);
+}
+
+.audio-prompt-text {
+  font-size: 10px;
+  opacity: 0.8;
+  color: #FE89D9;
+  letter-spacing: 1px;
+}

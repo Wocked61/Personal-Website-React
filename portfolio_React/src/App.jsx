@@ -20,6 +20,8 @@ function App() {
   const [loadingText, setLoadingText] = useState('INITIALIZING SYSTEM...');
   const [loadingAudio, setLoadingAudio] = useState(null);
   const [bgmAudio, setBgmAudio] = useState(null);
+  const [audioEnabled, setAudioEnabled] = useState(false);
+  const [showAudioPrompt, setShowAudioPrompt] = useState(false);
   const [navigatorState, setNavigatorState] = useState({
     isVisible: true,
     isMinimized: false,
@@ -39,25 +41,38 @@ function App() {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    const loadingAudioInstance = new Audio(loadingSound);
-    loadingAudioInstance.volume = 0.5;
-    setLoadingAudio(loadingAudioInstance);
-    
-    loadingAudioInstance.play().catch(error => {
-      console.log('Loading audio play failed:', error);
-    });
 
-    const bgmAudioInstance = new Audio(bgmSound);
-    bgmAudioInstance.volume = 0.3;
-    bgmAudioInstance.loop = true;
-    setBgmAudio(bgmAudioInstance);
+  useEffect(() => {
+    const initializeAudio = async () => {
+
+      const loadingAudioInstance = new Audio(loadingSound);
+      loadingAudioInstance.volume = 0.5;
+      setLoadingAudio(loadingAudioInstance);
+      
+      const bgmAudioInstance = new Audio(bgmSound);
+      bgmAudioInstance.volume = 0.15;
+      bgmAudioInstance.loop = true;
+      setBgmAudio(bgmAudioInstance);
+
+
+      try {
+        await loadingAudioInstance.play();
+        setAudioEnabled(true);
+      } catch (error) {
+        console.log('Audio autoplay blocked, showing prompt');
+        setShowAudioPrompt(true);
+      }
+    };
+
+    initializeAudio();
 
     const loadingSteps = [
-      { progress: 20, text: 'LOADING USER DATA...' },
+      { progress: 10, text: 'INITIALIZING SYSTEM...' },
+      { progress: 25, text: 'LOADING USER DATA...' },
       { progress: 40, text: 'SCANNING SKILL REPOSITORY...' },
-      { progress: 60, text: 'INITIALIZING PROJECTS...' },
-      { progress: 80, text: 'CONNECTING TO PORTFOLIO SYSTEM...' },
+      { progress: 55, text: 'INITIALIZING PROJECTS...' },
+      { progress: 70, text: 'CONNECTING TO PORTFOLIO SYSTEM...' },
+      { progress: 85, text: 'FINALIZING SETUP...' },
       { progress: 100, text: 'SYSTEM READY!' }
     ];
 
@@ -71,35 +86,42 @@ function App() {
         clearInterval(loadingInterval);
         setTimeout(() => {
           setIsLoading(false);
-        }, 800);
+        }, 1000); // Extended final delay
       }
-    }, 600);
-
+    }, 1000); // 7 steps × 1000ms + 1000ms = 8 seconds total
 
     return () => {
       clearInterval(loadingInterval);
     };
   }, []);
 
+  const enableAudio = async () => {
+    if (loadingAudio && !audioEnabled) {
+      try {
+        await loadingAudio.play();
+        setAudioEnabled(true);
+        setShowAudioPrompt(false);
+      } catch (error) {
+        console.log('Failed to enable audio:', error);
+      }
+    }
+  };
 
   useEffect(() => {
-    if (loadingAudio && bgmAudio && !isLoading) {
-
+    if (loadingAudio && bgmAudio && !isLoading && audioEnabled) {
       const checkLoadingSoundEnd = () => {
         if (loadingAudio.ended || loadingAudio.currentTime >= loadingAudio.duration) {
           bgmAudio.play().catch(error => {
             console.log('BGM play failed:', error);
           });
         } else {
-
           setTimeout(checkLoadingSoundEnd, 100);
         }
       };
       
-
       checkLoadingSoundEnd();
     }
-  }, [loadingAudio, bgmAudio, isLoading]);
+  }, [loadingAudio, bgmAudio, isLoading, audioEnabled]);
 
   useEffect(() => {
     return () => {
@@ -379,6 +401,15 @@ function App() {
             </div>
             <div className="loading-percentage">{loadingProgress}%</div>
           </div>
+          
+          {showAudioPrompt && (
+            <div className="audio-prompt">
+              <button onClick={enableAudio} className="audio-enable-button">
+                🔊 ENABLE AUDIO
+              </button>
+              <div className="audio-prompt-text">Click to enable sound effects and music</div>
+            </div>
+          )}
           
           <div className="loading-footer">
             <div>INITIALIZING USER: DYLAN_PHAN</div>
