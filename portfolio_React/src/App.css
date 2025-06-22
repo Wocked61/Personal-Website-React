@@ -1071,3 +1071,142 @@ html {
 .typed-content .status-line {
   margin: 4px 0;
 }
+
+/* Sound Settings Notification */
+.sound-notification {
+  position: fixed;
+  bottom: 60px;
+  right: 20px;
+  z-index: 1000;
+  animation: slideUpFromBottom 0.5s ease-out, fadeOut 0.5s ease-in 9.5s forwards;
+}
+
+.sound-notification-content {
+  background: linear-gradient(135deg, #14C8F9 0%, #946AA3 100%);
+  border: 3px solid #8E6BFF;
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 #8E6BFF, 8px 8px 0 rgba(148, 106, 163, 0.3);
+  color: white;
+  font-family: var(--pixel-font);
+  min-width: 250px;
+  max-width: 320px;
+  position: relative;
+}
+
+/* Speech bubble tail pointing down to sound settings */
+.sound-notification-content::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  right: 30px;
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 12px solid #8E6BFF;
+}
+
+.sound-notification-content::before {
+  content: '';
+  position: absolute;
+  bottom: -9px;
+  right: 33px;
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 9px solid #946AA3;
+  z-index: 1;
+}
+
+.sound-notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sound-notification-close {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.sound-notification-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.sound-notification-body {
+  padding: 12px 16px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.sound-notification-body p {
+  margin: 0 0 6px 0;
+}
+
+.sound-notification-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Animations */
+@keyframes slideUpFromBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .sound-notification {
+    bottom: 50px;
+    right: 10px;
+    left: 10px;
+  }
+  
+  .sound-notification-content {
+    min-width: auto;
+    max-width: none;
+  }
+  
+  .sound-notification-content::after {
+    right: 50px;
+  }
+  
+  .sound-notification-content::before {
+    right: 53px;
+  }
+}

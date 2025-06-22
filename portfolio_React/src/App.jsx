@@ -2,8 +2,8 @@
 // add a text bubble and have the pink cat to show the user the volume settings
 // add more to loading screen???
 // add acheivements???
-// fix the background not fiiting if dragged to the right
 // add from claifornia in the about me section
+// fix animation of draggable windows
 
 import React, { useState, useEffect } from 'react'
 import { Rnd } from 'react-rnd'
@@ -40,6 +40,7 @@ function App() {
   const [visitorCount, setVisitorCount] = useState(0);
   const [uniqueVisitors, setUniqueVisitors] = useState(0);
   const [discordStatus, setDiscordStatus] = useState('offline');
+  const [showSoundNotification, setShowSoundNotification] = useState(false);
   const [visitorCounterState, setVisitorCounterState] = useState({
     isVisible: true,
     isMinimized: false,
@@ -83,17 +84,15 @@ function App() {
   // Visitor tracking system
   useEffect(() => {
     const trackVisitor = () => {
+      // Always increment total visits on every page load
+      const totalVisits = parseInt(localStorage.getItem('portfolio_total_visits') || '0');
+      const newTotalVisits = totalVisits + 1;
+      localStorage.setItem('portfolio_total_visits', newTotalVisits.toString());
+      setVisitorCount(newTotalVisits);
 
+      // Check if this session has already been tracked for unique visitors
       const sessionTracked = sessionStorage.getItem('portfolio_session_tracked');
-      if (sessionTracked) {
-
-        const totalVisits = parseInt(localStorage.getItem('portfolio_total_visits') || '0');
-        const uniqueVisitorsData = JSON.parse(localStorage.getItem('portfolio_unique_visitors') || '[]');
-        setVisitorCount(totalVisits);
-        setUniqueVisitors(uniqueVisitorsData.length);
-        return;
-      }
-
+      
       // Generate a unique visitor ID if one doesn't exist
       let visitorId = localStorage.getItem('portfolio_visitor_id');
       if (!visitorId) {
@@ -101,26 +100,25 @@ function App() {
         localStorage.setItem('portfolio_visitor_id', visitorId);
       }
 
-      // Get current counts from localStorage
-      const totalVisits = parseInt(localStorage.getItem('portfolio_total_visits') || '0');
+      // Handle unique visitors (only once per session)
       const uniqueVisitorsData = JSON.parse(localStorage.getItem('portfolio_unique_visitors') || '[]');
       
-      // Increment total visits
-      const newTotalVisits = totalVisits + 1;
-      localStorage.setItem('portfolio_total_visits', newTotalVisits.toString());
-      setVisitorCount(newTotalVisits);
-
-      // Check if this is a unique visitor
-      if (!uniqueVisitorsData.includes(visitorId)) {
-        const newUniqueVisitors = [...uniqueVisitorsData, visitorId];
-        localStorage.setItem('portfolio_unique_visitors', JSON.stringify(newUniqueVisitors));
-        setUniqueVisitors(newUniqueVisitors.length);
+      if (!sessionTracked) {
+        // Check if this is a unique visitor
+        if (!uniqueVisitorsData.includes(visitorId)) {
+          const newUniqueVisitors = [...uniqueVisitorsData, visitorId];
+          localStorage.setItem('portfolio_unique_visitors', JSON.stringify(newUniqueVisitors));
+          setUniqueVisitors(newUniqueVisitors.length);
+        } else {
+          setUniqueVisitors(uniqueVisitorsData.length);
+        }
+        
+        // Mark this session as tracked for unique visitors
+        sessionStorage.setItem('portfolio_session_tracked', 'true');
       } else {
+        // Just set the current unique visitor count
         setUniqueVisitors(uniqueVisitorsData.length);
       }
-
-
-      sessionStorage.setItem('portfolio_session_tracked', 'true');
     };
 
     trackVisitor();
@@ -900,6 +898,26 @@ function App() {
     }
   };
 
+  // Show sound notification after loading is complete
+  useEffect(() => {
+    if (!isLoading && audioEnabled) {
+      const timer = setTimeout(() => {
+        setShowSoundNotification(true);
+        // Auto-hide after 10 seconds
+        setTimeout(() => {
+          setShowSoundNotification(false);
+        }, 10000);
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, audioEnabled]);
+
+  const handleCloseSoundNotification = () => {
+    playCloseWindowSound();
+    setShowSoundNotification(false);
+  };
+
   if (isLoading) {
     return (
       <div className="loading-screen">
@@ -938,6 +956,28 @@ function App() {
 
   return (
     <div className="App">
+      {/* Sound Settings Notification */}
+      {showSoundNotification && (
+        <div className="sound-notification">
+          <div className="sound-notification-content">
+            <div className="sound-notification-header">
+              <span>� SYSTEM TIP</span>
+              <button 
+                className="sound-notification-close" 
+                onClick={handleCloseSoundNotification}
+                title="Close notification"
+              >
+                ×
+              </button>
+            </div>
+            <div className="sound-notification-body">
+              <p>💡 Hey! You can adjust the sound settings right here!</p>
+              <p>Click the volume icon (🔊) below to customize audio levels.</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Desktop Icons Container with Window Border - Now Draggable/Resizable */}
       {navigatorState.isVisible && !navigatorState.isMinimized && (
         <Rnd
