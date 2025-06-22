@@ -6,7 +6,6 @@
 // add users visited count
 // fix the background not fiiting if dragged to the right
 // add from claifornia in the about me section
-// add text sound for typing effect
 
 import React, { useState, useEffect } from 'react'
 import { Rnd } from 'react-rnd'
@@ -23,6 +22,7 @@ import errorSound from './assets/Error.wav'
 import loadingSound from './assets/loading.mp3'
 import bgmSound from './assets/bgm.mp3'
 import projectClickSound from './assets/Project_Click.wav'
+import textSound from './assets/text.wav'
 
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
@@ -208,20 +208,36 @@ function App() {
         let currentCharIndex = 0;
         let displayLines = [];
         
+        const playTextSound = () => {
+          try {
+            const audio = new Audio(textSound);
+            audio.volume = 0.1; // Lower volume for typing sound
+            audio.play().catch(error => {
+              console.log('Text audio play failed:', error);
+            });
+          } catch (error) {
+            console.log('Text audio creation failed:', error);
+          }
+        };
+        
         const typeText = () => {
           if (currentLineIndex < textLines.length) {
             const currentLine = textLines[currentLineIndex];
             
             if (currentCharIndex < currentLine.length) {
+              if (currentLine[currentCharIndex] !== ' ' || currentCharIndex > 0) {
+                playTextSound();
+              }
+              
               displayLines[currentLineIndex] = currentLine.slice(0, currentCharIndex + 1);
               setTypedText(displayLines.join('\n'));
               currentCharIndex++;
-              setTimeout(typeText, 15); // Typing speed: 15ms per character
+              setTimeout(typeText, 15);
             } else {
               displayLines[currentLineIndex] = currentLine;
               currentLineIndex++;
               currentCharIndex = 0;
-              setTimeout(typeText, 100); // Brief pause
+              setTimeout(typeText, 100);
             }
           } else {
             setIsTyping(false);
