@@ -39,6 +39,18 @@ function App() {
   const [aboutMeLoading, setAboutMeLoading] = useState(true);
   const [typedText, setTypedText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [visitorCount, setVisitorCount] = useState(0);
+  const [uniqueVisitors, setUniqueVisitors] = useState(0);
+  const [visitorCounterState, setVisitorCounterState] = useState({
+    isVisible: true,
+    isMinimized: false,
+    isMaximized: false,
+    isAnimating: false,
+    position: { x: 1450, y: 150 },
+    size: { width: 360, height: 220 },
+    savedPosition: { x: 1450, y: 150 },
+    savedSize: { width: 360, height: 220 }
+  });
   const [navigatorState, setNavigatorState] = useState({
     isVisible: true,
     isMinimized: false,
@@ -67,6 +79,52 @@ function App() {
         y: prev.position.y - window.scrollY
       }
     }));
+  }, []);
+
+  // Visitor tracking system
+  useEffect(() => {
+    const trackVisitor = () => {
+
+      const sessionTracked = sessionStorage.getItem('portfolio_session_tracked');
+      if (sessionTracked) {
+
+        const totalVisits = parseInt(localStorage.getItem('portfolio_total_visits') || '0');
+        const uniqueVisitorsData = JSON.parse(localStorage.getItem('portfolio_unique_visitors') || '[]');
+        setVisitorCount(totalVisits);
+        setUniqueVisitors(uniqueVisitorsData.length);
+        return;
+      }
+
+      // Generate a unique visitor ID if one doesn't exist
+      let visitorId = localStorage.getItem('portfolio_visitor_id');
+      if (!visitorId) {
+        visitorId = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('portfolio_visitor_id', visitorId);
+      }
+
+      // Get current counts from localStorage
+      const totalVisits = parseInt(localStorage.getItem('portfolio_total_visits') || '0');
+      const uniqueVisitorsData = JSON.parse(localStorage.getItem('portfolio_unique_visitors') || '[]');
+      
+      // Increment total visits
+      const newTotalVisits = totalVisits + 1;
+      localStorage.setItem('portfolio_total_visits', newTotalVisits.toString());
+      setVisitorCount(newTotalVisits);
+
+      // Check if this is a unique visitor
+      if (!uniqueVisitorsData.includes(visitorId)) {
+        const newUniqueVisitors = [...uniqueVisitorsData, visitorId];
+        localStorage.setItem('portfolio_unique_visitors', JSON.stringify(newUniqueVisitors));
+        setUniqueVisitors(newUniqueVisitors.length);
+      } else {
+        setUniqueVisitors(uniqueVisitorsData.length);
+      }
+
+
+      sessionStorage.setItem('portfolio_session_tracked', 'true');
+    };
+
+    trackVisitor();
   }, []);
 
 
@@ -635,6 +693,172 @@ function App() {
     });
   };
 
+  // Visitor Counter Window Handlers
+  const handleVisitorCounterMinimize = () => {
+    playMinimizeWindowSound();
+    
+    const currentPosition = visitorCounterState.isMaximized ? visitorCounterState.savedPosition : visitorCounterState.position;
+    const viewportRelativePosition = {
+      x: currentPosition.x,
+      y: currentPosition.y - window.scrollY 
+    };
+    
+    setVisitorCounterState(prev => ({
+      ...prev,
+      savedPosition: viewportRelativePosition,
+      savedSize: prev.isMaximized ? prev.savedSize : prev.size,
+      isAnimating: true
+    }));
+
+    setTimeout(() => {
+      setVisitorCounterState(prev => ({
+        ...prev,
+        isMinimized: true,
+        isAnimating: false,
+        isMaximized: false
+      }));
+    }, 300);
+  };
+
+  const handleVisitorCounterMaximize = () => {
+    playEnlargeWindowSound();
+    
+    if (!visitorCounterState.isMaximized) {
+      const viewportRelativePosition = {
+        x: visitorCounterState.position.x,
+        y: visitorCounterState.position.y - window.scrollY
+      };
+      
+      setVisitorCounterState(prev => ({
+        ...prev,
+        isMaximized: true,
+        isMinimized: false,
+        savedPosition: viewportRelativePosition,
+        savedSize: prev.size
+      }));
+    } else {
+      const viewportPosition = {
+        x: visitorCounterState.savedPosition.x,
+        y: visitorCounterState.savedPosition.y + window.scrollY
+      };
+      
+      setVisitorCounterState(prev => ({
+        ...prev,
+        isMaximized: false,
+        isMinimized: false,
+        position: viewportPosition,
+        size: prev.savedSize
+      }));
+    }
+  };
+
+  const handleVisitorCounterClose = () => {
+    playCloseWindowSound();
+    
+    const visitorCounterElement = document.querySelector('.visitor-counter-window');
+    let viewportRelativePosition;
+    
+    if (visitorCounterElement) {
+      const rect = visitorCounterElement.getBoundingClientRect();
+      viewportRelativePosition = {
+        x: rect.left,
+        y: rect.top
+      };
+    } else {
+      const currentPosition = visitorCounterState.isMaximized ? visitorCounterState.savedPosition : visitorCounterState.position;
+      viewportRelativePosition = {
+        x: currentPosition.x,
+        y: currentPosition.y - window.scrollY
+      };
+    }
+    
+    setVisitorCounterState(prev => ({
+      ...prev,
+      savedPosition: viewportRelativePosition,
+      savedSize: prev.isMaximized ? prev.savedSize : prev.size,
+      isAnimating: true
+    }));
+
+    setTimeout(() => {
+      setVisitorCounterState(prev => ({
+        ...prev,
+        isVisible: false,
+        isMinimized: false,
+        isAnimating: false,
+        isMaximized: false
+      }));
+    }, 300);
+  };
+
+  const handleTaskBarVisitorCounterClick = () => {
+    if (!visitorCounterState.isVisible) {
+      playOpenWindowSound();
+      
+      const viewportPosition = {
+        x: visitorCounterState.savedPosition.x,
+        y: visitorCounterState.savedPosition.y + window.scrollY
+      };
+      
+      setVisitorCounterState(prev => ({
+        ...prev,
+        isVisible: true,
+        isMinimized: false,
+        position: viewportPosition,
+        size: prev.savedSize
+      }));
+    } else if (visitorCounterState.isMinimized) {
+      playOpenWindowSound();
+      
+      const viewportPosition = {
+        x: visitorCounterState.savedPosition.x,
+        y: visitorCounterState.savedPosition.y + window.scrollY
+      };
+      
+      setVisitorCounterState(prev => ({
+        ...prev,
+        isMinimized: false,
+        position: viewportPosition,
+        size: prev.savedSize
+      }));
+    } else {
+      playCloseWindowSound();
+      
+      const visitorCounterElement = document.querySelector('.visitor-counter-window');
+      let viewportRelativePosition;
+      
+      if (visitorCounterElement) {
+        const rect = visitorCounterElement.getBoundingClientRect();
+        viewportRelativePosition = {
+          x: rect.left,
+          y: rect.top
+        };
+      } else {
+        const currentPosition = visitorCounterState.isMaximized ? visitorCounterState.savedPosition : visitorCounterState.position;
+        viewportRelativePosition = {
+          x: currentPosition.x,
+          y: currentPosition.y - window.scrollY
+        };
+      }
+      
+      setVisitorCounterState(prev => ({
+        ...prev,
+        savedPosition: viewportRelativePosition,
+        savedSize: prev.isMaximized ? prev.savedSize : prev.size,
+        isAnimating: true
+      }));
+
+      setTimeout(() => {
+        setVisitorCounterState(prev => ({
+          ...prev,
+          isVisible: false,
+          isMinimized: false,
+          isAnimating: false,
+          isMaximized: false
+        }));
+      }, 300);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="loading-screen">
@@ -744,6 +968,81 @@ function App() {
               <div className="desktop-icon" onClick={scrollToContact}>
                 <div className="icon-image">📧</div>
                 <div>Contact</div>
+              </div>
+            </div>
+          </div>
+        </Rnd>
+      )}
+
+      {/* Visitor Counter Window */}
+      {visitorCounterState.isVisible && !visitorCounterState.isMinimized && (
+        <Rnd
+          position={visitorCounterState.isMaximized ? { x: 0, y: 0 } : visitorCounterState.position}
+          size={visitorCounterState.isMaximized ? { width: window.innerWidth, height: window.innerHeight - 40 } : visitorCounterState.size}
+          onDragStop={(e, d) => {
+            if (!visitorCounterState.isMaximized) {
+              const viewportRelativePosition = {
+                x: d.x,
+                y: d.y - window.scrollY
+              };
+              
+              setVisitorCounterState(prev => ({
+                ...prev,
+                position: { x: d.x, y: d.y },
+                savedPosition: viewportRelativePosition
+              }));
+            }
+          }}
+          onResizeStop={(e, direction, ref, delta, position) => {
+            if (!visitorCounterState.isMaximized) {
+              const viewportRelativePosition = {
+                x: position.x,
+                y: position.y - window.scrollY
+              };
+              
+              setVisitorCounterState(prev => ({
+                ...prev,
+                size: { width: ref.style.width, height: ref.style.height },
+                position,
+                savedPosition: viewportRelativePosition
+              }));
+            }
+          }}
+          minWidth={200}
+          minHeight={120}
+          bounds="parent"
+          dragHandleClassName="window-title-area"
+          className={`desktop-icons-rnd ${visitorCounterState.isAnimating ? 'minimizing' : ''}`}
+          style={{
+            position: 'fixed',
+            zIndex: 99
+          }}
+          disableDragging={visitorCounterState.isMaximized || visitorCounterState.isAnimating}
+          enableResizing={!visitorCounterState.isMaximized && !visitorCounterState.isAnimating}
+        >
+          <div className="desktop-icons-window visitor-counter-window">
+            <div className="window-header">
+              <span className="window-title-area">VisitorTracker.exe</span>
+              <div className="window-controls">
+                <div className="window-button" onClick={handleVisitorCounterMinimize}>−</div>
+                <div className="window-button" onClick={handleVisitorCounterMaximize}>□</div>
+                <div className="window-button" onClick={handleVisitorCounterClose}>×</div>
+              </div>
+            </div>
+            <div className="visitor-counter-content">
+              <div className="visitor-stats">
+                <h3>SITE ANALYTICS</h3>
+                <div className="stat-line">
+                  <span className="stat-label">Total Visits:</span>
+                  <span className="stat-value">{visitorCount.toLocaleString()}</span>
+                </div>
+                <div className="stat-line">
+                  <span className="stat-label">Unique Visitors:</span>
+                  <span className="stat-value">{uniqueVisitors.toLocaleString()}</span>
+                </div>
+              </div>
+              <div className="visitor-footer">
+                <small>📊 CLIENT-SIDE TRACKING</small>
               </div>
             </div>
           </div>
@@ -917,6 +1216,12 @@ function App() {
             onClick={handleTaskBarNavigatorClick}
           >
             Navigator.exe
+          </div>
+          <div 
+            className={`task-item ${(!visitorCounterState.isVisible || visitorCounterState.isMinimized) ? 'minimized' : 'active'}`}
+            onClick={handleTaskBarVisitorCounterClick}
+          >
+            VisitorTracker.exe
           </div>
         </div>
         <div className="system-tray">

@@ -317,6 +317,61 @@ body {
   overflow-y: auto;
 }
 
+/* Visitor Counter Styles */
+.visitor-counter-content {
+  flex: 1;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: var(--pixel-font);
+  background: linear-gradient(135deg, #FCFEFF 0%, #F5F7FF 100%);
+  overflow-y: auto;
+}
+
+.visitor-stats h3 {
+  color: var(--accent3-color);
+  font-size: 14px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 5px;
+}
+
+.stat-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(148, 106, 163, 0.2);
+}
+
+.stat-label {
+  color: var(--accent3-color);
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.stat-value {
+  color: var(--blue-accent);
+  font-weight: bold;
+  font-size: 12px;
+  background: rgba(254, 137, 217, 0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid rgba(254, 137, 217, 0.3);
+}
+
+.visitor-footer {
+  margin-top: auto;
+  text-align: center;
+  color: rgba(148, 106, 163, 0.7);
+  font-size: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(148, 106, 163, 0.2);
+}
+
 ::-webkit-scrollbar {
   width: 16px;
 }
