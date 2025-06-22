@@ -1,9 +1,7 @@
 // to do
 // add a text bubble and have the pink cat to show the user the volume settings
 // add more to loading screen???
-// tie online status to my discord status
 // add acheivements???
-// add users visited count
 // fix the background not fiiting if dragged to the right
 // add from claifornia in the about me section
 
@@ -41,6 +39,7 @@ function App() {
   const [isTyping, setIsTyping] = useState(false);
   const [visitorCount, setVisitorCount] = useState(0);
   const [uniqueVisitors, setUniqueVisitors] = useState(0);
+  const [discordStatus, setDiscordStatus] = useState('offline');
   const [visitorCounterState, setVisitorCounterState] = useState({
     isVisible: true,
     isMinimized: false,
@@ -125,6 +124,27 @@ function App() {
     };
 
     trackVisitor();
+  }, []);
+
+  // Discord status fetching
+  useEffect(() => {
+    const fetchDiscordStatus = () => {
+      fetch('https://api.lanyard.rest/v1/users/235600317939449856')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.data && data.data.discord_status) {
+            setDiscordStatus(data.data.discord_status);
+          }
+        })
+        .catch(error => {
+          console.log('Failed to fetch Discord status:', error);
+          setDiscordStatus('offline');
+        });
+    };
+
+    fetchDiscordStatus(); // initial fetch
+    const interval = setInterval(fetchDiscordStatus, 10000); // every 10 seconds
+    return () => clearInterval(interval);
   }, []);
 
 
@@ -693,6 +713,27 @@ function App() {
     });
   };
 
+  // Discord status helpers
+  const getDiscordStatusColor = (status) => {
+    switch (status) {
+      case 'online': return '#43b581';
+      case 'idle': return '#faa61a';
+      case 'dnd': return '#f04747';
+      case 'offline': return '#747f8d';
+      default: return '#747f8d';
+    }
+  };
+
+  const getDiscordStatusText = (status) => {
+    switch (status) {
+      case 'online': return 'ONLINE';
+      case 'idle': return 'AWAY';
+      case 'dnd': return 'BUSY';
+      case 'offline': return 'OFFLINE';
+      default: return 'OFFLINE';
+    }
+  };
+
   // Visitor Counter Window Handlers
   const handleVisitorCounterMinimize = () => {
     playMinimizeWindowSound();
@@ -1055,7 +1096,28 @@ function App() {
           Dylan's Portfolio System v1.0
         </h1>
         <div style={{fontSize: '10px'}}>
-          STATUS: ONLINE | USER: DYLAN_PHAN
+          <span 
+            style={{
+              color: getDiscordStatusColor(discordStatus),
+              textShadow: `0 0 3px ${getDiscordStatusColor(discordStatus)}`,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+            title={`Discord Status: ${discordStatus}`}
+          >
+            <span 
+              style={{
+                display: 'inline-block',
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: getDiscordStatusColor(discordStatus),
+                boxShadow: `0 0 4px ${getDiscordStatusColor(discordStatus)}`
+              }}
+            />
+            STATUS: {getDiscordStatusText(discordStatus)}
+          </span> | USER: DYLAN_PHAN
         </div>
       </div>
 
