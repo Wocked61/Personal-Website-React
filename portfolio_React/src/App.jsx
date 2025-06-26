@@ -1,8 +1,7 @@
 // to do
 // add a text bubble and have the pink cat to show the user the volume settings
 // add more to loading screen???
-// add acheivements???
-// add from claifornia in the about me section
+// add achievements???
 // fix animation of draggable windows
 
 import React, { useState, useEffect } from 'react'
@@ -21,6 +20,7 @@ import loadingSound from './assets/loading.mp3'
 import bgmSound from './assets/bgm.mp3'
 import projectClickSound from './assets/Project_Click.wav'
 import textSound from './assets/text.wav'
+import sadgeKitty from './assets/sadge_Kitty.png'
 
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
@@ -959,9 +959,12 @@ function App() {
       {/* Sound Settings Notification */}
       {showSoundNotification && (
         <div className="sound-notification">
+          <div className="notification-cat">
+            <img src={sadgeKitty} alt="Cute cat" className="cat-image" />
+          </div>
           <div className="sound-notification-content">
             <div className="sound-notification-header">
-              <span>� SYSTEM TIP</span>
+              <span>SYSTEM TIP</span>
               <button 
                 className="sound-notification-close" 
                 onClick={handleCloseSoundNotification}
@@ -971,8 +974,10 @@ function App() {
               </button>
             </div>
             <div className="sound-notification-body">
-              <p>💡 Hey! You can adjust the sound settings right here!</p>
-              <p>Click the volume icon (🔊) below to customize audio levels.</p>
+              <div className="notification-text">
+                <p>Hey! You can adjust the sound settings right here!</p>
+                <p>Click the volume icon (🔊) below to customize audio levels.</p>
+              </div>
             </div>
           </div>
         </div>
