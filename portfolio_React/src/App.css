@@ -1236,6 +1236,11 @@ html {
   animation: gentleBounce 2s ease-in-out infinite;
 }
 
+.cat-image:hover {
+  animation: gentleBounce 1s ease-in-out infinite;
+  cursor: pointer;
+}
+
 @keyframes gentleBounce {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-3px); }
