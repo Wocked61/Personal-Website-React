@@ -1,9 +1,5 @@
 // to do
 // achievements system implemented ✓
-// draggable windows fixed ✓
-// window repositioning on reopen fixed ✓
-// drag constraints and disappearing window bug fixed ✓
-// viewport-aware window reopening with savedPosition implemented ✓ 
 
 import React, { useState, useEffect } from 'react'
 import { Rnd } from 'react-rnd'
@@ -53,7 +49,7 @@ function App() {
       speedRunner: false
     };
   });
-  const [showAchievement, setShowAchievement] = useState(null);
+  const [showAchievements, setShowAchievements] = useState([]);
   const [unlockedAchievements, setUnlockedAchievements] = useState(() => {
     // Load unlocked achievements from localStorage
     const savedUnlocked = localStorage.getItem('portfolio_unlocked_achievements');
@@ -101,7 +97,6 @@ function App() {
   // Visitor tracking system
   useEffect(() => {
     const trackVisitor = () => {
-      // Always increment total visits on every page load
       const totalVisits = parseInt(localStorage.getItem('portfolio_total_visits') || '0');
       const newTotalVisits = totalVisits + 1;
       localStorage.setItem('portfolio_total_visits', newTotalVisits.toString());
@@ -109,7 +104,6 @@ function App() {
       
       console.log(`📊 Total visits: ${newTotalVisits}`);
 
-      // Check if this session has already been tracked for unique visitors
       const sessionTracked = sessionStorage.getItem('portfolio_session_tracked');
       
       // Generate a unique visitor ID if one doesn't exist
@@ -120,7 +114,6 @@ function App() {
         console.log('🆔 New visitor ID created:', visitorId);
       }
 
-      // Handle unique visitors (only once per session)
       const uniqueVisitorsData = JSON.parse(localStorage.getItem('portfolio_unique_visitors') || '[]');
       
       if (!sessionTracked) {
@@ -164,7 +157,7 @@ function App() {
         });
     };
 
-    fetchDiscordStatus(); // initial fetch
+    fetchDiscordStatus();
     const interval = setInterval(fetchDiscordStatus, 10000); // every 10 seconds
     return () => clearInterval(interval);
   }, []);
@@ -311,7 +304,7 @@ function App() {
         const playTextSound = () => {
           try {
             const audio = new Audio(textSound);
-            audio.volume = 0.1; // Lower volume for typing sound
+            audio.volume = 0.1;
             audio.play().catch(error => {
               console.log('Text audio play failed:', error);
             });
@@ -769,33 +762,31 @@ function App() {
     }
   };
 
-  // Helper function to get a safe position within the current viewport
+
   const getSafeWindowPosition = (windowWidth, windowHeight, preferredX = null, preferredY = null) => {
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
     
-    // If no preferred position is given, center the window in the viewport
+
     const defaultX = preferredX !== null ? preferredX : Math.max(20, (viewportWidth - windowWidth) / 2);
     const defaultY = preferredY !== null ? preferredY : Math.max(20, (viewportHeight - windowHeight) / 2);
     
-    // Calculate position relative to viewport (not document)
-    // Since windows use position: fixed, we don't need to add scrollY
     let safeY = Math.min(defaultY, viewportHeight - windowHeight - 50);
     let safeX = Math.min(defaultX, viewportWidth - windowWidth - 20);
     
-    // If preferred position would put window off-screen, adjust accordingly
+
     if (defaultX > viewportWidth - windowWidth) {
       safeX = viewportWidth - windowWidth - 20;
     }
     
-    // Ensure minimum distances from edges
+
     const finalX = Math.max(20, safeX);
     const finalY = Math.max(20, safeY);
     
     return { x: finalX, y: finalY };
   };
 
-  // Visitor Counter Window Handlers
+
   const handleVisitorCounterMinimize = () => {
     playMinimizeWindowSound();
     
@@ -1031,20 +1022,18 @@ function App() {
       const newAchievements = { ...achievements, [achievementKey]: true };
       const newUnlockedList = [...unlockedAchievements, achievementKey];
       
-      // Update state
       setAchievements(newAchievements);
       setUnlockedAchievements(newUnlockedList);
       
-      // Save to localStorage
       localStorage.setItem('portfolio_achievements', JSON.stringify(newAchievements));
       localStorage.setItem('portfolio_unlocked_achievements', JSON.stringify(newUnlockedList));
       
-      // Show achievement notification
-      setShowAchievement(achievementKey);
+      // Add achievement to the display queue
+      setShowAchievements(prev => [...prev, achievementKey]);
       
       // Auto-hide achievement after 5 seconds
       setTimeout(() => {
-        setShowAchievement(null);
+        setShowAchievements(prev => prev.filter(key => key !== achievementKey));
       }, 5000);
     } else {
       console.log(`❌ Achievement ${achievementKey} already unlocked`);
@@ -1091,6 +1080,17 @@ function App() {
       console.log('👥 Current unique visitors:', uniqueVisitors);
       console.log('🕒 Current hour:', new Date().getHours());
     };
+    
+    // Test function for multiple achievements
+    window.testMultipleAchievements = () => {
+      console.log('🧪 Testing multiple achievements...');
+      const testAchievements = ['settingsExplorer', 'projectViewer', 'windowMaster'];
+      testAchievements.forEach((achievement, index) => {
+        setTimeout(() => {
+          unlockAchievement(achievement);
+        }, index * 200); // Stagger the achievements slightly
+      });
+    };
   }, [achievements, visitorCount, uniqueVisitors]);
 
   // Scroll tracking for achievements
@@ -1098,13 +1098,15 @@ function App() {
     let scrollCount = 0;
     let lastScrollTime = Date.now();
     let hasScrolledToProjects = false;
+    let hasTriggeredSpeedRunner = false; // Add flag to prevent multiple speed runner achievements
 
     const handleScroll = () => {
       scrollCount++;
       const currentTime = Date.now();
       
-      // Speed runner achievement (fast scrolling)
-      if (currentTime - lastScrollTime < 100 && scrollCount >= 10) {
+      // Speed runner achievement (fast scrolling) - only trigger once
+      if (currentTime - lastScrollTime < 100 && scrollCount >= 10 && !hasTriggeredSpeedRunner) {
+        hasTriggeredSpeedRunner = true; // Set flag to prevent multiple triggers
         console.log('⚡ Lightning Fast achievement triggered!');
         unlockAchievement('speedRunner');
       }
@@ -1238,35 +1240,44 @@ function App() {
         </div>
       )}
 
-      {/* Achievement Notification */}
-      {showAchievement && (
-        <div className="achievement-notification">
-          <div className="achievement-window">
-            <div className="achievement-title-bar">
-              <div className="achievement-window-title">
-                <span className="achievement-icon-small">🏆</span>
-                ACHIEVEMENT UNLOCKED
-              </div>
-              <div className="achievement-window-controls">
-                <button className="achievement-close-btn" onClick={() => setShowAchievement(null)}>×</button>
-              </div>
-            </div>
-            <div className="achievement-window-content">
-              <div className="achievement-cat-container">
-                <img src={omgKitty} alt="Excited cat" className="achievement-cat-image" />
-              </div>
-              <div className="achievement-info">
-                <div className="achievement-details-header">
-                  <div className="achievement-emoji">{achievementData[showAchievement]?.icon}</div>
-                  <div className={`achievement-rarity-badge ${achievementData[showAchievement]?.rarity}`}>
-                    {achievementData[showAchievement]?.rarity?.toUpperCase()}
+      {/* Achievement Notifications */}
+      {showAchievements.length > 0 && (
+        <div className="achievement-notifications-container">
+          {showAchievements.map((achievementKey, index) => (
+            <div key={achievementKey} className="achievement-notification" style={{ top: `${20 + index * 160}px` }}>
+              <div className="achievement-window">
+                <div className="achievement-title-bar">
+                  <div className="achievement-window-title">
+                    <span className="achievement-icon-small">🏆</span>
+                    ACHIEVEMENT UNLOCKED
+                  </div>
+                  <div className="achievement-window-controls">
+                    <button 
+                      className="achievement-close-btn" 
+                      onClick={() => setShowAchievements(prev => prev.filter(key => key !== achievementKey))}
+                    >
+                      ×
+                    </button>
                   </div>
                 </div>
-                <div className="achievement-name">{achievementData[showAchievement]?.title}</div>
-                <div className="achievement-description">{achievementData[showAchievement]?.description}</div>
+                <div className="achievement-window-content">
+                  <div className="achievement-cat-container">
+                    <img src={omgKitty} alt="Excited cat" className="achievement-cat-image" />
+                  </div>
+                  <div className="achievement-info">
+                    <div className="achievement-details-header">
+                      <div className="achievement-emoji">{achievementData[achievementKey]?.icon}</div>
+                      <div className={`achievement-rarity-badge ${achievementData[achievementKey]?.rarity}`}>
+                        {achievementData[achievementKey]?.rarity?.toUpperCase()}
+                      </div>
+                    </div>
+                    <div className="achievement-name">{achievementData[achievementKey]?.title}</div>
+                    <div className="achievement-description">{achievementData[achievementKey]?.description}</div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          ))}
         </div>
       )}
 
