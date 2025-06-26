@@ -1,7 +1,6 @@
 // to do
-// add more to loading screen???
-// add achievements???
-// fix animation of draggable windows
+// achievements system implemented ✓
+// draggable windows fixed ✓
 
 import React, { useState, useEffect } from 'react'
 import { Rnd } from 'react-rnd'
@@ -63,9 +62,7 @@ function App() {
     isMaximized: false,
     isAnimating: false,
     position: { x: 1450, y: 150 },
-    size: { width: 360, height: 220 },
-    savedPosition: { x: 1450, y: 150 },
-    savedSize: { width: 360, height: 220 }
+    size: { width: 360, height: 220 }
   });
   const [navigatorState, setNavigatorState] = useState({
     isVisible: true,
@@ -73,9 +70,7 @@ function App() {
     isMaximized: false,
     isAnimating: false,
     position: { x: 120, y: 140 },
-    size: { width: 320, height: 320 },
-    savedPosition: { x: 120, y: 140 }, 
-    savedSize: { width: 320, height: 320 }
+    size: { width: 320, height: 320 }
   });
 
   useEffect(() => {
@@ -84,17 +79,6 @@ function App() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
-
-
-  useEffect(() => {
-    setNavigatorState(prev => ({
-      ...prev,
-      savedPosition: {
-        x: prev.position.x,
-        y: prev.position.y - window.scrollY
-      }
-    }));
   }, []);
 
   // Visitor tracking system
@@ -467,16 +451,8 @@ function App() {
     console.log('🎮 Window Wizard achievement triggered!');
     unlockAchievement('windowMaster'); // Window interaction achievement
     
-    const currentPosition = navigatorState.isMaximized ? navigatorState.savedPosition : navigatorState.position;
-    const viewportRelativePosition = {
-      x: currentPosition.x,
-      y: currentPosition.y - window.scrollY 
-    };
-    
     setNavigatorState(prev => ({
       ...prev,
-      savedPosition: viewportRelativePosition,
-      savedSize: prev.isMaximized ? prev.savedSize : prev.size,
       isAnimating: true
     }));
 
@@ -493,59 +469,18 @@ function App() {
   const handleMaximize = () => {
     playEnlargeWindowSound();
     
-    if (!navigatorState.isMaximized) {
-      const viewportRelativePosition = {
-        x: navigatorState.position.x,
-        y: navigatorState.position.y - window.scrollY
-      };
-      
-      setNavigatorState(prev => ({
-        ...prev,
-        isMaximized: true,
-        isMinimized: false,
-        savedPosition: viewportRelativePosition,
-        savedSize: prev.size
-      }));
-    } else {
-      const viewportPosition = {
-        x: navigatorState.savedPosition.x,
-        y: navigatorState.savedPosition.y + window.scrollY
-      };
-      
-      setNavigatorState(prev => ({
-        ...prev,
-        isMaximized: false,
-        isMinimized: false,
-        position: viewportPosition,
-        size: prev.savedSize
-      }));
-    }
+    setNavigatorState(prev => ({
+      ...prev,
+      isMaximized: !prev.isMaximized,
+      isMinimized: false
+    }));
   };
 
   const handleClose = () => {
     playCloseWindowSound();
     
-    const navigatorElement = document.querySelector('.navigator-window');
-    let viewportRelativePosition;
-    
-    if (navigatorElement) {
-      const rect = navigatorElement.getBoundingClientRect();
-      viewportRelativePosition = {
-        x: rect.left,
-        y: rect.top
-      };
-    } else {
-      const currentPosition = navigatorState.isMaximized ? navigatorState.savedPosition : navigatorState.position;
-      viewportRelativePosition = {
-        x: currentPosition.x,
-        y: currentPosition.y - window.scrollY
-      };
-    }
-    
     setNavigatorState(prev => ({
       ...prev,
-      savedPosition: viewportRelativePosition,
-      savedSize: prev.isMaximized ? prev.savedSize : prev.size,
       isAnimating: true
     }));
 
@@ -564,71 +499,20 @@ function App() {
     if (!navigatorState.isVisible) {
       playOpenWindowSound();
       
-      const viewportPosition = {
-        x: navigatorState.savedPosition.x,
-        y: navigatorState.savedPosition.y + window.scrollY
-      };
-      
       setNavigatorState(prev => ({
         ...prev,
         isVisible: true,
-        isMinimized: false,
-        position: viewportPosition,
-        size: prev.savedSize
+        isMinimized: false
       }));
     } else if (navigatorState.isMinimized) {
       playOpenWindowSound();
       
-      const viewportPosition = {
-        x: navigatorState.savedPosition.x,
-        y: navigatorState.savedPosition.y + window.scrollY
-      };
-      
       setNavigatorState(prev => ({
         ...prev,
-        isMinimized: false,
-        position: viewportPosition,
-        size: prev.savedSize
+        isMinimized: false
       }));
     } else {
-
-      playCloseWindowSound();
-      
-
-      const navigatorElement = document.querySelector('.navigator-window');
-      let viewportRelativePosition;
-      
-      if (navigatorElement) {
-        const rect = navigatorElement.getBoundingClientRect();
-        viewportRelativePosition = {
-          x: rect.left,
-          y: rect.top
-        };
-      } else {
-
-        const currentPosition = navigatorState.isMaximized ? navigatorState.savedPosition : navigatorState.position;
-        viewportRelativePosition = {
-          x: currentPosition.x,
-          y: currentPosition.y - window.scrollY
-        };
-      }
-      
-      setNavigatorState(prev => ({
-        ...prev,
-        savedPosition: viewportRelativePosition,
-        savedSize: prev.isMaximized ? prev.savedSize : prev.size,
-        isAnimating: true
-      }));
-
-      setTimeout(() => {
-        setNavigatorState(prev => ({
-          ...prev,
-          isVisible: false,
-          isMinimized: false,
-          isAnimating: false,
-          isMaximized: false
-        }));
-      }, 300);
+      handleClose();
     }
   };
 
@@ -764,16 +648,8 @@ function App() {
   const handleVisitorCounterMinimize = () => {
     playMinimizeWindowSound();
     
-    const currentPosition = visitorCounterState.isMaximized ? visitorCounterState.savedPosition : visitorCounterState.position;
-    const viewportRelativePosition = {
-      x: currentPosition.x,
-      y: currentPosition.y - window.scrollY 
-    };
-    
     setVisitorCounterState(prev => ({
       ...prev,
-      savedPosition: viewportRelativePosition,
-      savedSize: prev.isMaximized ? prev.savedSize : prev.size,
       isAnimating: true
     }));
 
@@ -790,59 +666,18 @@ function App() {
   const handleVisitorCounterMaximize = () => {
     playEnlargeWindowSound();
     
-    if (!visitorCounterState.isMaximized) {
-      const viewportRelativePosition = {
-        x: visitorCounterState.position.x,
-        y: visitorCounterState.position.y - window.scrollY
-      };
-      
-      setVisitorCounterState(prev => ({
-        ...prev,
-        isMaximized: true,
-        isMinimized: false,
-        savedPosition: viewportRelativePosition,
-        savedSize: prev.size
-      }));
-    } else {
-      const viewportPosition = {
-        x: visitorCounterState.savedPosition.x,
-        y: visitorCounterState.savedPosition.y + window.scrollY
-      };
-      
-      setVisitorCounterState(prev => ({
-        ...prev,
-        isMaximized: false,
-        isMinimized: false,
-        position: viewportPosition,
-        size: prev.savedSize
-      }));
-    }
+    setVisitorCounterState(prev => ({
+      ...prev,
+      isMaximized: !prev.isMaximized,
+      isMinimized: false
+    }));
   };
 
   const handleVisitorCounterClose = () => {
     playCloseWindowSound();
     
-    const visitorCounterElement = document.querySelector('.visitor-counter-window');
-    let viewportRelativePosition;
-    
-    if (visitorCounterElement) {
-      const rect = visitorCounterElement.getBoundingClientRect();
-      viewportRelativePosition = {
-        x: rect.left,
-        y: rect.top
-      };
-    } else {
-      const currentPosition = visitorCounterState.isMaximized ? visitorCounterState.savedPosition : visitorCounterState.position;
-      viewportRelativePosition = {
-        x: currentPosition.x,
-        y: currentPosition.y - window.scrollY
-      };
-    }
-    
     setVisitorCounterState(prev => ({
       ...prev,
-      savedPosition: viewportRelativePosition,
-      savedSize: prev.isMaximized ? prev.savedSize : prev.size,
       isAnimating: true
     }));
 
@@ -861,68 +696,20 @@ function App() {
     if (!visitorCounterState.isVisible) {
       playOpenWindowSound();
       
-      const viewportPosition = {
-        x: visitorCounterState.savedPosition.x,
-        y: visitorCounterState.savedPosition.y + window.scrollY
-      };
-      
       setVisitorCounterState(prev => ({
         ...prev,
         isVisible: true,
-        isMinimized: false,
-        position: viewportPosition,
-        size: prev.savedSize
+        isMinimized: false
       }));
     } else if (visitorCounterState.isMinimized) {
       playOpenWindowSound();
       
-      const viewportPosition = {
-        x: visitorCounterState.savedPosition.x,
-        y: visitorCounterState.savedPosition.y + window.scrollY
-      };
-      
       setVisitorCounterState(prev => ({
         ...prev,
-        isMinimized: false,
-        position: viewportPosition,
-        size: prev.savedSize
+        isMinimized: false
       }));
     } else {
-      playCloseWindowSound();
-      
-      const visitorCounterElement = document.querySelector('.visitor-counter-window');
-      let viewportRelativePosition;
-      
-      if (visitorCounterElement) {
-        const rect = visitorCounterElement.getBoundingClientRect();
-        viewportRelativePosition = {
-          x: rect.left,
-          y: rect.top
-        };
-      } else {
-        const currentPosition = visitorCounterState.isMaximized ? visitorCounterState.savedPosition : visitorCounterState.position;
-        viewportRelativePosition = {
-          x: currentPosition.x,
-          y: currentPosition.y - window.scrollY
-        };
-      }
-      
-      setVisitorCounterState(prev => ({
-        ...prev,
-        savedPosition: viewportRelativePosition,
-        savedSize: prev.isMaximized ? prev.savedSize : prev.size,
-        isAnimating: true
-      }));
-
-      setTimeout(() => {
-        setVisitorCounterState(prev => ({
-          ...prev,
-          isVisible: false,
-          isMinimized: false,
-          isAnimating: false,
-          isMaximized: false
-        }));
-      }, 300);
+      handleVisitorCounterClose();
     }
   };
 
@@ -1081,6 +868,52 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [achievements]);
 
+  // Handle window resize to keep draggable windows in bounds
+  useEffect(() => {
+    const handleWindowResize = () => {
+      // Constrain navigator window
+      setNavigatorState(prev => {
+        if (prev.isVisible && !prev.isMaximized) {
+          const maxX = window.innerWidth - prev.size.width;
+          const maxY = window.innerHeight - prev.size.height;
+          
+          const constrainedX = Math.max(0, Math.min(prev.position.x, maxX));
+          const constrainedY = Math.max(0, Math.min(prev.position.y, maxY));
+          
+          if (constrainedX !== prev.position.x || constrainedY !== prev.position.y) {
+            return {
+              ...prev,
+              position: { x: constrainedX, y: constrainedY }
+            };
+          }
+        }
+        return prev;
+      });
+
+      // Constrain visitor counter window
+      setVisitorCounterState(prev => {
+        if (prev.isVisible && !prev.isMaximized) {
+          const maxX = window.innerWidth - prev.size.width;
+          const maxY = window.innerHeight - prev.size.height;
+          
+          const constrainedX = Math.max(0, Math.min(prev.position.x, maxX));
+          const constrainedY = Math.max(0, Math.min(prev.position.y, maxY));
+          
+          if (constrainedX !== prev.position.x || constrainedY !== prev.position.y) {
+            return {
+              ...prev,
+              position: { x: constrainedX, y: constrainedY }
+            };
+          }
+        }
+        return prev;
+      });
+    };
+
+    window.addEventListener('resize', handleWindowResize);
+    return () => window.removeEventListener('resize', handleWindowResize);
+  }, []);
+
   if (isLoading) {
     return (
       <div className="loading-screen">
@@ -1183,38 +1016,57 @@ function App() {
         <Rnd
           position={navigatorState.isMaximized ? { x: 0, y: 0 } : navigatorState.position}
           size={navigatorState.isMaximized ? { width: window.innerWidth, height: window.innerHeight - 40 } : navigatorState.size}
-          onDragStop={(e, d) => {
+          onDrag={(e, d) => {
             if (!navigatorState.isMaximized) {
-              const viewportRelativePosition = {
-                x: d.x,
-                y: d.y - window.scrollY
-              };
+              // Update position in real-time during drag to prevent jumping
+              const maxX = window.innerWidth - navigatorState.size.width;
+              const maxY = window.innerHeight - navigatorState.size.height;
+              
+              const constrainedX = Math.max(0, Math.min(d.x, maxX));
+              const constrainedY = Math.max(0, Math.min(d.y, maxY));
               
               setNavigatorState(prev => ({
                 ...prev,
-                position: { x: d.x, y: d.y },
-                savedPosition: viewportRelativePosition
+                position: { x: constrainedX, y: constrainedY }
+              }));
+            }
+          }}
+          onDragStop={(e, d) => {
+            if (!navigatorState.isMaximized) {
+              // Ensure the window stays within viewport bounds
+              const maxX = window.innerWidth - navigatorState.size.width;
+              const maxY = window.innerHeight - navigatorState.size.height;
+              
+              const constrainedX = Math.max(0, Math.min(d.x, maxX));
+              const constrainedY = Math.max(0, Math.min(d.y, maxY));
+              
+              setNavigatorState(prev => ({
+                ...prev,
+                position: { x: constrainedX, y: constrainedY }
               }));
             }
           }}
           onResizeStop={(e, direction, ref, delta, position) => {
             if (!navigatorState.isMaximized) {
-              const viewportRelativePosition = {
-                x: position.x,
-                y: position.y - window.scrollY
-              };
+              // Ensure the window stays within viewport bounds after resize
+              const newWidth = parseInt(ref.style.width);
+              const newHeight = parseInt(ref.style.height);
+              
+              const maxX = window.innerWidth - newWidth;
+              const maxY = window.innerHeight - newHeight;
+              
+              const constrainedX = Math.max(0, Math.min(position.x, maxX));
+              const constrainedY = Math.max(0, Math.min(position.y, maxY));
               
               setNavigatorState(prev => ({
                 ...prev,
-                size: { width: ref.style.width, height: ref.style.height },
-                position,
-                savedPosition: viewportRelativePosition
+                size: { width: newWidth, height: newHeight },
+                position: { x: constrainedX, y: constrainedY }
               }));
             }
           }}
           minWidth={200}
           minHeight={150}
-          bounds="parent"
           dragHandleClassName="window-title-area"
           className={`desktop-icons-rnd ${navigatorState.isAnimating ? 'minimizing' : ''}`}
           style={{
@@ -1260,38 +1112,57 @@ function App() {
         <Rnd
           position={visitorCounterState.isMaximized ? { x: 0, y: 0 } : visitorCounterState.position}
           size={visitorCounterState.isMaximized ? { width: window.innerWidth, height: window.innerHeight - 40 } : visitorCounterState.size}
-          onDragStop={(e, d) => {
+          onDrag={(e, d) => {
             if (!visitorCounterState.isMaximized) {
-              const viewportRelativePosition = {
-                x: d.x,
-                y: d.y - window.scrollY
-              };
+              // Update position in real-time during drag to prevent jumping
+              const maxX = window.innerWidth - visitorCounterState.size.width;
+              const maxY = window.innerHeight - visitorCounterState.size.height;
+              
+              const constrainedX = Math.max(0, Math.min(d.x, maxX));
+              const constrainedY = Math.max(0, Math.min(d.y, maxY));
               
               setVisitorCounterState(prev => ({
                 ...prev,
-                position: { x: d.x, y: d.y },
-                savedPosition: viewportRelativePosition
+                position: { x: constrainedX, y: constrainedY }
+              }));
+            }
+          }}
+          onDragStop={(e, d) => {
+            if (!visitorCounterState.isMaximized) {
+              // Ensure the window stays within viewport bounds
+              const maxX = window.innerWidth - visitorCounterState.size.width;
+              const maxY = window.innerHeight - visitorCounterState.size.height;
+              
+              const constrainedX = Math.max(0, Math.min(d.x, maxX));
+              const constrainedY = Math.max(0, Math.min(d.y, maxY));
+              
+              setVisitorCounterState(prev => ({
+                ...prev,
+                position: { x: constrainedX, y: constrainedY }
               }));
             }
           }}
           onResizeStop={(e, direction, ref, delta, position) => {
             if (!visitorCounterState.isMaximized) {
-              const viewportRelativePosition = {
-                x: position.x,
-                y: position.y - window.scrollY
-              };
+              // Ensure the window stays within viewport bounds after resize
+              const newWidth = parseInt(ref.style.width);
+              const newHeight = parseInt(ref.style.height);
+              
+              const maxX = window.innerWidth - newWidth;
+              const maxY = window.innerHeight - newHeight;
+              
+              const constrainedX = Math.max(0, Math.min(position.x, maxX));
+              const constrainedY = Math.max(0, Math.min(position.y, maxY));
               
               setVisitorCounterState(prev => ({
                 ...prev,
-                size: { width: ref.style.width, height: ref.style.height },
-                position,
-                savedPosition: viewportRelativePosition
+                size: { width: newWidth, height: newHeight },
+                position: { x: constrainedX, y: constrainedY }
               }));
             }
           }}
           minWidth={200}
           minHeight={120}
-          bounds="parent"
           dragHandleClassName="window-title-area"
           className={`desktop-icons-rnd ${visitorCounterState.isAnimating ? 'minimizing' : ''}`}
           style={{
