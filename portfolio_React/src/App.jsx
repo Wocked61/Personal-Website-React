@@ -17,6 +17,7 @@ import loadingSound from './assets/loading.mp3'
 import bgmSound from './assets/bgm.mp3'
 import projectClickSound from './assets/Project_Click.wav'
 import textSound from './assets/text.wav'
+import meowSound from './assets/meow.mp3'
 import sadgeKitty from './assets/sadge_Kitty.png'
 import omgKitty from './assets/omg_Kitty.png'
 
@@ -167,7 +168,7 @@ function App() {
     const initializeAudio = async () => {
 
       const loadingAudioInstance = new Audio(loadingSound);
-      loadingAudioInstance.volume = 0.5;
+      loadingAudioInstance.volume = 0.4;
       setLoadingAudio(loadingAudioInstance);
       
       const bgmAudioInstance = new Audio(bgmSound);
@@ -425,6 +426,18 @@ function App() {
       });
     } catch (error) {
       console.log('Audio creation failed:', error);
+    }
+  };
+
+  const playMeowSound = () => {
+    try {
+      const audio = new Audio(meowSound);
+      audio.volume = 0.8;
+      audio.play().catch(error => {
+        console.log('Meow audio play failed:', error);
+      });
+    } catch (error) {
+      console.log('Meow audio creation failed:', error);
     }
   };
 
@@ -1217,7 +1230,13 @@ function App() {
       {showSoundNotification && (
         <div className="sound-notification">
           <div className="notification-cat">
-            <img src={sadgeKitty} alt="Cute cat" className="cat-image" />
+            <img 
+              src={sadgeKitty} 
+              alt="Cute cat" 
+              className="cat-image clickable" 
+              onClick={playMeowSound}
+              title="Click me! 🐱"
+            />
           </div>
           <div className="sound-notification-content">
             <div className="sound-notification-header">
