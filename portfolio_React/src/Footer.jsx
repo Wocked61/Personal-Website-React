@@ -28,36 +28,36 @@ function Footer() {
     <footer className="App-footer">
       <p>Built with React</p>
       <p>
-        <i 
-          className="hn hn-github social-icon" 
+        <i
+          className="hn hn-github social-icon"
           onClick={() => handleLinkClick("https://github.com/Wocked61")}
         ></i>
-        My <span 
-          className="footer-link" 
+        My <span
+          className="footer-link"
           onClick={() => handleLinkClick("https://github.com/Wocked61")}
         >
           GitHub
         </span>
       </p>
       <p>
-        <i 
-          className="hn hn-google social-icon" 
+        <i
+          className="hn hn-google social-icon"
           onClick={handleEmailClick}
         ></i>
-        Email me: <span 
-          className="footer-link" 
+        Email me: <span
+          className="footer-link"
           onClick={handleEmailClick}
         >
           dylanphan88@gmail.com
         </span>
       </p>
       <p>
-        <i 
-          className="hn hn-linkedin social-icon" 
+        <i
+          className="hn hn-linkedin social-icon"
           onClick={() => handleLinkClick("https://www.linkedin.com/in/dylan-phan88")}
         ></i>
-        Connect with me on <span 
-          className="footer-link" 
+        Connect with me on <span
+          className="footer-link"
           onClick={() => handleLinkClick("https://www.linkedin.com/in/dylan-phan88")}
         >
           LinkedIn
@@ -66,7 +66,7 @@ function Footer() {
       <p>Last updated: June 2025</p>
       <p>&copy; 2025 Dylan Phan | Computer Science Student @ CSUF</p>
       <p></p>
-      <p></p> 
+      <p></p>
     </footer>
   )
 }

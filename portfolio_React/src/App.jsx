@@ -20,7 +20,7 @@ import sadgeKitty from './assets/sadge_Kitty.png'
 import omgKitty from './assets/omg_Kitty.png'
 
 function App() {
-  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [loadingText, setLoadingText] = useState('INITIALIZING SYSTEM...');
@@ -76,13 +76,13 @@ function App() {
     isAnimating: false,
     position: { x: 120, y: 140 },
     size: { width: 320, height: 320 },
-    savedPosition: { x: 120, y: 140 }, 
+    savedPosition: { x: 120, y: 140 },
     savedSize: { width: 320, height: 320 }
   });
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+      setCurrentTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
     }, 1000);
 
     return () => clearInterval(timer);
@@ -105,11 +105,11 @@ function App() {
       const newTotalVisits = totalVisits + 1;
       localStorage.setItem('portfolio_total_visits', newTotalVisits.toString());
       setVisitorCount(newTotalVisits);
-      
+
       console.log(`📊 Total visits: ${newTotalVisits}`);
 
       const sessionTracked = sessionStorage.getItem('portfolio_session_tracked');
-      
+
       // Generate a unique visitor ID if one doesn't exist
       let visitorId = localStorage.getItem('portfolio_visitor_id');
       if (!visitorId) {
@@ -119,20 +119,20 @@ function App() {
       }
 
       const uniqueVisitorsData = JSON.parse(localStorage.getItem('portfolio_unique_visitors') || '[]');
-      
+
       if (!sessionTracked) {
         // Check if this is a unique visitor
         if (!uniqueVisitorsData.includes(visitorId)) {
           const newUniqueVisitors = [...uniqueVisitorsData, visitorId];
           localStorage.setItem('portfolio_unique_visitors', JSON.stringify(newUniqueVisitors));
           setUniqueVisitors(newUniqueVisitors.length);
-          
+
           console.log('👥 New unique visitor detected!');
         } else {
           setUniqueVisitors(uniqueVisitorsData.length);
           console.log('👥 Returning unique visitor');
         }
-        
+
         // Mark this session as tracked for unique visitors
         sessionStorage.setItem('portfolio_session_tracked', 'true');
       } else {
@@ -173,7 +173,7 @@ function App() {
       const loadingAudioInstance = new Audio(loadingSound);
       loadingAudioInstance.volume = 0.4;
       setLoadingAudio(loadingAudioInstance);
-      
+
       const bgmAudioInstance = new Audio(bgmSound);
       bgmAudioInstance.volume = 0.1;
       bgmAudioInstance.loop = true;
@@ -243,7 +243,7 @@ function App() {
           setTimeout(checkLoadingSoundEnd, 100);
         }
       };
-      
+
       checkLoadingSoundEnd();
     }
   }, [loadingAudio, bgmAudio, isLoading, audioEnabled]);
@@ -287,7 +287,7 @@ function App() {
       const aboutMeTimer = setTimeout(() => {
         setAboutMeLoading(false);
         setIsTyping(true);
-        
+
         // The text content to type out
         const textLines = [
           "Profile: Dylan Phan",
@@ -304,7 +304,7 @@ function App() {
         let currentLineIndex = 0;
         let currentCharIndex = 0;
         let displayLines = [];
-        
+
         const playTextSound = () => {
           try {
             const audio = new Audio(textSound);
@@ -316,16 +316,16 @@ function App() {
             console.log('Text audio creation failed:', error);
           }
         };
-        
+
         const typeText = () => {
           if (currentLineIndex < textLines.length) {
             const currentLine = textLines[currentLineIndex];
-            
+
             if (currentCharIndex < currentLine.length) {
               if (currentLine[currentCharIndex] !== ' ' || currentCharIndex > 0) {
                 playTextSound();
               }
-              
+
               displayLines[currentLineIndex] = currentLine.slice(0, currentCharIndex + 1);
               setTypedText(displayLines.join('\n'));
               currentCharIndex++;
@@ -340,10 +340,10 @@ function App() {
             setIsTyping(false);
           }
         };
-        
+
         typeText();
-      }, 2000); 
-      
+      }, 2000);
+
       return () => clearTimeout(aboutMeTimer);
     }
   }, [isLoading]);
@@ -439,7 +439,7 @@ function App() {
       audio.play().catch(error => {
         console.log('Meow audio play failed:', error);
       });
-      
+
       // Cat lover achievement
       console.log('😸 Cat Whisperer achievement triggered!');
       unlockAchievement('catLover');
@@ -492,10 +492,10 @@ function App() {
     playMinimizeWindowSound();
     console.log('🎮 Window Wizard achievement triggered!');
     unlockAchievement('windowMaster'); // Window interaction achievement
-    
+
     const navigatorElement = document.querySelector('.navigator-window');
     let viewportRelativePosition;
-    
+
     if (navigatorElement) {
       const rect = navigatorElement.getBoundingClientRect();
       viewportRelativePosition = {
@@ -509,7 +509,7 @@ function App() {
         y: currentPosition.y - window.scrollY
       };
     }
-    
+
     setNavigatorState(prev => ({
       ...prev,
       savedPosition: viewportRelativePosition,
@@ -529,13 +529,13 @@ function App() {
 
   const handleMaximize = () => {
     playEnlargeWindowSound();
-    
+
     if (!navigatorState.isMaximized) {
       const viewportRelativePosition = {
         x: navigatorState.position.x,
         y: navigatorState.position.y - window.scrollY
       };
-      
+
       setNavigatorState(prev => ({
         ...prev,
         isMaximized: true,
@@ -548,7 +548,7 @@ function App() {
         x: navigatorState.savedPosition.x,
         y: navigatorState.savedPosition.y + window.scrollY
       };
-      
+
       setNavigatorState(prev => ({
         ...prev,
         isMaximized: false,
@@ -561,10 +561,10 @@ function App() {
 
   const handleClose = () => {
     playCloseWindowSound();
-    
+
     const navigatorElement = document.querySelector('.navigator-window');
     let viewportRelativePosition;
-    
+
     if (navigatorElement) {
       const rect = navigatorElement.getBoundingClientRect();
       viewportRelativePosition = {
@@ -578,7 +578,7 @@ function App() {
         y: currentPosition.y - window.scrollY
       };
     }
-    
+
     setNavigatorState(prev => ({
       ...prev,
       savedPosition: viewportRelativePosition,
@@ -600,12 +600,12 @@ function App() {
   const handleTaskBarNavigatorClick = () => {
     if (!navigatorState.isVisible) {
       playOpenWindowSound();
-      
+
       const viewportPosition = {
         x: navigatorState.savedPosition.x,
         y: navigatorState.savedPosition.y + window.scrollY
       };
-      
+
       setNavigatorState(prev => ({
         ...prev,
         isVisible: true,
@@ -615,12 +615,12 @@ function App() {
       }));
     } else if (navigatorState.isMinimized) {
       playOpenWindowSound();
-      
+
       const viewportPosition = {
         x: navigatorState.savedPosition.x,
         y: navigatorState.savedPosition.y + window.scrollY
       };
-      
+
       setNavigatorState(prev => ({
         ...prev,
         isMinimized: false,
@@ -629,10 +629,10 @@ function App() {
       }));
     } else {
       playCloseWindowSound();
-      
+
       const navigatorElement = document.querySelector('.navigator-window');
       let viewportRelativePosition;
-      
+
       if (navigatorElement) {
         const rect = navigatorElement.getBoundingClientRect();
         viewportRelativePosition = {
@@ -646,7 +646,7 @@ function App() {
           y: currentPosition.y - window.scrollY
         };
       }
-      
+
       setNavigatorState(prev => ({
         ...prev,
         savedPosition: viewportRelativePosition,
@@ -670,8 +670,8 @@ function App() {
     playMoveScrollSound();
     const aboutMeWindow = document.querySelector('.window:nth-child(1)');
     if (aboutMeWindow) {
-      aboutMeWindow.scrollIntoView({ 
-        behavior: 'smooth', 
+      aboutMeWindow.scrollIntoView({
+        behavior: 'smooth',
         block: 'start',
         inline: 'nearest'
       });
@@ -682,8 +682,8 @@ function App() {
     playMoveScrollSound();
     const projectsWindow = document.querySelector('.window:nth-child(3)');
     if (projectsWindow) {
-      projectsWindow.scrollIntoView({ 
-        behavior: 'smooth', 
+      projectsWindow.scrollIntoView({
+        behavior: 'smooth',
         block: 'start',
         inline: 'nearest'
       });
@@ -694,8 +694,8 @@ function App() {
     playMoveScrollSound();
     const skillsWindow = document.querySelector('.window:nth-child(2)');
     if (skillsWindow) {
-      skillsWindow.scrollIntoView({ 
-        behavior: 'smooth', 
+      skillsWindow.scrollIntoView({
+        behavior: 'smooth',
         block: 'start',
         inline: 'nearest'
       });
@@ -704,15 +704,15 @@ function App() {
 
   const scrollToContact = () => {
     playMoveScrollSound();
-    
+
     // Social butterfly achievement
     console.log('🦋 Social Butterfly achievement triggered!');
     unlockAchievement('socialButterfly');
-    
+
     const footer = document.querySelector('.App-footer');
     if (footer) {
-      footer.scrollIntoView({ 
-        behavior: 'smooth', 
+      footer.scrollIntoView({
+        behavior: 'smooth',
         block: 'start',
         inline: 'nearest'
       });
@@ -764,7 +764,7 @@ function App() {
   const SkillBar = ({ skill, level, maxBars = 10 }) => {
     const filledBars = Math.round((level / 100) * maxBars);
     const emptyBars = maxBars - filledBars;
-    
+
     return (
       <div className="skill-item">
         <div className="skill-name">{skill}</div>
@@ -809,33 +809,33 @@ function App() {
   const getSafeWindowPosition = (windowWidth, windowHeight, preferredX = null, preferredY = null) => {
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
-    
+
 
     const defaultX = preferredX !== null ? preferredX : Math.max(20, (viewportWidth - windowWidth) / 2);
     const defaultY = preferredY !== null ? preferredY : Math.max(20, (viewportHeight - windowHeight) / 2);
-    
+
     let safeY = Math.min(defaultY, viewportHeight - windowHeight - 50);
     let safeX = Math.min(defaultX, viewportWidth - windowWidth - 20);
-    
+
 
     if (defaultX > viewportWidth - windowWidth) {
       safeX = viewportWidth - windowWidth - 20;
     }
-    
+
 
     const finalX = Math.max(20, safeX);
     const finalY = Math.max(20, safeY);
-    
+
     return { x: finalX, y: finalY };
   };
 
 
   const handleVisitorCounterMinimize = () => {
     playMinimizeWindowSound();
-    
+
     const visitorCounterElement = document.querySelector('.visitor-counter-window');
     let viewportRelativePosition;
-    
+
     if (visitorCounterElement) {
       const rect = visitorCounterElement.getBoundingClientRect();
       viewportRelativePosition = {
@@ -849,7 +849,7 @@ function App() {
         y: currentPosition.y - window.scrollY
       };
     }
-    
+
     setVisitorCounterState(prev => ({
       ...prev,
       savedPosition: viewportRelativePosition,
@@ -869,13 +869,13 @@ function App() {
 
   const handleVisitorCounterMaximize = () => {
     playEnlargeWindowSound();
-    
+
     if (!visitorCounterState.isMaximized) {
       const viewportRelativePosition = {
         x: visitorCounterState.position.x,
         y: visitorCounterState.position.y - window.scrollY
       };
-      
+
       setVisitorCounterState(prev => ({
         ...prev,
         isMaximized: true,
@@ -888,7 +888,7 @@ function App() {
         x: visitorCounterState.savedPosition.x,
         y: visitorCounterState.savedPosition.y + window.scrollY
       };
-      
+
       setVisitorCounterState(prev => ({
         ...prev,
         isMaximized: false,
@@ -901,10 +901,10 @@ function App() {
 
   const handleVisitorCounterClose = () => {
     playCloseWindowSound();
-    
+
     const visitorCounterElement = document.querySelector('.visitor-counter-window');
     let viewportRelativePosition;
-    
+
     if (visitorCounterElement) {
       const rect = visitorCounterElement.getBoundingClientRect();
       viewportRelativePosition = {
@@ -918,7 +918,7 @@ function App() {
         y: currentPosition.y - window.scrollY
       };
     }
-    
+
     setVisitorCounterState(prev => ({
       ...prev,
       savedPosition: viewportRelativePosition,
@@ -940,12 +940,12 @@ function App() {
   const handleTaskBarVisitorCounterClick = () => {
     if (!visitorCounterState.isVisible) {
       playOpenWindowSound();
-      
+
       const viewportPosition = {
         x: visitorCounterState.savedPosition.x,
         y: visitorCounterState.savedPosition.y + window.scrollY
       };
-      
+
       setVisitorCounterState(prev => ({
         ...prev,
         isVisible: true,
@@ -955,12 +955,12 @@ function App() {
       }));
     } else if (visitorCounterState.isMinimized) {
       playOpenWindowSound();
-      
+
       const viewportPosition = {
         x: visitorCounterState.savedPosition.x,
         y: visitorCounterState.savedPosition.y + window.scrollY
       };
-      
+
       setVisitorCounterState(prev => ({
         ...prev,
         isMinimized: false,
@@ -969,10 +969,10 @@ function App() {
       }));
     } else {
       playCloseWindowSound();
-      
+
       const visitorCounterElement = document.querySelector('.visitor-counter-window');
       let viewportRelativePosition;
-      
+
       if (visitorCounterElement) {
         const rect = visitorCounterElement.getBoundingClientRect();
         viewportRelativePosition = {
@@ -986,7 +986,7 @@ function App() {
           y: currentPosition.y - window.scrollY
         };
       }
-      
+
       setVisitorCounterState(prev => ({
         ...prev,
         savedPosition: viewportRelativePosition,
@@ -1016,7 +1016,7 @@ function App() {
           setShowSoundNotification(false);
         }, 10000);
       }, 1000);
-      
+
       return () => clearTimeout(timer);
     }
   }, [isLoading, audioEnabled]);
@@ -1089,26 +1089,26 @@ function App() {
   const unlockAchievement = (achievementKey) => {
     console.log(`🏆 Attempting to unlock achievement: ${achievementKey}`);
     console.log(`Current achievement status:`, achievements[achievementKey]);
-    
+
     // Check if achievement is already unlocked
     if (!achievements[achievementKey]) {
       console.log(`✅ Unlocking achievement: ${achievementKey}`);
-      
+
       // Play achievement sound
       playAchievementSound();
-      
+
       const newAchievements = { ...achievements, [achievementKey]: true };
       const newUnlockedList = [...unlockedAchievements, achievementKey];
-      
+
       setAchievements(newAchievements);
       setUnlockedAchievements(newUnlockedList);
-      
+
       localStorage.setItem('portfolio_achievements', JSON.stringify(newAchievements));
       localStorage.setItem('portfolio_unlocked_achievements', JSON.stringify(newUnlockedList));
-      
+
       // Add achievement to the display queue
       setShowAchievements(prev => [...prev, achievementKey]);
-      
+
       // Auto-hide achievement after 5 seconds
       setTimeout(() => {
         setShowAchievements(prev => prev.filter(key => key !== achievementKey));
@@ -1156,14 +1156,14 @@ function App() {
       console.log('🏆 All achievements and visitor data reset! Reloading page...');
       location.reload();
     };
-    
+
     window.checkAchievements = () => {
       console.log('🏆 Current achievements:', achievements);
       console.log('📊 Current visitor count:', visitorCount);
       console.log('👥 Current unique visitors:', uniqueVisitors);
       console.log('🕒 Current hour:', new Date().getHours());
     };
-    
+
     // Test function for multiple achievements
     window.testMultipleAchievements = () => {
       console.log('🧪 Testing multiple achievements...');
@@ -1174,7 +1174,7 @@ function App() {
         }, index * 200); // Stagger the achievements slightly
       });
     };
-    
+
     // Test function for all achievements
     window.testAllAchievements = () => {
       console.log('🎯 Testing all achievements...');
@@ -1197,14 +1197,14 @@ function App() {
     const handleScroll = () => {
       scrollCount++;
       const currentTime = Date.now();
-      
+
       // Speed runner achievement (fast scrolling) - only trigger once
       if (currentTime - lastScrollTime < 100 && scrollCount >= 10 && !hasTriggeredSpeedRunner) {
         hasTriggeredSpeedRunner = true; // Set flag to prevent multiple triggers
         console.log('⚡ Lightning Fast achievement triggered!');
         unlockAchievement('speedRunner');
       }
-      
+
       // Check if user scrolled to projects section
       const projectsSection = document.querySelector('#projects-section');
       if (projectsSection) {
@@ -1215,7 +1215,7 @@ function App() {
           unlockAchievement('projectViewer');
         }
       }
-      
+
       lastScrollTime = currentTime;
     };
 
@@ -1251,10 +1251,10 @@ function App() {
         if (prev.isVisible && !prev.isMaximized) {
           const maxX = window.innerWidth - prev.size.width;
           const maxY = window.innerHeight - prev.size.height;
-          
+
           const constrainedX = Math.max(0, Math.min(prev.position.x, maxX));
           const constrainedY = Math.max(0, Math.min(prev.position.y, maxY));
-          
+
           if (constrainedX !== prev.position.x || constrainedY !== prev.position.y) {
             return {
               ...prev,
@@ -1270,10 +1270,10 @@ function App() {
         if (prev.isVisible && !prev.isMaximized) {
           const maxX = window.innerWidth - prev.size.width;
           const maxY = window.innerHeight - prev.size.height;
-          
+
           const constrainedX = Math.max(0, Math.min(prev.position.x, maxX));
           const constrainedY = Math.max(0, Math.min(prev.position.y, maxY));
-          
+
           if (constrainedX !== prev.position.x || constrainedY !== prev.position.y) {
             return {
               ...prev,
@@ -1295,18 +1295,18 @@ function App() {
         <div className="loading-container">
           <h1 className="loading-title">DYLAN'S PORTFOLIO SYSTEM</h1>
           <div className="loading-version">v1.0</div>
-          
+
           <div className="loading-progress-container">
             <div className="loading-text">{loadingText}</div>
             <div className="loading-bar">
-              <div 
-                className="loading-fill" 
+              <div
+                className="loading-fill"
                 style={{ width: `${loadingProgress}%` }}
               ></div>
             </div>
             <div className="loading-percentage">{loadingProgress}%</div>
           </div>
-          
+
           {showAudioPrompt && (
             <div className="audio-prompt">
               <button onClick={enableAudio} className="audio-enable-button">
@@ -1315,7 +1315,7 @@ function App() {
               <div className="audio-prompt-text">Click to enable sound effects and music</div>
             </div>
           )}
-          
+
           <div className="loading-footer">
             <div>INITIALIZING USER: DYLAN_PHAN</div>
             <div>STATUS: LOADING...</div>
@@ -1331,10 +1331,10 @@ function App() {
       {showSoundNotification && (
         <div className="sound-notification">
           <div className="notification-cat">
-            <img 
-              src={sadgeKitty} 
-              alt="Cute cat" 
-              className="cat-image clickable" 
+            <img
+              src={sadgeKitty}
+              alt="Cute cat"
+              className="cat-image clickable"
               onClick={playMeowSound}
               title="Click me! 🐱"
             />
@@ -1342,8 +1342,8 @@ function App() {
           <div className="sound-notification-content">
             <div className="sound-notification-header">
               <span>SYSTEM TIP</span>
-              <button 
-                className="sound-notification-close" 
+              <button
+                className="sound-notification-close"
                 onClick={handleCloseSoundNotification}
                 title="Close notification"
               >
@@ -1372,8 +1372,8 @@ function App() {
                     ACHIEVEMENT UNLOCKED
                   </div>
                   <div className="achievement-window-controls">
-                    <button 
-                      className="achievement-close-btn" 
+                    <button
+                      className="achievement-close-btn"
                       onClick={() => setShowAchievements(prev => prev.filter(key => key !== achievementKey))}
                     >
                       ×
@@ -1412,7 +1412,7 @@ function App() {
                 x: d.x,
                 y: d.y - window.scrollY
               };
-              
+
               setNavigatorState(prev => ({
                 ...prev,
                 position: { x: d.x, y: d.y },
@@ -1426,7 +1426,7 @@ function App() {
                 x: position.x,
                 y: position.y - window.scrollY
               };
-              
+
               setNavigatorState(prev => ({
                 ...prev,
                 size: { width: ref.style.width, height: ref.style.height },
@@ -1463,10 +1463,10 @@ function App() {
               <div className="desktop-icon" onClick={scrollToSkills}>
                 <div className="icon-image">⚙️</div>
                 <div>Skills</div>
-              </div>              
+              </div>
               <div className="desktop-icon" onClick={scrollToProjects}>
                 <div className="icon-image">📁</div>
-                <div>Projects</div>                
+                <div>Projects</div>
               </div>
               <div className="desktop-icon" onClick={scrollToContact}>
                 <div className="icon-image">📧</div>
@@ -1488,7 +1488,7 @@ function App() {
                 x: d.x,
                 y: d.y - window.scrollY
               };
-              
+
               setVisitorCounterState(prev => ({
                 ...prev,
                 position: { x: d.x, y: d.y },
@@ -1502,7 +1502,7 @@ function App() {
                 x: position.x,
                 y: position.y - window.scrollY
               };
-              
+
               setVisitorCounterState(prev => ({
                 ...prev,
                 size: { width: ref.style.width, height: ref.style.height },
@@ -1553,11 +1553,11 @@ function App() {
 
       {/* HUD Panel Header */}
       <div className="hud-panel">
-        <h1 style={{margin: 0, fontSize: '16px', textTransform: 'uppercase', letterSpacing: '2px'}}>
+        <h1 style={{ margin: 0, fontSize: '16px', textTransform: 'uppercase', letterSpacing: '2px' }}>
           Dylan's Portfolio System v1.0
         </h1>
-        <div style={{fontSize: '10px'}}>
-          <span 
+        <div style={{ fontSize: '10px' }}>
+          <span
             style={{
               color: getDiscordStatusColor(discordStatus),
               textShadow: `0 0 3px ${getDiscordStatusColor(discordStatus)}`,
@@ -1567,7 +1567,7 @@ function App() {
             }}
             title={`Discord Status: ${discordStatus}`}
           >
-            <span 
+            <span
               style={{
                 display: 'inline-block',
                 width: '8px',
@@ -1642,7 +1642,7 @@ function App() {
             <h2>Technical Skills Database</h2>
             <p>SKILL REPOSITORY SCAN COMPLETE ✓</p>
             <p>Found 10 programming languages and technologies</p>
-            
+
             <div className="skills-container">
               <h3>Web Technologies</h3>
               <SkillBar skill="HTML" level={85} />
@@ -1650,13 +1650,13 @@ function App() {
               <SkillBar skill="JavaScript" level={75} />
               <SkillBar skill="React" level={70} />
               <SkillBar skill="Node.js" level={50} />
-              
+
               <h3>Programming Languages</h3>
               <SkillBar skill="Python" level={50} />
               <SkillBar skill="Java" level={50} />
               <SkillBar skill="C++" level={50} />
               <SkillBar skill="C#" level={20} />
-              
+
               <h3>Tools & Platforms</h3>
               <SkillBar skill="Git / GitHub" level={75} />
             </div>
@@ -1680,7 +1680,7 @@ function App() {
             <h2>Project Archive</h2>
             <p>PROJECT INITIALIZATION COMPLETE ✓</p>
             <p>Found 5 project files in directory</p>
-            
+
             <div className="project-list">
               <div className="project-item clickable" onClick={handlePortfolioClick}>
                 <div className="project-icon">
@@ -1741,17 +1741,17 @@ function App() {
       <div className="task-bar">
         <div className="start-button" onClick={handleStartButtonClick}>Start</div>
         <div className="task-items">
-          <div className="task-item" onClick={handleTaskbarAboutMe}>About_Me.exe</div>  
-          <div className="task-item" onClick={handleTaskbarSkills}>Skills.exe</div>                  
+          <div className="task-item" onClick={handleTaskbarAboutMe}>About_Me.exe</div>
+          <div className="task-item" onClick={handleTaskbarSkills}>Skills.exe</div>
           <div className="task-item" onClick={handleTaskbarProjects}>Projects.exe</div>
           <div className="task-item" onClick={handleTaskbarContact}>Contact.exe</div>
-          <div 
+          <div
             className={`task-item ${(!navigatorState.isVisible || navigatorState.isMinimized) ? 'minimized' : 'active'}`}
             onClick={handleTaskBarNavigatorClick}
           >
             Navigator.exe
           </div>
-          <div 
+          <div
             className={`task-item ${(!visitorCounterState.isVisible || visitorCounterState.isMinimized) ? 'minimized' : 'active'}`}
             onClick={handleTaskBarVisitorCounterClick}
           >
@@ -1759,21 +1759,21 @@ function App() {
           </div>
         </div>
         <div className="system-tray">
-          {currentTime} | 
-          <span 
-            className="volume-controls-area clickable" 
+          {currentTime} |
+          <span
+            className="volume-controls-area clickable"
             onClick={handleVolumeIconClick}
             title="Volume Settings"
           >
             {isMuted ? '🔇' : '🔊'} ⚡ 📶
           </span>
-          
+
           {/* Volume Settings Popup */}
           {showVolumeSettings && (
             <div className="volume-settings-popup">
               <div className="volume-popup-header">
                 <span>Volume Settings</span>
-                <button 
+                <button
                   className="close-popup-btn"
                   onClick={() => {
                     playCloseWindowSound();
@@ -1798,7 +1798,7 @@ function App() {
                   <span className="volume-value">{Math.round(bgmVolume * 100)}%</span>
                 </div>
                 <div className="mute-control-row">
-                  <button 
+                  <button
                     className={`mute-btn ${isMuted ? 'muted' : ''}`}
                     onClick={handleMuteToggle}
                   >

@@ -15,7 +15,7 @@
   font-family: var(--pixel-font);
 }
 
-.App-footer > * {
+.App-footer>* {
   margin-left: 40px;
   margin-right: 40px;
 }
@@ -93,19 +93,22 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--accent-color) 0px,
-    var(--accent-color) 4px,
-    var(--accent2-color) 4px,
-    var(--accent2-color) 8px
-  );
+  background: repeating-linear-gradient(90deg,
+      var(--accent-color) 0px,
+      var(--accent-color) 4px,
+      var(--accent2-color) 4px,
+      var(--accent2-color) 8px);
   animation: pixelScroll 2s linear infinite;
 }
 
 @keyframes pixelScroll {
-  0% { transform: translateX(0px); }
-  100% { transform: translateX(8px); }
+  0% {
+    transform: translateX(0px);
+  }
+
+  100% {
+    transform: translateX(8px);
+  }
 }
 
 @media (max-width: 768px) {
