@@ -1,5 +1,3 @@
-// to do
-// achievements system implemented ✓
 
 import React, { useState, useEffect } from 'react'
 import { Rnd } from 'react-rnd'
@@ -1653,7 +1651,7 @@ function App() {
             onClick={handleVolumeIconClick}
             title="Volume Settings"
           >
-            🔊 ⚡ 📶
+            {isMuted ? '🔇' : '🔊'} ⚡ 📶
           </span>
           
           {/* Volume Settings Popup */}
