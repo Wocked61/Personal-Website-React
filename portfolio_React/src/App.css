@@ -1511,3 +1511,10 @@ html {
     font-size: 20px;
   }
 }
+
+.project-icon-image {
+  width: 1.5em;
+  height: 1.5em;
+  font-size: 2rem;
+  object-fit: contain;
+}

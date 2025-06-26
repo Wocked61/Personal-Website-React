@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react'
 import { Rnd } from 'react-rnd'
 import Footer from './Footer.jsx'
@@ -46,7 +45,12 @@ function App() {
       settingsExplorer: false,
       projectViewer: false,
       windowMaster: false,
-      speedRunner: false
+      speedRunner: false,
+      timeWaster: false,
+      nightOwl: false,
+      catLover: false,
+      persistent: false,
+      socialButterfly: false
     };
   });
   const [showAchievements, setShowAchievements] = useState([]);
@@ -435,6 +439,10 @@ function App() {
       audio.play().catch(error => {
         console.log('Meow audio play failed:', error);
       });
+      
+      // Cat lover achievement
+      console.log('😸 Cat Whisperer achievement triggered!');
+      unlockAchievement('catLover');
     } catch (error) {
       console.log('Meow audio creation failed:', error);
     }
@@ -696,6 +704,11 @@ function App() {
 
   const scrollToContact = () => {
     playMoveScrollSound();
+    
+    // Social butterfly achievement
+    console.log('🦋 Social Butterfly achievement triggered!');
+    unlockAchievement('socialButterfly');
+    
     const footer = document.querySelector('.App-footer');
     if (footer) {
       footer.scrollIntoView({ 
@@ -725,6 +738,12 @@ function App() {
   const handleCheckersChessClick = () => {
     playProjectClickSound();
     window.open('https://wocked61.github.io/cpsc_362_sp2025_group2/', '_blank');
+  }
+
+  const handlePortfolioClick = () => {
+    playProjectClickSound();
+    console.log('🎉 You clicked on the portfolio you\'re already viewing! How meta! 🤔');
+    unlockAchievement('projectViewer'); // Give them the project viewer achievement
   }
 
   const handlePokePullClick = () => {
@@ -1032,6 +1051,36 @@ function App() {
       description: "Wow, you're going through everything so quickly! ⚡",
       icon: "🏃‍♀️",
       rarity: "rare"
+    },
+    timeWaster: {
+      title: "Time Well Spent",
+      description: "You've been here for 5 minutes! Taking your time, I see! ⏰",
+      icon: "🕰️",
+      rarity: "common"
+    },
+    nightOwl: {
+      title: "Night Owl",
+      description: "Browsing my portfolio past midnight? Dedication! 🦉",
+      icon: "🌙",
+      rarity: "uncommon"
+    },
+    catLover: {
+      title: "Cat Whisperer",
+      description: "You made the kitty meow! You're definitely a cat person! 🐱",
+      icon: "😸",
+      rarity: "common"
+    },
+    persistent: {
+      title: "Persistent Visitor",
+      description: "This is your 10th visit! You really like this place! 🔄",
+      icon: "💪",
+      rarity: "rare"
+    },
+    socialButterfly: {
+      title: "Social Butterfly",
+      description: "Clicked on contact info! Let's be friends! 🦋",
+      icon: "📞",
+      rarity: "common"
     }
   };
 
@@ -1087,6 +1136,11 @@ function App() {
    * - Project Stalker 👀 - Scroll to projects section  
    * - Window Wizard 🎮 - Minimize/maximize/close windows
    * - Lightning Fast 🏃‍♀️ - Fast scroll through content
+   * - Time Waster 🕰️ - Stay on site for 5 minutes
+   * - Night Owl 🌙 - Visit between midnight and 6am
+   * - Cat Whisperer 😸 - Click the meowing kitty
+   * - Persistent Visitor 💪 - Visit the site 10+ times
+   * - Social Butterfly 🦋 - Scroll to contact section
    */
 
   // Add reset function to window for easy testing
@@ -1112,11 +1166,22 @@ function App() {
     // Test function for multiple achievements
     window.testMultipleAchievements = () => {
       console.log('🧪 Testing multiple achievements...');
-      const testAchievements = ['settingsExplorer', 'projectViewer', 'windowMaster'];
+      const testAchievements = ['settingsExplorer', 'projectViewer', 'windowMaster', 'catLover', 'socialButterfly'];
       testAchievements.forEach((achievement, index) => {
         setTimeout(() => {
           unlockAchievement(achievement);
         }, index * 200); // Stagger the achievements slightly
+      });
+    };
+    
+    // Test function for all achievements
+    window.testAllAchievements = () => {
+      console.log('🎯 Testing all achievements...');
+      const allAchievements = Object.keys(achievementData);
+      allAchievements.forEach((achievement, index) => {
+        setTimeout(() => {
+          unlockAchievement(achievement);
+        }, index * 300); // Stagger more for better visual effect
       });
     };
   }, [achievements, visitorCount, uniqueVisitors]);
@@ -1156,6 +1221,33 @@ function App() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [achievements]);
+
+  // Time-based and visit-based achievements
+  useEffect(() => {
+    // Night owl achievement (after midnight)
+    const currentHour = new Date().getHours();
+    if (currentHour >= 0 && currentHour < 6) {
+      console.log('🌙 Night Owl achievement triggered!');
+      unlockAchievement('nightOwl');
+    }
+
+    // Time waster achievement (after 5 minutes)
+    const timeWasterTimer = setTimeout(() => {
+      console.log('🕰️ Time Waster achievement triggered!');
+      unlockAchievement('timeWaster');
+    }, 5 * 60 * 1000); // 5 minutes
+
+    // Persistent visitor achievement (10+ visits)
+    const totalVisits = parseInt(localStorage.getItem('portfolio_total_visits') || '0');
+    if (totalVisits >= 10) {
+      console.log('💪 Persistent Visitor achievement triggered!');
+      unlockAchievement('persistent');
+    }
+
+    return () => {
+      clearTimeout(timeWasterTimer);
+    };
+  }, []);
 
   // Handle window resize to keep draggable windows in bounds
   useEffect(() => {
@@ -1593,9 +1685,20 @@ function App() {
           <div className="window-content">
             <h2>Project Archive</h2>
             <p>PROJECT INITIALIZATION COMPLETE ✓</p>
-            <p>Found 4 project files in directory</p>
+            <p>Found 5 project files in directory</p>
             
             <div className="project-list">
+              <div className="project-item clickable" onClick={handlePortfolioClick}>
+                <div className="project-icon">
+                  <img src="Port_Icon.png" alt="Portfolio Icon" className="project-icon-image" />
+                </div>
+                <div className="project-details">
+                  <h3>Interactive React Portfolio Website</h3>
+                  <p>Technologies: React, CSS, Audio API</p>
+                  <p>Status: You're looking at it!</p>
+                </div>
+              </div>
+
               <div className="project-item clickable" onClick={handleCheckersChessClick}>
                 <div className="project-icon">🏁</div>
                 <div className="project-details">
