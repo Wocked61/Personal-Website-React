@@ -16,6 +16,7 @@ import bgmSound from './assets/bgm.mp3'
 import projectClickSound from './assets/Project_Click.wav'
 import textSound from './assets/text.wav'
 import meowSound from './assets/meow.mp3'
+import achievementSound from './assets/acheivement.mp3'
 import sadgeKitty from './assets/sadge_Kitty.png'
 import omgKitty from './assets/omg_Kitty.png'
 
@@ -436,6 +437,18 @@ function App() {
       });
     } catch (error) {
       console.log('Meow audio creation failed:', error);
+    }
+  };
+
+  const playAchievementSound = () => {
+    try {
+      const audio = new Audio(achievementSound);
+      audio.volume = 0.7;
+      audio.play().catch(error => {
+        console.log('Achievement audio play failed:', error);
+      });
+    } catch (error) {
+      console.log('Achievement audio creation failed:', error);
     }
   };
 
@@ -1030,6 +1043,10 @@ function App() {
     // Check if achievement is already unlocked
     if (!achievements[achievementKey]) {
       console.log(`✅ Unlocking achievement: ${achievementKey}`);
+      
+      // Play achievement sound
+      playAchievementSound();
+      
       const newAchievements = { ...achievements, [achievementKey]: true };
       const newUnlockedList = [...unlockedAchievements, achievementKey];
       
