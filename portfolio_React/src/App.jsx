@@ -1,5 +1,4 @@
 // to do
-// add a text bubble and have the pink cat to show the user the volume settings
 // add more to loading screen???
 // add achievements???
 // fix animation of draggable windows
@@ -21,6 +20,7 @@ import bgmSound from './assets/bgm.mp3'
 import projectClickSound from './assets/Project_Click.wav'
 import textSound from './assets/text.wav'
 import sadgeKitty from './assets/sadge_Kitty.png'
+import omgKitty from './assets/omg_Kitty.png'
 
 function App() {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
@@ -41,6 +41,22 @@ function App() {
   const [uniqueVisitors, setUniqueVisitors] = useState(0);
   const [discordStatus, setDiscordStatus] = useState('offline');
   const [showSoundNotification, setShowSoundNotification] = useState(false);
+  const [achievements, setAchievements] = useState(() => {
+    // Load achievements from localStorage
+    const savedAchievements = localStorage.getItem('portfolio_achievements');
+    return savedAchievements ? JSON.parse(savedAchievements) : {
+      settingsExplorer: false,
+      projectViewer: false,
+      windowMaster: false,
+      speedRunner: false
+    };
+  });
+  const [showAchievement, setShowAchievement] = useState(null);
+  const [unlockedAchievements, setUnlockedAchievements] = useState(() => {
+    // Load unlocked achievements from localStorage
+    const savedUnlocked = localStorage.getItem('portfolio_unlocked_achievements');
+    return savedUnlocked ? JSON.parse(savedUnlocked) : [];
+  });
   const [visitorCounterState, setVisitorCounterState] = useState({
     isVisible: true,
     isMinimized: false,
@@ -89,6 +105,8 @@ function App() {
       const newTotalVisits = totalVisits + 1;
       localStorage.setItem('portfolio_total_visits', newTotalVisits.toString());
       setVisitorCount(newTotalVisits);
+      
+      console.log(`📊 Total visits: ${newTotalVisits}`);
 
       // Check if this session has already been tracked for unique visitors
       const sessionTracked = sessionStorage.getItem('portfolio_session_tracked');
@@ -98,6 +116,7 @@ function App() {
       if (!visitorId) {
         visitorId = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         localStorage.setItem('portfolio_visitor_id', visitorId);
+        console.log('🆔 New visitor ID created:', visitorId);
       }
 
       // Handle unique visitors (only once per session)
@@ -109,8 +128,11 @@ function App() {
           const newUniqueVisitors = [...uniqueVisitorsData, visitorId];
           localStorage.setItem('portfolio_unique_visitors', JSON.stringify(newUniqueVisitors));
           setUniqueVisitors(newUniqueVisitors.length);
+          
+          console.log('👥 New unique visitor detected!');
         } else {
           setUniqueVisitors(uniqueVisitorsData.length);
+          console.log('👥 Returning unique visitor');
         }
         
         // Mark this session as tracked for unique visitors
@@ -118,6 +140,7 @@ function App() {
       } else {
         // Just set the current unique visitor count
         setUniqueVisitors(uniqueVisitorsData.length);
+        console.log('👥 Session already tracked for unique visitors');
       }
     };
 
@@ -432,12 +455,17 @@ function App() {
       playCloseWindowSound();
     } else {
       playOpenWindowSound();
+      // Settings Hacker achievement
+      console.log('⚙️ Settings Hacker achievement triggered!');
+      unlockAchievement('settingsExplorer');
     }
     setShowVolumeSettings(!showVolumeSettings);
   };
 
   const handleMinimize = () => {
     playMinimizeWindowSound();
+    console.log('🎮 Window Wizard achievement triggered!');
+    unlockAchievement('windowMaster'); // Window interaction achievement
     
     const currentPosition = navigatorState.isMaximized ? navigatorState.savedPosition : navigatorState.position;
     const viewportRelativePosition = {
@@ -918,6 +946,141 @@ function App() {
     setShowSoundNotification(false);
   };
 
+  // Achievement definitions
+  const achievementData = {
+    settingsExplorer: {
+      title: "Settings Hacker",
+      description: "Found the secret settings! You're so smart! 🤓",
+      icon: "⚙️",
+      rarity: "uncommon"
+    },
+    projectViewer: {
+      title: "Project Stalker",
+      description: "Checking out my work? I'm flattered! 💕",
+      icon: "👀",
+      rarity: "common"
+    },
+    windowMaster: {
+      title: "Window Wizard",
+      description: "Playing with my windows? You're having fun! 🪟",
+      icon: "🎮",
+      rarity: "uncommon"
+    },
+    speedRunner: {
+      title: "Lightning Fast",
+      description: "Wow, you're going through everything so quickly! ⚡",
+      icon: "🏃‍♀️",
+      rarity: "rare"
+    }
+  };
+
+  // Achievement unlock function
+  const unlockAchievement = (achievementKey) => {
+    console.log(`🏆 Attempting to unlock achievement: ${achievementKey}`);
+    console.log(`Current achievement status:`, achievements[achievementKey]);
+    
+    // Check if achievement is already unlocked
+    if (!achievements[achievementKey]) {
+      console.log(`✅ Unlocking achievement: ${achievementKey}`);
+      const newAchievements = { ...achievements, [achievementKey]: true };
+      const newUnlockedList = [...unlockedAchievements, achievementKey];
+      
+      // Update state
+      setAchievements(newAchievements);
+      setUnlockedAchievements(newUnlockedList);
+      
+      // Save to localStorage
+      localStorage.setItem('portfolio_achievements', JSON.stringify(newAchievements));
+      localStorage.setItem('portfolio_unlocked_achievements', JSON.stringify(newUnlockedList));
+      
+      // Show achievement notification
+      setShowAchievement(achievementKey);
+      
+      // Auto-hide achievement after 5 seconds
+      setTimeout(() => {
+        setShowAchievement(null);
+      }, 5000);
+    } else {
+      console.log(`❌ Achievement ${achievementKey} already unlocked`);
+    }
+  };
+
+  /* 
+   * Development utility for testing achievements:
+   * Run this in browser console to reset all achievements:
+   * 
+   * localStorage.removeItem('portfolio_achievements');
+   * localStorage.removeItem('portfolio_unlocked_achievements');
+   * localStorage.removeItem('portfolio_total_visits');
+   * localStorage.removeItem('portfolio_visitor_id');
+   * localStorage.removeItem('portfolio_unique_visitors');
+   * sessionStorage.removeItem('portfolio_session_tracked');
+   * location.reload();
+   * 
+   * Or use the global function: window.resetAchievements()
+   * 
+   * Available achievements:
+   * - Settings Hacker ⚙️ - Click volume settings icon
+   * - Project Stalker 👀 - Scroll to projects section  
+   * - Window Wizard 🎮 - Minimize/maximize/close windows
+   * - Lightning Fast 🏃‍♀️ - Fast scroll through content
+   */
+
+  // Add reset function to window for easy testing
+  useEffect(() => {
+    window.resetAchievements = () => {
+      localStorage.removeItem('portfolio_achievements');
+      localStorage.removeItem('portfolio_unlocked_achievements');
+      localStorage.removeItem('portfolio_total_visits');
+      localStorage.removeItem('portfolio_visitor_id');
+      localStorage.removeItem('portfolio_unique_visitors');
+      sessionStorage.removeItem('portfolio_session_tracked');
+      console.log('🏆 All achievements and visitor data reset! Reloading page...');
+      location.reload();
+    };
+    
+    window.checkAchievements = () => {
+      console.log('🏆 Current achievements:', achievements);
+      console.log('📊 Current visitor count:', visitorCount);
+      console.log('👥 Current unique visitors:', uniqueVisitors);
+      console.log('🕒 Current hour:', new Date().getHours());
+    };
+  }, [achievements, visitorCount, uniqueVisitors]);
+
+  // Scroll tracking for achievements
+  useEffect(() => {
+    let scrollCount = 0;
+    let lastScrollTime = Date.now();
+    let hasScrolledToProjects = false;
+
+    const handleScroll = () => {
+      scrollCount++;
+      const currentTime = Date.now();
+      
+      // Speed runner achievement (fast scrolling)
+      if (currentTime - lastScrollTime < 100 && scrollCount >= 10) {
+        console.log('⚡ Lightning Fast achievement triggered!');
+        unlockAchievement('speedRunner');
+      }
+      
+      // Check if user scrolled to projects section
+      const projectsSection = document.querySelector('#projects-section');
+      if (projectsSection) {
+        const rect = projectsSection.getBoundingClientRect();
+        if (rect.top <= window.innerHeight && rect.bottom >= 0 && !hasScrolledToProjects) {
+          hasScrolledToProjects = true;
+          console.log('👀 Project Stalker achievement triggered!');
+          unlockAchievement('projectViewer');
+        }
+      }
+      
+      lastScrollTime = currentTime;
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [achievements]);
+
   if (isLoading) {
     return (
       <div className="loading-screen">
@@ -977,6 +1140,38 @@ function App() {
               <div className="notification-text">
                 <p>Hey! You can adjust the sound settings right here!</p>
                 <p>Click the volume icon (🔊) below to customize audio levels.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Achievement Notification */}
+      {showAchievement && (
+        <div className="achievement-notification">
+          <div className="achievement-window">
+            <div className="achievement-title-bar">
+              <div className="achievement-window-title">
+                <span className="achievement-icon-small">🏆</span>
+                ACHIEVEMENT UNLOCKED
+              </div>
+              <div className="achievement-window-controls">
+                <button className="achievement-close-btn" onClick={() => setShowAchievement(null)}>×</button>
+              </div>
+            </div>
+            <div className="achievement-window-content">
+              <div className="achievement-cat-container">
+                <img src={omgKitty} alt="Excited cat" className="achievement-cat-image" />
+              </div>
+              <div className="achievement-info">
+                <div className="achievement-details-header">
+                  <div className="achievement-emoji">{achievementData[showAchievement]?.icon}</div>
+                  <div className={`achievement-rarity-badge ${achievementData[showAchievement]?.rarity}`}>
+                    {achievementData[showAchievement]?.rarity?.toUpperCase()}
+                  </div>
+                </div>
+                <div className="achievement-name">{achievementData[showAchievement]?.title}</div>
+                <div className="achievement-description">{achievementData[showAchievement]?.description}</div>
               </div>
             </div>
           </div>
