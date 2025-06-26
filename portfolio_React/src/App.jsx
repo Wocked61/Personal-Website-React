@@ -47,7 +47,7 @@ function App() {
       windowMaster: false,
       speedRunner: false,
       timeWaster: false,
-
+      metaClicker: false,
       catLover: false,
       persistent: false,
       socialButterfly: false
@@ -743,7 +743,7 @@ function App() {
   const handlePortfolioClick = () => {
     playProjectClickSound();
     console.log('🎉 You clicked on the portfolio you\'re already viewing! How meta! 🤔');
-    unlockAchievement('projectViewer'); // Give them the project viewer achievement
+    unlockAchievement('metaClicker'); // Give them the meta clicker achievement
   }
 
   const handlePokePullClick = () => {
@@ -1058,6 +1058,12 @@ function App() {
       icon: "🕰️",
       rarity: "common"
     },
+    metaClicker: {
+      title: "Meta Clicker",
+      description: "You clicked on the portfolio you're already viewing! How meta! 🤔",
+      icon: "🌀",
+      rarity: "uncommon"
+    },
 
     catLover: {
       title: "Cat Whisperer",
@@ -1132,7 +1138,7 @@ function App() {
    * - Window Wizard 🎮 - Minimize/maximize/close windows
    * - Lightning Fast 🏃‍♀️ - Fast scroll through content
    * - Time Waster 🕰️ - Stay on site for 5 minutes
-
+   * - Meta Clicker 🌀 - Click on the portfolio project
    * - Cat Whisperer 😸 - Click the meowing kitty
    * - Persistent Visitor 💪 - Visit the site 10+ times
    * - Social Butterfly 🦋 - Scroll to contact section
