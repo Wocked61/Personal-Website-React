@@ -1,6 +1,9 @@
 // to do
 // achievements system implemented ✓
 // draggable windows fixed ✓
+// window repositioning on reopen fixed ✓
+// drag constraints and disappearing window bug fixed ✓
+// viewport-aware window reopening with savedPosition implemented ✓ 
 
 import React, { useState, useEffect } from 'react'
 import { Rnd } from 'react-rnd'
@@ -62,7 +65,9 @@ function App() {
     isMaximized: false,
     isAnimating: false,
     position: { x: 1450, y: 150 },
-    size: { width: 360, height: 220 }
+    size: { width: 360, height: 220 },
+    savedPosition: { x: 1450, y: 150 },
+    savedSize: { width: 360, height: 220 }
   });
   const [navigatorState, setNavigatorState] = useState({
     isVisible: true,
@@ -70,7 +75,9 @@ function App() {
     isMaximized: false,
     isAnimating: false,
     position: { x: 120, y: 140 },
-    size: { width: 320, height: 320 }
+    size: { width: 320, height: 320 },
+    savedPosition: { x: 120, y: 140 }, 
+    savedSize: { width: 320, height: 320 }
   });
 
   useEffect(() => {
@@ -79,6 +86,16 @@ function App() {
     }, 1000);
 
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    setNavigatorState(prev => ({
+      ...prev,
+      savedPosition: {
+        x: prev.position.x,
+        y: prev.position.y - window.scrollY
+      }
+    }));
   }, []);
 
   // Visitor tracking system
@@ -451,8 +468,27 @@ function App() {
     console.log('🎮 Window Wizard achievement triggered!');
     unlockAchievement('windowMaster'); // Window interaction achievement
     
+    const navigatorElement = document.querySelector('.navigator-window');
+    let viewportRelativePosition;
+    
+    if (navigatorElement) {
+      const rect = navigatorElement.getBoundingClientRect();
+      viewportRelativePosition = {
+        x: rect.left,
+        y: rect.top
+      };
+    } else {
+      const currentPosition = navigatorState.isMaximized ? navigatorState.savedPosition : navigatorState.position;
+      viewportRelativePosition = {
+        x: currentPosition.x,
+        y: currentPosition.y - window.scrollY
+      };
+    }
+    
     setNavigatorState(prev => ({
       ...prev,
+      savedPosition: viewportRelativePosition,
+      savedSize: prev.isMaximized ? prev.savedSize : prev.size,
       isAnimating: true
     }));
 
@@ -469,18 +505,59 @@ function App() {
   const handleMaximize = () => {
     playEnlargeWindowSound();
     
-    setNavigatorState(prev => ({
-      ...prev,
-      isMaximized: !prev.isMaximized,
-      isMinimized: false
-    }));
+    if (!navigatorState.isMaximized) {
+      const viewportRelativePosition = {
+        x: navigatorState.position.x,
+        y: navigatorState.position.y - window.scrollY
+      };
+      
+      setNavigatorState(prev => ({
+        ...prev,
+        isMaximized: true,
+        isMinimized: false,
+        savedPosition: viewportRelativePosition,
+        savedSize: prev.size
+      }));
+    } else {
+      const viewportPosition = {
+        x: navigatorState.savedPosition.x,
+        y: navigatorState.savedPosition.y + window.scrollY
+      };
+      
+      setNavigatorState(prev => ({
+        ...prev,
+        isMaximized: false,
+        isMinimized: false,
+        position: viewportPosition,
+        size: prev.savedSize
+      }));
+    }
   };
 
   const handleClose = () => {
     playCloseWindowSound();
     
+    const navigatorElement = document.querySelector('.navigator-window');
+    let viewportRelativePosition;
+    
+    if (navigatorElement) {
+      const rect = navigatorElement.getBoundingClientRect();
+      viewportRelativePosition = {
+        x: rect.left,
+        y: rect.top
+      };
+    } else {
+      const currentPosition = navigatorState.isMaximized ? navigatorState.savedPosition : navigatorState.position;
+      viewportRelativePosition = {
+        x: currentPosition.x,
+        y: currentPosition.y - window.scrollY
+      };
+    }
+    
     setNavigatorState(prev => ({
       ...prev,
+      savedPosition: viewportRelativePosition,
+      savedSize: prev.isMaximized ? prev.savedSize : prev.size,
       isAnimating: true
     }));
 
@@ -499,20 +576,68 @@ function App() {
     if (!navigatorState.isVisible) {
       playOpenWindowSound();
       
+      const viewportPosition = {
+        x: navigatorState.savedPosition.x,
+        y: navigatorState.savedPosition.y + window.scrollY
+      };
+      
       setNavigatorState(prev => ({
         ...prev,
         isVisible: true,
-        isMinimized: false
+        isMinimized: false,
+        position: viewportPosition,
+        size: prev.savedSize
       }));
     } else if (navigatorState.isMinimized) {
       playOpenWindowSound();
       
+      const viewportPosition = {
+        x: navigatorState.savedPosition.x,
+        y: navigatorState.savedPosition.y + window.scrollY
+      };
+      
       setNavigatorState(prev => ({
         ...prev,
-        isMinimized: false
+        isMinimized: false,
+        position: viewportPosition,
+        size: prev.savedSize
       }));
     } else {
-      handleClose();
+      playCloseWindowSound();
+      
+      const navigatorElement = document.querySelector('.navigator-window');
+      let viewportRelativePosition;
+      
+      if (navigatorElement) {
+        const rect = navigatorElement.getBoundingClientRect();
+        viewportRelativePosition = {
+          x: rect.left,
+          y: rect.top
+        };
+      } else {
+        const currentPosition = navigatorState.isMaximized ? navigatorState.savedPosition : navigatorState.position;
+        viewportRelativePosition = {
+          x: currentPosition.x,
+          y: currentPosition.y - window.scrollY
+        };
+      }
+      
+      setNavigatorState(prev => ({
+        ...prev,
+        savedPosition: viewportRelativePosition,
+        savedSize: prev.isMaximized ? prev.savedSize : prev.size,
+        isAnimating: true
+      }));
+
+      setTimeout(() => {
+        setNavigatorState(prev => ({
+          ...prev,
+          isVisible: false,
+          isMinimized: false,
+          isAnimating: false,
+          isMaximized: false
+        }));
+      }, 300);
     }
   };
 
@@ -644,12 +769,57 @@ function App() {
     }
   };
 
+  // Helper function to get a safe position within the current viewport
+  const getSafeWindowPosition = (windowWidth, windowHeight, preferredX = null, preferredY = null) => {
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+    
+    // If no preferred position is given, center the window in the viewport
+    const defaultX = preferredX !== null ? preferredX : Math.max(20, (viewportWidth - windowWidth) / 2);
+    const defaultY = preferredY !== null ? preferredY : Math.max(20, (viewportHeight - windowHeight) / 2);
+    
+    // Calculate position relative to viewport (not document)
+    // Since windows use position: fixed, we don't need to add scrollY
+    let safeY = Math.min(defaultY, viewportHeight - windowHeight - 50);
+    let safeX = Math.min(defaultX, viewportWidth - windowWidth - 20);
+    
+    // If preferred position would put window off-screen, adjust accordingly
+    if (defaultX > viewportWidth - windowWidth) {
+      safeX = viewportWidth - windowWidth - 20;
+    }
+    
+    // Ensure minimum distances from edges
+    const finalX = Math.max(20, safeX);
+    const finalY = Math.max(20, safeY);
+    
+    return { x: finalX, y: finalY };
+  };
+
   // Visitor Counter Window Handlers
   const handleVisitorCounterMinimize = () => {
     playMinimizeWindowSound();
     
+    const visitorCounterElement = document.querySelector('.visitor-counter-window');
+    let viewportRelativePosition;
+    
+    if (visitorCounterElement) {
+      const rect = visitorCounterElement.getBoundingClientRect();
+      viewportRelativePosition = {
+        x: rect.left,
+        y: rect.top
+      };
+    } else {
+      const currentPosition = visitorCounterState.isMaximized ? visitorCounterState.savedPosition : visitorCounterState.position;
+      viewportRelativePosition = {
+        x: currentPosition.x,
+        y: currentPosition.y - window.scrollY
+      };
+    }
+    
     setVisitorCounterState(prev => ({
       ...prev,
+      savedPosition: viewportRelativePosition,
+      savedSize: prev.isMaximized ? prev.savedSize : prev.size,
       isAnimating: true
     }));
 
@@ -666,18 +836,59 @@ function App() {
   const handleVisitorCounterMaximize = () => {
     playEnlargeWindowSound();
     
-    setVisitorCounterState(prev => ({
-      ...prev,
-      isMaximized: !prev.isMaximized,
-      isMinimized: false
-    }));
+    if (!visitorCounterState.isMaximized) {
+      const viewportRelativePosition = {
+        x: visitorCounterState.position.x,
+        y: visitorCounterState.position.y - window.scrollY
+      };
+      
+      setVisitorCounterState(prev => ({
+        ...prev,
+        isMaximized: true,
+        isMinimized: false,
+        savedPosition: viewportRelativePosition,
+        savedSize: prev.size
+      }));
+    } else {
+      const viewportPosition = {
+        x: visitorCounterState.savedPosition.x,
+        y: visitorCounterState.savedPosition.y + window.scrollY
+      };
+      
+      setVisitorCounterState(prev => ({
+        ...prev,
+        isMaximized: false,
+        isMinimized: false,
+        position: viewportPosition,
+        size: prev.savedSize
+      }));
+    }
   };
 
   const handleVisitorCounterClose = () => {
     playCloseWindowSound();
     
+    const visitorCounterElement = document.querySelector('.visitor-counter-window');
+    let viewportRelativePosition;
+    
+    if (visitorCounterElement) {
+      const rect = visitorCounterElement.getBoundingClientRect();
+      viewportRelativePosition = {
+        x: rect.left,
+        y: rect.top
+      };
+    } else {
+      const currentPosition = visitorCounterState.isMaximized ? visitorCounterState.savedPosition : visitorCounterState.position;
+      viewportRelativePosition = {
+        x: currentPosition.x,
+        y: currentPosition.y - window.scrollY
+      };
+    }
+    
     setVisitorCounterState(prev => ({
       ...prev,
+      savedPosition: viewportRelativePosition,
+      savedSize: prev.isMaximized ? prev.savedSize : prev.size,
       isAnimating: true
     }));
 
@@ -696,20 +907,68 @@ function App() {
     if (!visitorCounterState.isVisible) {
       playOpenWindowSound();
       
+      const viewportPosition = {
+        x: visitorCounterState.savedPosition.x,
+        y: visitorCounterState.savedPosition.y + window.scrollY
+      };
+      
       setVisitorCounterState(prev => ({
         ...prev,
         isVisible: true,
-        isMinimized: false
+        isMinimized: false,
+        position: viewportPosition,
+        size: prev.savedSize
       }));
     } else if (visitorCounterState.isMinimized) {
       playOpenWindowSound();
       
+      const viewportPosition = {
+        x: visitorCounterState.savedPosition.x,
+        y: visitorCounterState.savedPosition.y + window.scrollY
+      };
+      
       setVisitorCounterState(prev => ({
         ...prev,
-        isMinimized: false
+        isMinimized: false,
+        position: viewportPosition,
+        size: prev.savedSize
       }));
     } else {
-      handleVisitorCounterClose();
+      playCloseWindowSound();
+      
+      const visitorCounterElement = document.querySelector('.visitor-counter-window');
+      let viewportRelativePosition;
+      
+      if (visitorCounterElement) {
+        const rect = visitorCounterElement.getBoundingClientRect();
+        viewportRelativePosition = {
+          x: rect.left,
+          y: rect.top
+        };
+      } else {
+        const currentPosition = visitorCounterState.isMaximized ? visitorCounterState.savedPosition : visitorCounterState.position;
+        viewportRelativePosition = {
+          x: currentPosition.x,
+          y: currentPosition.y - window.scrollY
+        };
+      }
+      
+      setVisitorCounterState(prev => ({
+        ...prev,
+        savedPosition: viewportRelativePosition,
+        savedSize: prev.isMaximized ? prev.savedSize : prev.size,
+        isAnimating: true
+      }));
+
+      setTimeout(() => {
+        setVisitorCounterState(prev => ({
+          ...prev,
+          isVisible: false,
+          isMinimized: false,
+          isAnimating: false,
+          isMaximized: false
+        }));
+      }, 300);
     }
   };
 
@@ -1016,52 +1275,32 @@ function App() {
         <Rnd
           position={navigatorState.isMaximized ? { x: 0, y: 0 } : navigatorState.position}
           size={navigatorState.isMaximized ? { width: window.innerWidth, height: window.innerHeight - 40 } : navigatorState.size}
-          onDrag={(e, d) => {
-            if (!navigatorState.isMaximized) {
-              // Update position in real-time during drag to prevent jumping
-              const maxX = window.innerWidth - navigatorState.size.width;
-              const maxY = window.innerHeight - navigatorState.size.height;
-              
-              const constrainedX = Math.max(0, Math.min(d.x, maxX));
-              const constrainedY = Math.max(0, Math.min(d.y, maxY));
-              
-              setNavigatorState(prev => ({
-                ...prev,
-                position: { x: constrainedX, y: constrainedY }
-              }));
-            }
-          }}
           onDragStop={(e, d) => {
             if (!navigatorState.isMaximized) {
-              // Ensure the window stays within viewport bounds
-              const maxX = window.innerWidth - navigatorState.size.width;
-              const maxY = window.innerHeight - navigatorState.size.height;
-              
-              const constrainedX = Math.max(0, Math.min(d.x, maxX));
-              const constrainedY = Math.max(0, Math.min(d.y, maxY));
+              const viewportRelativePosition = {
+                x: d.x,
+                y: d.y - window.scrollY
+              };
               
               setNavigatorState(prev => ({
                 ...prev,
-                position: { x: constrainedX, y: constrainedY }
+                position: { x: d.x, y: d.y },
+                savedPosition: viewportRelativePosition
               }));
             }
           }}
           onResizeStop={(e, direction, ref, delta, position) => {
             if (!navigatorState.isMaximized) {
-              // Ensure the window stays within viewport bounds after resize
-              const newWidth = parseInt(ref.style.width);
-              const newHeight = parseInt(ref.style.height);
-              
-              const maxX = window.innerWidth - newWidth;
-              const maxY = window.innerHeight - newHeight;
-              
-              const constrainedX = Math.max(0, Math.min(position.x, maxX));
-              const constrainedY = Math.max(0, Math.min(position.y, maxY));
+              const viewportRelativePosition = {
+                x: position.x,
+                y: position.y - window.scrollY
+              };
               
               setNavigatorState(prev => ({
                 ...prev,
-                size: { width: newWidth, height: newHeight },
-                position: { x: constrainedX, y: constrainedY }
+                size: { width: ref.style.width, height: ref.style.height },
+                position,
+                savedPosition: viewportRelativePosition
               }));
             }
           }}
@@ -1112,52 +1351,32 @@ function App() {
         <Rnd
           position={visitorCounterState.isMaximized ? { x: 0, y: 0 } : visitorCounterState.position}
           size={visitorCounterState.isMaximized ? { width: window.innerWidth, height: window.innerHeight - 40 } : visitorCounterState.size}
-          onDrag={(e, d) => {
-            if (!visitorCounterState.isMaximized) {
-              // Update position in real-time during drag to prevent jumping
-              const maxX = window.innerWidth - visitorCounterState.size.width;
-              const maxY = window.innerHeight - visitorCounterState.size.height;
-              
-              const constrainedX = Math.max(0, Math.min(d.x, maxX));
-              const constrainedY = Math.max(0, Math.min(d.y, maxY));
-              
-              setVisitorCounterState(prev => ({
-                ...prev,
-                position: { x: constrainedX, y: constrainedY }
-              }));
-            }
-          }}
           onDragStop={(e, d) => {
             if (!visitorCounterState.isMaximized) {
-              // Ensure the window stays within viewport bounds
-              const maxX = window.innerWidth - visitorCounterState.size.width;
-              const maxY = window.innerHeight - visitorCounterState.size.height;
-              
-              const constrainedX = Math.max(0, Math.min(d.x, maxX));
-              const constrainedY = Math.max(0, Math.min(d.y, maxY));
+              const viewportRelativePosition = {
+                x: d.x,
+                y: d.y - window.scrollY
+              };
               
               setVisitorCounterState(prev => ({
                 ...prev,
-                position: { x: constrainedX, y: constrainedY }
+                position: { x: d.x, y: d.y },
+                savedPosition: viewportRelativePosition
               }));
             }
           }}
           onResizeStop={(e, direction, ref, delta, position) => {
             if (!visitorCounterState.isMaximized) {
-              // Ensure the window stays within viewport bounds after resize
-              const newWidth = parseInt(ref.style.width);
-              const newHeight = parseInt(ref.style.height);
-              
-              const maxX = window.innerWidth - newWidth;
-              const maxY = window.innerHeight - newHeight;
-              
-              const constrainedX = Math.max(0, Math.min(position.x, maxX));
-              const constrainedY = Math.max(0, Math.min(position.y, maxY));
+              const viewportRelativePosition = {
+                x: position.x,
+                y: position.y - window.scrollY
+              };
               
               setVisitorCounterState(prev => ({
                 ...prev,
-                size: { width: newWidth, height: newHeight },
-                position: { x: constrainedX, y: constrainedY }
+                size: { width: ref.style.width, height: ref.style.height },
+                position,
+                savedPosition: viewportRelativePosition
               }));
             }
           }}
