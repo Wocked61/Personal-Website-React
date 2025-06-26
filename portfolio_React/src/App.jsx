@@ -47,7 +47,7 @@ function App() {
       windowMaster: false,
       speedRunner: false,
       timeWaster: false,
-      nightOwl: false,
+
       catLover: false,
       persistent: false,
       socialButterfly: false
@@ -1058,12 +1058,7 @@ function App() {
       icon: "🕰️",
       rarity: "common"
     },
-    nightOwl: {
-      title: "Night Owl",
-      description: "Browsing my portfolio past midnight? Dedication! 🦉",
-      icon: "🌙",
-      rarity: "uncommon"
-    },
+
     catLover: {
       title: "Cat Whisperer",
       description: "You made the kitty meow! You're definitely a cat person! 🐱",
@@ -1137,7 +1132,7 @@ function App() {
    * - Window Wizard 🎮 - Minimize/maximize/close windows
    * - Lightning Fast 🏃‍♀️ - Fast scroll through content
    * - Time Waster 🕰️ - Stay on site for 5 minutes
-   * - Night Owl 🌙 - Visit between midnight and 6am
+
    * - Cat Whisperer 😸 - Click the meowing kitty
    * - Persistent Visitor 💪 - Visit the site 10+ times
    * - Social Butterfly 🦋 - Scroll to contact section
@@ -1224,13 +1219,6 @@ function App() {
 
   // Time-based and visit-based achievements
   useEffect(() => {
-    // Night owl achievement (after midnight)
-    const currentHour = new Date().getHours();
-    if (currentHour >= 0 && currentHour < 6) {
-      console.log('🌙 Night Owl achievement triggered!');
-      unlockAchievement('nightOwl');
-    }
-
     // Time waster achievement (after 5 minutes)
     const timeWasterTimer = setTimeout(() => {
       console.log('🕰️ Time Waster achievement triggered!');
