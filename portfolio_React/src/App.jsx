@@ -1684,7 +1684,7 @@ function App() {
             <div className="project-list">
               <div className="project-item clickable" onClick={handlePortfolioClick}>
                 <div className="project-icon">
-                  <img src="Port_Icon.png" alt="Portfolio Icon" className="project-icon-image" />
+                  <img src="port_Icon.png" alt="Portfolio Icon" className="project-icon-image" />
                 </div>
                 <div className="project-details">
                   <h3>Interactive React Portfolio Website</h3>
