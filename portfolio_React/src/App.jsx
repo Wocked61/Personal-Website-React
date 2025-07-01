@@ -12,6 +12,7 @@ import minimizeWindowSound from './assets/minimize_Window.mp3'
 import errorSound from './assets/Error.wav'
 import loadingSound from './assets/loading.mp3'
 import bgmSound from './assets/bgm.mp3'
+import bgm2Sound from './assets/bgm2(8bit).mp3'
 import projectClickSound from './assets/Project_Click.wav'
 import textSound from './assets/text.wav'
 import meowSound from './assets/meow.mp3'
@@ -26,6 +27,9 @@ function App() {
   const [loadingText, setLoadingText] = useState('INITIALIZING SYSTEM...');
   const [loadingAudio, setLoadingAudio] = useState(null);
   const [bgmAudio, setBgmAudio] = useState(null);
+  const [bgm2Audio, setBgm2Audio] = useState(null);
+  const [currentBgmIndex, setCurrentBgmIndex] = useState(0);
+  const [bgmTracks, setBgmTracks] = useState([]);
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [showAudioPrompt, setShowAudioPrompt] = useState(false);
   const [showVolumeSettings, setShowVolumeSettings] = useState(false);
@@ -179,6 +183,13 @@ function App() {
       bgmAudioInstance.loop = true;
       setBgmAudio(bgmAudioInstance);
 
+      const bgm2AudioInstance = new Audio(bgm2Sound);
+      bgm2AudioInstance.volume = 0.06;
+      bgm2AudioInstance.loop = true;
+      setBgm2Audio(bgm2AudioInstance);
+
+      // Set up the BGM tracks array
+      setBgmTracks([bgmAudioInstance, bgm2AudioInstance]);
 
       try {
         await loadingAudioInstance.play();
@@ -233,12 +244,36 @@ function App() {
   };
 
   useEffect(() => {
-    if (loadingAudio && bgmAudio && !isLoading && audioEnabled) {
+    if (loadingAudio && bgmTracks.length > 0 && !isLoading && audioEnabled) {
       const checkLoadingSoundEnd = () => {
         if (loadingAudio.ended || loadingAudio.currentTime >= loadingAudio.duration) {
-          bgmAudio.play().catch(error => {
+          // Start playing the first BGM track
+          const currentTrack = bgmTracks[currentBgmIndex];
+          currentTrack.play().catch(error => {
             console.log('BGM play failed:', error);
           });
+
+          // Set up event listener for when the current track ends to switch to the next one
+          const handleTrackEnd = () => {
+            const nextIndex = (currentBgmIndex + 1) % bgmTracks.length;
+            const nextTrack = bgmTracks[nextIndex];
+            
+            // Stop current track
+            currentTrack.pause();
+            currentTrack.currentTime = 0;
+            
+            // Play next track
+            nextTrack.play().catch(error => {
+              console.log('Next BGM play failed:', error);
+            });
+            
+            setCurrentBgmIndex(nextIndex);
+            console.log(`🎵 Switching to BGM ${nextIndex + 1} ${nextIndex === 0 ? '(Original)' : '(8-bit)'}`);
+          };
+
+          // Remove any existing event listeners to prevent duplicates
+          currentTrack.removeEventListener('ended', handleTrackEnd);
+          currentTrack.addEventListener('ended', handleTrackEnd);
         } else {
           setTimeout(checkLoadingSoundEnd, 100);
         }
@@ -246,7 +281,7 @@ function App() {
 
       checkLoadingSoundEnd();
     }
-  }, [loadingAudio, bgmAudio, isLoading, audioEnabled]);
+  }, [loadingAudio, bgmTracks, isLoading, audioEnabled, currentBgmIndex]);
 
   useEffect(() => {
     return () => {
@@ -258,14 +293,21 @@ function App() {
         bgmAudio.pause();
         bgmAudio.currentTime = 0;
       }
+      if (bgm2Audio) {
+        bgm2Audio.pause();
+        bgm2Audio.currentTime = 0;
+      }
     };
-  }, [loadingAudio, bgmAudio]);
+  }, [loadingAudio, bgmAudio, bgm2Audio]);
 
   useEffect(() => {
     if (bgmAudio) {
       bgmAudio.volume = isMuted ? 0 : bgmVolume;
     }
-  }, [bgmAudio, bgmVolume, isMuted]);
+    if (bgm2Audio) {
+      bgm2Audio.volume = isMuted ? 0 : bgmVolume;
+    }
+  }, [bgmAudio, bgm2Audio, bgmVolume, isMuted]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -465,6 +507,9 @@ function App() {
     if (bgmAudio) {
       bgmAudio.volume = isMuted ? 0 : newVolume;
     }
+    if (bgm2Audio) {
+      bgm2Audio.volume = isMuted ? 0 : newVolume;
+    }
   };
 
   const handleMuteToggle = () => {
@@ -473,6 +518,9 @@ function App() {
     setIsMuted(newMutedState);
     if (bgmAudio) {
       bgmAudio.volume = newMutedState ? 0 : bgmVolume;
+    }
+    if (bgm2Audio) {
+      bgm2Audio.volume = newMutedState ? 0 : bgmVolume;
     }
   };
 
@@ -486,6 +534,25 @@ function App() {
       unlockAchievement('settingsExplorer');
     }
     setShowVolumeSettings(!showVolumeSettings);
+  };
+
+  const switchBGM = () => {
+    if (bgmTracks.length > 0) {
+      const currentTrack = bgmTracks[currentBgmIndex];
+      currentTrack.pause();
+      currentTrack.currentTime = 0;
+      
+      const nextIndex = (currentBgmIndex + 1) % bgmTracks.length;
+      const nextTrack = bgmTracks[nextIndex];
+      
+      nextTrack.play().catch(error => {
+        console.log('Manual BGM switch failed:', error);
+      });
+      
+      setCurrentBgmIndex(nextIndex);
+      playProjectClickSound();
+      console.log(`🎵 Manually switched to BGM ${nextIndex + 1} ${nextIndex === 0 ? '(Original)' : '(8-bit)'}`);
+    }
   };
 
   const handleMinimize = () => {
@@ -1796,6 +1863,19 @@ function App() {
                     className="volume-slider"
                   />
                   <span className="volume-value">{Math.round(bgmVolume * 100)}%</span>
+                </div>
+                <div className="bgm-track-row">
+                  <span className="bgm-track-label">Current Track:</span>
+                  <span className="bgm-track-info">
+                    BGM{currentBgmIndex+1} {currentBgmIndex === 0 ? '(Original)' : '(8bit)'}
+                  </span>
+                  <button
+                    className="bgm-switch-btn"
+                    onClick={switchBGM}
+                    title="Switch BGM Track"
+                  >
+                    🎵 Switch
+                  </button>
                 </div>
                 <div className="mute-control-row">
                   <button

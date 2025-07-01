@@ -1036,6 +1036,57 @@ html {
   font-weight: bold;
 }
 
+.bgm-track-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding: 8px;
+  background: linear-gradient(135deg, rgba(254, 137, 217, 0.1) 0%, rgba(20, 200, 249, 0.1) 100%);
+  border: 2px solid rgba(148, 106, 163, 0.3);
+}
+
+.bgm-track-label {
+  font-size: 10px;
+  color: #252525;
+  min-width: 80px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bgm-track-info {
+  flex: 1;
+  font-size: 10px;
+  color: #946AA3;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.bgm-switch-btn {
+  background: linear-gradient(135deg, #14C8F9 0%, #946AA3 100%);
+  border: 2px solid #8E6BFF;
+  color: white;
+  padding: 6px 12px;
+  font-family: var(--pixel-font);
+  font-size: 9px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  box-shadow: 2px 2px 0 rgba(142, 107, 255, 0.3);
+}
+
+.bgm-switch-btn:hover {
+  background: linear-gradient(135deg, #946AA3 0%, #14C8F9 100%);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 rgba(142, 107, 255, 0.5);
+}
+
+.bgm-switch-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(142, 107, 255, 0.3);
+}
+
 .mute-control-row {
   text-align: center;
 }
