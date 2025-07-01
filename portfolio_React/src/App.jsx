@@ -29,7 +29,7 @@ function App() {
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [showAudioPrompt, setShowAudioPrompt] = useState(false);
   const [showVolumeSettings, setShowVolumeSettings] = useState(false);
-  const [bgmVolume, setBgmVolume] = useState(0.07);
+  const [bgmVolume, setBgmVolume] = useState(0.06);
   const [isMuted, setIsMuted] = useState(false);
   const [aboutMeLoading, setAboutMeLoading] = useState(true);
   const [typedText, setTypedText] = useState('');
@@ -175,7 +175,7 @@ function App() {
       setLoadingAudio(loadingAudioInstance);
 
       const bgmAudioInstance = new Audio(bgmSound);
-      bgmAudioInstance.volume = 0.07;
+      bgmAudioInstance.volume = 0.06;
       bgmAudioInstance.loop = true;
       setBgmAudio(bgmAudioInstance);
 
