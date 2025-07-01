@@ -29,7 +29,7 @@ function App() {
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [showAudioPrompt, setShowAudioPrompt] = useState(false);
   const [showVolumeSettings, setShowVolumeSettings] = useState(false);
-  const [bgmVolume, setBgmVolume] = useState(0.1);
+  const [bgmVolume, setBgmVolume] = useState(0.07);
   const [isMuted, setIsMuted] = useState(false);
   const [aboutMeLoading, setAboutMeLoading] = useState(true);
   const [typedText, setTypedText] = useState('');
@@ -171,11 +171,11 @@ function App() {
     const initializeAudio = async () => {
 
       const loadingAudioInstance = new Audio(loadingSound);
-      loadingAudioInstance.volume = 0.4;
+      loadingAudioInstance.volume = 0.35;
       setLoadingAudio(loadingAudioInstance);
 
       const bgmAudioInstance = new Audio(bgmSound);
-      bgmAudioInstance.volume = 0.1;
+      bgmAudioInstance.volume = 0.07;
       bgmAudioInstance.loop = true;
       setBgmAudio(bgmAudioInstance);
 
@@ -308,7 +308,7 @@ function App() {
         const playTextSound = () => {
           try {
             const audio = new Audio(textSound);
-            audio.volume = 0.1;
+            audio.volume = 0.05;
             audio.play().catch(error => {
               console.log('Text audio play failed:', error);
             });
@@ -363,7 +363,7 @@ function App() {
   const playCloseWindowSound = () => {
     try {
       const audio = new Audio(closeWindowSound);
-      audio.volume = 0.7;
+      audio.volume = 0.4;
       audio.play().catch(error => {
         console.log('Audio play failed:', error);
       });
@@ -375,7 +375,7 @@ function App() {
   const playOpenWindowSound = () => {
     try {
       const audio = new Audio(openWindowSound);
-      audio.volume = 1;
+      audio.volume = 0.6;
       audio.play().catch(error => {
         console.log('Audio play failed:', error);
       });
@@ -411,7 +411,7 @@ function App() {
   const playErrorSound = () => {
     try {
       const audio = new Audio(errorSound);
-      audio.volume = 0.6;
+      audio.volume = 0.5;
       audio.play().catch(error => {
         console.log('Audio play failed:', error);
       });
