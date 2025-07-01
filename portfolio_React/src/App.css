@@ -579,10 +579,10 @@ body {
 }
 
 .project-icon-image {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 4px;
+  width: 1.5em;
+  height: 1.5em;
+  font-size: 2rem;
+  object-fit: contain;
 }
 
 .project-details h3 {
