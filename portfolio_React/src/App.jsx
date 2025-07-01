@@ -106,7 +106,15 @@ function App() {
 
   // Visitor tracking system with Supabase
   useEffect(() => {
+    let hasTracked = false; 
+    
     const trackVisitor = async () => {
+      if (hasTracked) {
+        console.log('🛑 Tracking already completed, skipping...');
+        return;
+      }
+      
+      hasTracked = true;
       console.log('🚀 Starting visitor tracking...');
       
       try {
