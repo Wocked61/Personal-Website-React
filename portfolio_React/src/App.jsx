@@ -3,6 +3,7 @@ import { Rnd } from 'react-rnd'
 import Footer from './Footer.jsx'
 import './App.css'
 import '@hackernoon/pixel-icon-library/fonts/iconfont.css'
+import { supabase } from './supabase.js'
 import csufLogo from './assets/csuf-logo.png'
 import moveScrollSound from './assets/move_scroll.mp3'
 import closeWindowSound from './assets/close_Window.mp3'
@@ -40,6 +41,7 @@ function App() {
   const [isTyping, setIsTyping] = useState(false);
   const [visitorCount, setVisitorCount] = useState(0);
   const [uniqueVisitors, setUniqueVisitors] = useState(0);
+  const [trackingMethod, setTrackingMethod] = useState('Connecting...');
   const [discordStatus, setDiscordStatus] = useState('offline');
   const [showSoundNotification, setShowSoundNotification] = useState(false);
   const [achievements, setAchievements] = useState(() => {
@@ -102,47 +104,92 @@ function App() {
     }));
   }, []);
 
-  // Visitor tracking system
+  // Visitor tracking system with Supabase
   useEffect(() => {
-    const trackVisitor = () => {
-      const totalVisits = parseInt(localStorage.getItem('portfolio_total_visits') || '0');
-      const newTotalVisits = totalVisits + 1;
-      localStorage.setItem('portfolio_total_visits', newTotalVisits.toString());
-      setVisitorCount(newTotalVisits);
+    const trackVisitor = async () => {
+      console.log('🚀 Starting visitor tracking...');
+      
+      try {
 
-      console.log(`📊 Total visits: ${newTotalVisits}`);
+        console.log('🌐 Fetching user IP...');
+        const ipResponse = await fetch('https://api64.ipify.org?format=json');
+        const ipData = await ipResponse.json();
+        const userIP = ipData.ip;
+        console.log('✅ User IP obtained:', userIP);
+        
 
-      const sessionTracked = sessionStorage.getItem('portfolio_session_tracked');
+        const sessionTracked = sessionStorage.getItem('portfolio_session_tracked');
+        console.log('📋 Session already tracked:', sessionTracked);
+        
+        if (!sessionTracked) {
+          console.log('📝 Attempting to insert visit record...');
+          
+          // Insert a new visit record
+          const { data, error } = await supabase
+            .from('visits')
+            .insert([{ ip: userIP }])
+            .select();
 
-      // Generate a unique visitor ID if one doesn't exist
-      let visitorId = localStorage.getItem('portfolio_visitor_id');
-      if (!visitorId) {
-        visitorId = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('portfolio_visitor_id', visitorId);
-        console.log('🆔 New visitor ID created:', visitorId);
-      }
-
-      const uniqueVisitorsData = JSON.parse(localStorage.getItem('portfolio_unique_visitors') || '[]');
-
-      if (!sessionTracked) {
-        // Check if this is a unique visitor
-        if (!uniqueVisitorsData.includes(visitorId)) {
-          const newUniqueVisitors = [...uniqueVisitorsData, visitorId];
-          localStorage.setItem('portfolio_unique_visitors', JSON.stringify(newUniqueVisitors));
-          setUniqueVisitors(newUniqueVisitors.length);
-
-          console.log('👥 New unique visitor detected!');
+          if (error) {
+            console.error('❌ Error inserting visit:', error);
+            console.error('Error code:', error.code);
+            console.error('Error details:', error.details);
+            console.error('Error hint:', error.hint);
+            console.error('Error message:', error.message);
+            setTrackingMethod('Local Storage (Fallback)');
+            fallbackToLocalStorage();
+            return;
+          } else {
+            console.log('✅ Visit record inserted successfully:', data);
+            sessionStorage.setItem('portfolio_session_tracked', 'true');
+          }
         } else {
-          setUniqueVisitors(uniqueVisitorsData.length);
-          console.log('👥 Returning unique visitor');
+          console.log('ℹ️ Session already tracked, skipping insert');
         }
 
-        // Mark this session as tracked for unique visitors
-        sessionStorage.setItem('portfolio_session_tracked', 'true');
-      } else {
-        // Just set the current unique visitor count
-        setUniqueVisitors(uniqueVisitorsData.length);
-        console.log('👥 Session already tracked for unique visitors');
+        console.log('📊 Fetching visitor statistics...');
+        
+        // Fetch visitor statistics
+        const { count: totalCount, error: countError } = await supabase
+          .from('visits')
+          .select('*', { count: 'exact', head: true });
+
+        if (countError) {
+          console.error('❌ Error fetching total count:', countError);
+          setTrackingMethod('Local Storage (Fallback)');
+          fallbackToLocalStorage();
+          return;
+        }
+
+        console.log('📈 Total visits count:', totalCount);
+        setVisitorCount(totalCount || 0);
+
+        // Fetch unique visitors
+        console.log('👥 Fetching unique visitors...');
+        const { data: uniqueIps, error: uniqueError } = await supabase
+          .from('visits')
+          .select('ip', { count: 'exact', head: false })
+          .neq('ip', null);
+
+        if (uniqueError) {
+          console.error('❌ Error fetching unique visitors:', uniqueError);
+          setTrackingMethod('Local Storage (Fallback)');
+          fallbackToLocalStorage();
+          return;
+        }
+
+        console.log('🔍 Raw IP data:', uniqueIps);
+        const uniqueSet = new Set(uniqueIps?.map((v) => v.ip) || []);
+        console.log('📊 Unique visitors count:', uniqueSet.size);
+        
+        setUniqueVisitors(uniqueSet.size);
+        setTrackingMethod('Supabase Database');
+        console.log('✅ Visitor tracking completed successfully!');
+
+      } catch (error) {
+        console.error('❌ General error in visitor tracking:', error);
+        setTrackingMethod('Local Storage (Fallback)');
+        fallbackToLocalStorage();
       }
     };
 
@@ -896,7 +943,6 @@ function App() {
     return { x: finalX, y: finalY };
   };
 
-
   const handleVisitorCounterMinimize = () => {
     playMinimizeWindowSound();
 
@@ -1611,7 +1657,7 @@ function App() {
                 </div>
               </div>
               <div className="visitor-footer">
-                <small>📊 CLIENT-SIDE TRACKING</small>
+                <small>📊 {trackingMethod.toUpperCase()}</small>
               </div>
             </div>
           </div>
