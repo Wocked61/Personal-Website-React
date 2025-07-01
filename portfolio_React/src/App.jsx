@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Rnd } from 'react-rnd'
 import Footer from './Footer.jsx'
 import './App.css'
@@ -86,6 +86,9 @@ function App() {
     savedSize: { width: 320, height: 320 }
   });
 
+
+  const hasTrackedVisitor = useRef(false);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
@@ -104,55 +107,45 @@ function App() {
     }));
   }, []);
 
-  // Visitor tracking system with Supabase
+
   useEffect(() => {
-    let hasTracked = false; 
     
     const trackVisitor = async () => {
-      if (hasTracked) {
-        console.log('🛑 Tracking already completed, skipping...');
+      if (hasTrackedVisitor.current) {
+        console.log('🚫 Already executed in this render cycle, skipping...');
         return;
       }
-      
-      hasTracked = true;
-      console.log('🚀 Starting visitor tracking...');
-      
-      try {
+      hasTrackedVisitor.current = true;
 
+      console.log('🚀 Starting visitor tracking...');
+
+      try {
         console.log('🌐 Fetching user IP...');
         const ipResponse = await fetch('https://api64.ipify.org?format=json');
         const ipData = await ipResponse.json();
         const userIP = ipData.ip;
         console.log('✅ User IP obtained:', userIP);
         
-
-        const sessionTracked = sessionStorage.getItem('portfolio_session_tracked');
-        console.log('📋 Session already tracked:', sessionTracked);
+        // Always insert a new visit record (counts refreshes)
+        console.log('📝 Inserting visit record for each page load...');
         
-        if (!sessionTracked) {
-          console.log('📝 Attempting to insert visit record...');
-          
-          // Insert a new visit record
-          const { data, error } = await supabase
-            .from('visits')
-            .insert([{ ip: userIP }])
-            .select();
+        // Insert a new visit record
+        const { data, error } = await supabase
+          .from('visits')
+          .insert([{ ip: userIP }])
+          .select();
 
-          if (error) {
-            console.error('❌ Error inserting visit:', error);
-            console.error('Error code:', error.code);
-            console.error('Error details:', error.details);
-            console.error('Error hint:', error.hint);
-            console.error('Error message:', error.message);
-            setTrackingMethod('Local Storage (Fallback)');
-            fallbackToLocalStorage();
-            return;
-          } else {
-            console.log('✅ Visit record inserted successfully:', data);
-            sessionStorage.setItem('portfolio_session_tracked', 'true');
-          }
+        if (error) {
+          console.error('❌ Error inserting visit:', error);
+          console.error('Error code:', error.code);
+          console.error('Error details:', error.details);
+          console.error('Error hint:', error.hint);
+          console.error('Error message:', error.message);
+          setTrackingMethod('Local Storage (Fallback)');
+          fallbackToLocalStorage();
+          return;
         } else {
-          console.log('ℹ️ Session already tracked, skipping insert');
+          console.log('✅ Visit record inserted successfully:', data);
         }
 
         console.log('📊 Fetching visitor statistics...');
@@ -198,6 +191,32 @@ function App() {
         console.error('❌ General error in visitor tracking:', error);
         setTrackingMethod('Local Storage (Fallback)');
         fallbackToLocalStorage();
+      }
+    };
+
+    const fallbackToLocalStorage = () => {
+      console.log('📊 Using localStorage fallback for visitor tracking');
+      
+      const totalVisits = parseInt(localStorage.getItem('portfolio_total_visits') || '0');
+      const newTotalVisits = totalVisits + 1;
+      localStorage.setItem('portfolio_total_visits', newTotalVisits.toString());
+      setVisitorCount(newTotalVisits);
+
+      let visitorId = localStorage.getItem('portfolio_visitor_id');
+      if (!visitorId) {
+        visitorId = 'visitor_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('portfolio_visitor_id', visitorId);
+      }
+
+      const uniqueVisitorsData = JSON.parse(localStorage.getItem('portfolio_unique_visitors') || '[]');
+
+      // Add to unique visitors list if not already present
+      if (!uniqueVisitorsData.includes(visitorId)) {
+        const newUniqueVisitors = [...uniqueVisitorsData, visitorId];
+        localStorage.setItem('portfolio_unique_visitors', JSON.stringify(newUniqueVisitors));
+        setUniqueVisitors(newUniqueVisitors.length);
+      } else {
+        setUniqueVisitors(uniqueVisitorsData.length);
       }
     };
 
