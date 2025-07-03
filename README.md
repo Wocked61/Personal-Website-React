@@ -30,3 +30,19 @@ I used the inspiration of Needy Streamer Overload because I love its theme and d
 
 Note: I never played the game but I love the music since I listen to the artist
 ![image](https://github.com/user-attachments/assets/754a51eb-41d5-4780-9eef-3db8fcdae010)
+
+# Console Commands
+Reset all achievements and visitor data
+window.resetAchievements()
+
+Check the current achievement status
+window.checkAchievements()
+
+Test multiple achievements at once
+window.testMultipleAchievements()
+
+Test all achievements sequentially
+window.testAllAchievements()
+
+Test the Supabase database connection
+window.testSupabaseConnection()
