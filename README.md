@@ -6,8 +6,10 @@ I would like to add a 3d model to the website for the user to interact with and 
 
 # Preview
 ![image](https://github.com/user-attachments/assets/13ce1c1b-cb73-43f3-8257-f54d16ccab0d)
+![image](https://github.com/user-attachments/assets/d49980fd-3c66-4bcc-9f7a-af88689563a6)
 ![image](https://github.com/user-attachments/assets/9bac1787-af1a-4920-a97f-b3367bb0d688)
-![image](https://github.com/user-attachments/assets/e343fe37-068a-45d2-861c-06a08a50af1b)
+![image](https://github.com/user-attachments/assets/683b9adc-bca1-4619-a981-9c551f21a81b)
+
 
 # Footer Icons
 License (CC BY 4.0 International)
